@@ -12,19 +12,24 @@ public class SubstitutionData
 public class SubstitutionMediator : MonoBehaviour
 {
     [SerializeField] private SubstitutionData _data;
-    [SerializeField] private BatimentPool pool;
+    public BatimentPool pool;
+    private Substitutor substitutor = new Substitutor();
     
-    private Substitutor substitutor;
     private GameObject[] placeHolders;
     private List<Transform> transforms = new();
 
     public void Substitute()
     {
-        pool.Setup(_data.PoolSize, _data.Prefab);
-        pool.InitializePool();
-        substitutor = new Substitutor(pool);
+        if (!pool || _data.PoolSize <= 0 || !_data.Prefab)
+        {
+            Debug.LogWarning("Assign values!");
+            return;
+        }
         
-        GetPlaceholders();
+        FindPlaceholdersAndSetTransforms();
+        
+        pool.InitializePool(_data.PoolSize, _data.Prefab);
+        
         
         if (_data.PoolSize < transforms.Count)
         {
@@ -32,10 +37,10 @@ public class SubstitutionMediator : MonoBehaviour
             return;
         }
         
-        substitutor.Substitute(transforms.ToArray(), transform);
+        substitutor.Substitute(transforms.ToArray(), transform, pool);
     }
 
-    public void GetPlaceholders()
+    private void FindPlaceholdersAndSetTransforms()
     {
         transforms.Clear();
         placeHolders = GameObject.FindGameObjectsWithTag("Collectable");
@@ -45,5 +50,4 @@ public class SubstitutionMediator : MonoBehaviour
             transforms.Add(collectable.transform);
         }
     }
-    
 }

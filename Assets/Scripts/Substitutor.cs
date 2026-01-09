@@ -3,18 +3,11 @@ using UnityEngine;
 
 public class Substitutor
 {
-    private BatimentPool _pool;
-
-    public Substitutor(BatimentPool pool)
-    {
-        _pool = pool;
-    }
-
-    public void Substitute(Transform[] transforms, Transform parent)
+    public void Substitute(Transform[] transforms, Transform parent, BatimentPool pool)
     {
         foreach (var transform in transforms)
         {
-            var newPrefab = _pool.GetItem();
+            var newPrefab = pool.GetItem();
 
             newPrefab.transform.position = transform.position;
             newPrefab.transform.rotation = transform.rotation;
@@ -23,4 +16,5 @@ public class Substitutor
             newPrefab.transform.SetParent(parent);
         }
     }
+    
 }

@@ -48,4 +48,9 @@ using UnityEngine;
                 //ReleaseItem(item);
             }
         }
+
+        public void ClearPool()
+        {
+            pool.Clear();
+        }
     }
