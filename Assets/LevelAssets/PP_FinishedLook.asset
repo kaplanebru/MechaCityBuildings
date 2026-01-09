@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29fa0085f50d5e54f8144f766051a691, type: 3}
   m_Name: FilmGrain
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   type:
     m_OverrideState: 1
     m_Value: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 0.7
+    m_Value: 0.605
   response:
     m_OverrideState: 1
     m_Value: 0.8
@@ -126,7 +126,7 @@ MonoBehaviour:
     m_Value: {r: 0.16981131, g: 0.16981131, b: 0.16981131, a: 1}
   center:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 1}
+    m_Value: {x: 0.95, y: 1}
   intensity:
     m_OverrideState: 1
     m_Value: 0.2
@@ -163,4 +163,4 @@ MonoBehaviour:
     m_Value: 0
   saturation:
     m_OverrideState: 1
-    m_Value: -7
+    m_Value: 34
