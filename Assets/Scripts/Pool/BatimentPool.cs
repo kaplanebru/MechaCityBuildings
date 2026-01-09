@@ -3,12 +3,17 @@ using UnityEngine;
 
 public class BatimentPool : Pool<Transform>
 {
-    public int poolSize = 200;
-    [SerializeField] private Transform prefab;
-    
+
+    private int _poolSize;
+    private Transform _prefab;
+    public void Setup(int poolSize, Transform prefab)
+    {
+        _poolSize = poolSize;
+        _prefab = prefab;
+    }
 
     public void InitializePool()
     {
-        CreatePool(poolSize, transform, prefab);
+        CreatePool(_poolSize, transform, _prefab);
     }
 }

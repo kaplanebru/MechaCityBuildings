@@ -4159,7 +4159,7 @@ GameObject:
   - component: {fileID: 384613875}
   - component: {fileID: 384613874}
   m_Layer: 0
-  m_Name: Collector
+  m_Name: SubstitutionHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4177,7 +4177,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70f40546d3fa34c1d947c95794c28cac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  batimentPool: {fileID: 1609222836}
+  _data:
+    PoolSize: 200
+    Prefab: {fileID: 0}
+  pool: {fileID: 0}
 --- !u!4 &384613875
 Transform:
   m_ObjectHideFlags: 0
@@ -16825,8 +16828,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f0b5c4b527274395a185284654f6de9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolSize: 200
-  prefab: {fileID: 475950788213655192, guid: 1ea0e8812e76b4f128f3b50473ee5510, type: 3}
 --- !u!4 &1609222837
 Transform:
   m_ObjectHideFlags: 0
