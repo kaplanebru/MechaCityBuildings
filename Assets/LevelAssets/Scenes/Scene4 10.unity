@@ -187,6 +187,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -260,6 +264,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -406,6 +414,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -491,6 +503,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -600,6 +616,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -937,6 +957,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1011,6 +1035,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1084,6 +1112,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1376,6 +1408,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1558,6 +1594,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1670,6 +1710,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1743,6 +1787,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1818,6 +1866,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1891,6 +1943,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2090,6 +2146,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2163,6 +2223,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2238,6 +2302,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2312,6 +2380,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2385,6 +2457,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2506,6 +2582,67 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 220079321}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &241525369
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6908631236943679037, guid: be13c5b020ccc48c5bce44d94bbded56, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6908631236943679037, guid: be13c5b020ccc48c5bce44d94bbded56, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6908631236943679037, guid: be13c5b020ccc48c5bce44d94bbded56, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6908631236943679037, guid: be13c5b020ccc48c5bce44d94bbded56, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6908631236943679037, guid: be13c5b020ccc48c5bce44d94bbded56, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6908631236943679037, guid: be13c5b020ccc48c5bce44d94bbded56, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6908631236943679037, guid: be13c5b020ccc48c5bce44d94bbded56, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6908631236943679037, guid: be13c5b020ccc48c5bce44d94bbded56, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6908631236943679037, guid: be13c5b020ccc48c5bce44d94bbded56, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6908631236943679037, guid: be13c5b020ccc48c5bce44d94bbded56, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8866051102866819351, guid: be13c5b020ccc48c5bce44d94bbded56, type: 3}
+      propertyPath: _data.Prefab
+      value: 
+      objectReference: {fileID: 8904269963369663636, guid: 399bcadb9b20443d892fced9cf37aac7, type: 3}
+    - target: {fileID: 9040705995481963925, guid: be13c5b020ccc48c5bce44d94bbded56, type: 3}
+      propertyPath: m_Name
+      value: Substitutor
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: be13c5b020ccc48c5bce44d94bbded56, type: 3}
 --- !u!1001 &245618521
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2569,6 +2706,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2643,6 +2784,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2721,6 +2866,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2866,6 +3015,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2975,6 +3128,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3158,6 +3315,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3266,6 +3427,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3339,6 +3504,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3414,6 +3583,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3488,6 +3661,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3561,6 +3738,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3817,6 +3998,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3929,6 +4114,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4002,6 +4191,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4333,6 +4526,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4407,6 +4604,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4480,6 +4681,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4729,6 +4934,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -4805,6 +5014,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4990,6 +5203,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5064,6 +5281,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5137,6 +5358,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5322,6 +5547,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5396,6 +5625,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5469,6 +5702,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5697,6 +5934,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5770,6 +6011,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5845,6 +6090,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5918,6 +6167,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6101,6 +6354,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6257,6 +6514,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6330,6 +6591,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6440,6 +6705,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6683,6 +6952,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6793,6 +7066,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6866,6 +7143,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6941,6 +7222,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7014,6 +7299,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7205,6 +7494,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7278,6 +7571,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7462,6 +7759,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7548,6 +7849,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7621,6 +7926,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7735,6 +8044,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7808,6 +8121,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7883,6 +8200,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7956,6 +8277,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8077,6 +8402,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8260,6 +8589,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -8372,6 +8705,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8450,6 +8787,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8523,6 +8864,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8718,6 +9063,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8795,6 +9144,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8913,6 +9266,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8986,6 +9343,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9169,6 +9530,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9242,6 +9607,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9351,6 +9720,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9535,6 +9908,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9608,6 +9985,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9765,6 +10146,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9855,6 +10240,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9928,6 +10317,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10389,6 +10782,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10462,6 +10859,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10610,6 +11011,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10683,6 +11088,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10829,6 +11238,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10902,6 +11315,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10977,6 +11394,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11050,6 +11471,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11129,6 +11554,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11203,6 +11632,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11276,6 +11709,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11386,6 +11823,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11459,6 +11900,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11534,6 +11979,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11607,6 +12056,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11717,6 +12170,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11824,6 +12281,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12007,6 +12468,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12081,6 +12546,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12154,6 +12623,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12235,6 +12708,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12308,6 +12785,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12383,6 +12864,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12456,6 +12941,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12668,6 +13157,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12741,6 +13234,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12852,6 +13349,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -12947,6 +13448,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13132,6 +13637,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13205,6 +13714,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13283,6 +13796,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13409,6 +13926,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13518,6 +14039,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13592,6 +14117,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13665,6 +14194,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13743,6 +14276,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13816,6 +14353,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -13907,6 +14448,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13981,6 +14526,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14054,6 +14603,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14239,6 +14792,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14394,6 +14951,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14467,6 +15028,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14591,6 +15156,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14768,6 +15337,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14877,6 +15450,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14950,6 +15527,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15025,6 +15606,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15098,6 +15683,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15281,6 +15870,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15370,6 +15963,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15590,6 +16187,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15663,6 +16264,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15847,6 +16452,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15920,6 +16529,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16007,6 +16620,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16081,6 +16698,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16154,6 +16775,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16232,6 +16857,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16356,6 +16985,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16429,6 +17062,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16682,6 +17319,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -17229,6 +17870,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -17303,6 +17948,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -17376,6 +18025,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -17487,6 +18140,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -17576,6 +18233,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -17830,6 +18491,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18012,6 +18677,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18120,6 +18789,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18193,6 +18866,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -18268,6 +18945,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18342,6 +19023,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18415,6 +19100,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -18595,6 +19284,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -18780,6 +19473,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18889,6 +19586,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18962,6 +19663,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
       propertyPath: m_Name
       value: Batiment (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -19147,6 +19852,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -19221,6 +19930,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Batiment (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab55824980cc940f588db5ddb67125b7, type: 3}
+      propertyPath: m_TagString
+      value: Collectable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -19240,3 +19953,4 @@ SceneRoots:
   - {fileID: 418044559}
   - {fileID: 1632811888}
   - {fileID: 1763191944}
+  - {fileID: 241525369}
