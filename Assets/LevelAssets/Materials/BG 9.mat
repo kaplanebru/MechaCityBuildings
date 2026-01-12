@@ -7,23 +7,20 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Buildings 3
+  m_Name: BG 9
   m_Shader: {fileID: 4800000, guid: 2a230514c860643f69b6a4d1871d3825, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - DR_GRADIENT_ON
   - DR_LIGHT_ATTENUATION
   - DR_RIM_ON
-  - DR_SPECULAR_ON
   - _DETAILMAPBLENDINGMODE_MULTIPLY
-  - _TEXTUREBLENDINGMODE_ADD
-  m_InvalidKeywords:
-  - _UNITYSHADOWMODE_COLOR
+  - _TEXTUREBLENDINGMODE_MULTIPLY
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
+  m_CustomRenderQueue: -1
   stringTagMap:
     RenderType: Opaque
   disabledShaderPasses: []
@@ -31,6 +28,14 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Fill_Texture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Shape_Texture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BakedGIRamp:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -40,10 +45,6 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Detail:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -68,7 +69,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _GradientRamp:
-        m_Texture: {fileID: 4431791674430559388}
+        m_Texture: {fileID: 3156201134547652810}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -87,6 +88,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ShadingGradientTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -101,82 +106,112 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - BILLBOARD_FACE_CAMERA_POSITION: 0
+    - BILLBOARD_ROTATION: 0
+    - Billboard_Scale: 1
+    - Clip_Threshold: 0.5
+    - Fill_Impact: 0.5
+    - Fill_Scale: 1
+    - Fresnel_Power: 1
+    - Fresnel_Sharpness: 0.5
+    - Offset_Along_Normal: 0
+    - Wind: 0
+    - Wind_Speed: 0.1
+    - Wind_Strength: 0.2
+    - Wind_Turbulence: 1
+    - _AllowAlphaOverflow: 0
     - _AlphaClip: 0
     - _BaseMapPremultiply: 0
     - _Blend: 0
     - _BumpScale: 1
-    - _CameraDistanceImpact: 0.577
+    - _CameraDistanceFadeClose: 0
+    - _CameraDistanceFadeFar: 10
+    - _CameraDistanceImpact: 0.5
     - _Cull: 2
     - _Cutoff: 0.5
+    - _Depth: 100
     - _DetailMapBlendingMode: 0
     - _DetailMapImpact: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _FlatRimEdgeSmoothness: 0.775
-    - _FlatRimLightAlign: 0
-    - _FlatRimSize: 0.04
-    - _FlatSpecularEdgeSmoothness: 1
-    - _FlatSpecularSize: 0.545
+    - _FRESNEL: 1
+    - _FlatRimEdgeSmoothness: 0.142
+    - _FlatRimLightAlign: 0.386
+    - _FlatRimSize: 0.786
+    - _FlatSpecularEdgeSmoothness: 0
+    - _FlatSpecularSize: 0.381
+    - _Float: 0
+    - _FresnelToggleUpgrade: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _GradientAngle: 175
-    - _GradientCenterX: 15.5
-    - _GradientCenterY: 774.2
-    - _GradientEnabled: 1
-    - _GradientSize: 13.6
-    - _LightContribution: 0.593
+    - _GradientAngle: 173
+    - _GradientCenterX: 44.87
+    - _GradientCenterY: 600
+    - _GradientEnabled: 0
+    - _GradientSize: 10
+    - _LightContrib: 0
+    - _LightContribution: 0.775
     - _LightmapDirectionPitch: 0
     - _LightmapDirectionYaw: 0
     - _Metallic: 0
     - _Mode: 0
+    - _NoiseAmount: 0.5
+    - _NoiseScale: 1
     - _OcclusionStrength: 1
-    - _OutlineDepthOffset: 0.245
+    - _OutlineDepthOffset: 0
     - _OutlineEnabled: 0
-    - _OutlineScale: 0.99
-    - _OutlineWidth: 2.7
+    - _OutlineScale: 1
+    - _OutlineWidth: 0
     - _OverrideBakedGi: 0
     - _OverrideLightAttenuation: 1
     - _OverrideLightmapDir: 0
     - _Parallax: 0.005
+    - _QueueControl: -1
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _RimEnabled: 1
-    - _SelfShadingSize: 0.719
-    - _Shininess: 0.046
+    - _SelfShadingSize: 0.261
+    - _ShadowStrength: 1
     - _SmoothnessTextureChannel: 0
-    - _SpecularEnabled: 1
+    - _SpecularEnabled: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
-    - _TextureBlendingMode: 1
-    - _TextureImpact: 0
+    - _TextureBlendingMode: 0
+    - _TextureImpact: 0.396
+    - _USE_FILL_TEXTURE: 1
     - _UVSec: 0
     - _UnityShadowOcclusion: 0
+    - _UvFadeX: 0.1
+    - _UvFadeY: 0.1
     - _VertexColorsEnabled: 0
+    - _WIND: 0
     - _ZWrite: 1
     m_Colors:
+    - Fresnel_Color: {r: 1, g: 1, b: 1, a: 0.5019608}
+    - Wind_Direction: {r: 1, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorGradient: {r: 0.7653525, g: 0.82943726, b: 0.8584906, a: 0.85056}
+    - _ColorGradient: {r: 0.4528302, g: 0.4528302, b: 0.4528302, a: 0.85056}
     - _DetailMapColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FlatRimColor: {r: 0.26561943, g: 0.41323763, b: 0.4433962, a: 0.85056}
-    - _FlatSpecularColor: {r: 0.44455323, g: 0.509434, b: 0.50379217, a: 0.85056}
+    - _FlatRimColor: {r: 0.097899616, g: 0.28928956, b: 0.3773585, a: 0.85056}
+    - _FlatSpecularColor: {r: 0.85023, g: 0.85034, b: 0.85045, a: 0.85056}
     - _LightAttenuation: {r: 0, g: 1, b: 0, a: 0}
     - _LightmapDirection: {r: 0, g: 1, b: 0, a: 0}
-    - _OutlineColor: {r: 0.84104663, g: 0.9433962, b: 0.90347904, a: 1}
+    - _NoiseSpeed: {r: 0, g: 0, b: 0, a: 0}
+    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!28 &4431791674430559388
+--- !u!28 &3156201134547652810
 Texture2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: z__GradientRampTex{"mode":0,"colorKeys":[{"color":{"r":0.239215686917305,"g":0.29370373487472536,"b":0.32156863808631899,"a":1.0},"time":0.0},{"color":{"r":1.0,"g":1.0,"b":1.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
+  m_Name: z__GradientRampTex{"mode":0,"colorKeys":[{"color":{"r":0.005117478314787149,"g":0.17959347367286683,"b":0.21698111295700074,"a":1.0},"time":0.0},{"color":{"r":1.0,"g":1.0,"b":1.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
@@ -210,7 +245,7 @@ Texture2D:
   m_ColorSpace: 1
   m_PlatformBlob: 
   image data: 1024
-  _typelessdata: ff3d4b52ff3e4c53ff3f4c53ff3f4d54ff404e55ff414e55ff424f56ff425057ff435157ff445158ff455259ff455359ff46535aff47545bff48555bff48555cff49565dff4a575eff4b585eff4b585fff4c5960ff4d5a60ff4e5a61ff4e5b62ff4f5c62ff505d63ff515d64ff525e64ff525f65ff535f66ff546066ff556167ff556168ff566268ff576369ff58646aff58646aff59656bff5a666cff5b666cff5b676dff5c686eff5d696eff5e696fff5e6a70ff5f6b71ff606b71ff616c72ff626d73ff626e73ff636e74ff646f75ff657075ff657076ff667177ff677277ff687278ff687379ff697479ff6a757aff6b757bff6b767bff6c777cff6d777dff6e787dff6e797eff6f7a7fff707a7fff717b80ff717c81ff727c81ff737d82ff747e83ff757e84ff757f84ff768085ff778186ff788186ff788287ff798388ff7a8388ff7b8489ff7b858aff7c868aff7d868bff7e878cff7e888cff7f888dff80898eff818a8eff818a8fff828b90ff838c90ff848d91ff858d92ff858e92ff868f93ff878f94ff889094ff889195ff899296ff8a9297ff8b9397ff8b9498ff8c9499ff8d9599ff8e969aff8e969bff8f979bff90989cff91999dff91999dff929a9eff939b9fff949b9fff949ca0ff959da1ff969ea1ff979ea2ff989fa3ff98a0a3ff99a0a4ff9aa1a5ff9ba2a5ff9ba2a6ff9ca3a7ff9da4a7ff9ea5a8ff9ea5a9ff9fa6aaffa0a7aaffa1a7abffa1a8acffa2a9acffa3aaadffa4aaaeffa4abaeffa5acafffa6acb0ffa7adb0ffa8aeb1ffa8aeb2ffa9afb2ffaab0b3ffabb1b4ffabb1b4ffacb2b5ffadb3b6ffaeb3b6ffaeb4b7ffafb5b8ffb0b6b8ffb1b6b9ffb1b7baffb2b8baffb3b8bbffb4b9bcffb4babdffb5babdffb6bbbeffb7bcbfffb7bdbfffb8bdc0ffb9bec1ffbabfc1ffbbbfc2ffbbc0c3ffbcc1c3ffbdc2c4ffbec2c5ffbec3c5ffbfc4c6ffc0c4c7ffc1c5c7ffc1c6c8ffc2c6c9ffc3c7c9ffc4c8caffc4c9cbffc5c9cbffc6caccffc7cbcdffc7cbcdffc8ccceffc9cdcfffcaced0ffcbced0ffcbcfd1ffccd0d2ffcdd0d2ffced1d3ffced2d4ffcfd3d4ffd0d3d5ffd1d4d6ffd1d5d6ffd2d5d7ffd3d6d8ffd4d7d8ffd4d7d9ffd5d8daffd6d9daffd7dadbffd7dadcffd8dbdcffd9dcddffdadcdeffdadddeffdbdedfffdcdfe0ffdddfe0ffdee0e1ffdee1e2ffdfe1e3ffe0e2e3ffe1e3e4ffe1e3e5ffe2e4e5ffe3e5e6ffe4e6e7ffe4e6e7ffe5e7e8ffe6e8e9ffe7e8e9ffe7e9eaffe8eaebffe9ebebffeaebecffeaecedffebededffecedeeffedeeefffeeefefffeeeff0ffeff0f1fff0f1f1fff1f2f2fff1f2f3fff2f3f3fff3f4f4fff4f4f5fff4f5f6fff5f6f6fff6f7f7fff7f7f8fff7f8f8fff8f9f9fff9f9fafffafafafffafbfbfffbfbfcfffcfcfcfffdfdfdfffdfefefffefefeffffffff
+  _typelessdata: ff012e37ff022f38ff032f39ff04303aff05313aff06323bff07333cff08343dff09343eff0a353eff0b363fff0c3740ff0d3841ff0e3842ff0f3942ff103a43ff113b44ff123c45ff133d45ff143d46ff153e47ff163f48ff174049ff184149ff19414aff1a424bff1b434cff1c444cff1d454dff1e464eff1f464fff204750ff214850ff224951ff234a52ff244b53ff254b54ff264c54ff274d55ff284e56ff294f57ff2a4f57ff2b5058ff2c5159ff2d525aff2e535bff2f545bff30545cff31555dff32565eff33575eff34585fff355860ff365961ff375a62ff385b62ff395c63ff3a5d64ff3b5d65ff3c5e66ff3d5f66ff3e6067ff3f6168ff406169ff416269ff42636aff43646bff44656cff45666dff46666dff47676eff48686fff496970ff4a6a70ff4b6b71ff4c6b72ff4d6c73ff4e6d74ff4f6e74ff506f75ff516f76ff527077ff537178ff547278ff557379ff56747aff57747bff58757bff59767cff5a777dff5b787eff5c787fff5d797fff5e7a80ff5f7b81ff607c82ff617d83ff627d83ff637e84ff647f85ff658086ff668186ff678187ff688288ff698389ff6a848aff6b858aff6c868bff6d868cff6e878dff6f888dff70898eff718a8fff728b90ff738b91ff748c91ff758d92ff768e93ff778f94ff788f95ff799095ff7a9196ff7b9297ff7c9398ff7d9498ff7e9499ff7f959aff80969bff81979cff82989cff83989dff84999eff859a9fff869b9fff879ca0ff889da1ff899da2ff8a9ea3ff8b9fa3ff8ca0a4ff8da1a5ff8ea1a6ff8fa2a7ff90a3a7ff91a4a8ff92a5a9ff93a6aaff94a6aaff95a7abff96a8acff97a9adff98aaaeff99aaaeff9aabafff9bacb0ff9cadb1ff9daeb1ff9eafb2ff9eafb3ff9fb0b4ffa0b1b5ffa1b2b5ffa2b3b6ffa3b4b7ffa4b4b8ffa5b5b9ffa6b6b9ffa7b7baffa8b8bbffa9b8bcffaab9bcffabbabdffacbbbeffadbcbfffaebdc0ffafbdc0ffb0bec1ffb1bfc2ffb2c0c3ffb3c1c3ffb4c1c4ffb5c2c5ffb6c3c6ffb7c4c7ffb8c5c7ffb9c6c8ffbac6c9ffbbc7caffbcc8cbffbdc9cbffbecaccffbfcacdffc0cbceffc1ccceffc2cdcfffc3ced0ffc4cfd1ffc5cfd2ffc6d0d2ffc7d1d3ffc8d2d4ffc9d3d5ffcad4d6ffcbd4d6ffccd5d7ffcdd6d8ffced7d9ffcfd8d9ffd0d8daffd1d9dbffd2dadcffd3dbddffd4dcddffd5dddeffd6dddfffd7dee0ffd8dfe0ffd9e0e1ffdae1e2ffdbe1e3ffdce2e4ffdde3e4ffdee4e5ffdfe5e6ffe0e6e7ffe1e6e8ffe2e7e8ffe3e8e9ffe4e9eaffe5eaebffe6eaebffe7ebecffe8ecedffe9edeeffeaeeefffebefefffeceff0ffedf0f1ffeef1f2ffeff2f2fff0f3f3fff1f4f4fff2f4f5fff3f5f6fff4f6f6fff5f7f7fff6f8f8fff7f8f9fff8f9fafff9fafafffafbfbfffbfcfcfffcfdfdfffdfdfdfffefefeffffffff
   m_StreamData:
     serializedVersion: 2
     offset: 0
