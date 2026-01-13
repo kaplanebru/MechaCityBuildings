@@ -14,6 +14,7 @@ Material:
   m_ValidKeywords:
   - DR_LIGHT_ATTENUATION
   - DR_RIM_ON
+  - DR_SPECULAR_ON
   - _DETAILMAPBLENDINGMODE_MULTIPLY
   - _TEXTUREBLENDINGMODE_MULTIPLY
   m_InvalidKeywords:
@@ -139,7 +140,7 @@ Material:
     - _SelfShadingSize: 0.213
     - _Shininess: 0.078125
     - _SmoothnessTextureChannel: 0
-    - _SpecularEnabled: 0
+    - _SpecularEnabled: 1
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
@@ -155,7 +156,7 @@ Material:
     - _ColorGradient: {r: 0.85023, g: 0.85034, b: 0.8504499, a: 0.85056}
     - _DetailMapColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FlatRimColor: {r: 0.41229087, g: 0.5656335, b: 0.8018868, a: 0.85056}
+    - _FlatRimColor: {r: 0.68907976, g: 0.8500378, b: 0.8962264, a: 0.85056}
     - _FlatSpecularColor: {r: 0.14231041, g: 0.735849, b: 0.42456242, a: 0.85056}
     - _LightAttenuation: {r: 0, g: 1, b: 0, a: 0}
     - _LightmapDirection: {r: 0, g: 1, b: 0, a: 0}
