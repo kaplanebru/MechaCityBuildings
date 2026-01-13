@@ -3,51 +3,58 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum ReplacementType
+{
+    RightBatiment,
+    LeftBatiment,
+    Stairs
+}
+
 [Serializable]
-public class SubstitutionData
+public class PoolData
 {
     public int PoolSize = 200;
-    public Transform Prefab;
+    public Replacement Prefab;
 }
+
 public class SubstitutionMediator : MonoBehaviour
 {
-    [SerializeField] private SubstitutionData _data;
-    public BatimentPool pool;
-    private Substitutor substitutor = new Substitutor();
+    [SerializeField] private ReplacementType replacementType;
+    [SerializeField] private PoolData poolData;
     
-    private GameObject[] placeHolders;
-    private List<Transform> transforms = new();
+    public ReplacementPool pool;
+    public Transform parent;
+
+    private Substitutor substitutor = new Substitutor();
+    private Placeholder[] collectables;
+    private List<Placeholder> _placeholders = new();
 
     public void Substitute()
     {
-        if (!pool || _data.PoolSize <= 0 || !_data.Prefab)
+        CollectPlaceholders();
+        
+        pool.InitializePool(poolData);
+
+        if (poolData.PoolSize < _placeholders.Count)
         {
-            Debug.LogWarning("Assign values!");
+            Debug.LogWarning("Pool size is too small for " + replacementType);
             return;
         }
-        
-        FindPlaceholdersAndSetTransforms();
-        
-        pool.InitializePool(_data.PoolSize, _data.Prefab);
-        
-        
-        if (_data.PoolSize < transforms.Count)
-        {
-            Debug.LogWarning("Pool size is too small");
-            return;
-        }
-        
-        substitutor.Substitute(transforms.ToArray(), transform, pool);
+
+        substitutor.Substitute(
+            _placeholders,
+            parent,
+            pool);
     }
 
-    private void FindPlaceholdersAndSetTransforms()
+    private void CollectPlaceholders()
     {
-        transforms.Clear();
-        placeHolders = GameObject.FindGameObjectsWithTag("Collectable");
+        _placeholders.Clear();
+
+        _placeholders = FindObjectsByType<Placeholder>(FindObjectsSortMode.None).
+            Where(p=> p.canBeCollectedRandomly && p.replacementType == replacementType).ToList();
         
-        foreach (var collectable in placeHolders)
-        {
-            transforms.Add(collectable.transform);
-        }
+        _placeholders = FindObjectsByType<Placeholder>(FindObjectsSortMode.None).Where(p=> p.replacementType == ReplacementType.Stairs).ToList();
+        print(_placeholders.Count);
     }
 }

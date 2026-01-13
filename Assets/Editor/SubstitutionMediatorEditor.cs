@@ -38,9 +38,8 @@ public class SubstitutionMediatorEditor : Editor
 
     private void HardReset()
     {
-        DeleteAllChildrenInEditor(t.transform);
+        DeleteAllChildrenInEditor(t.parent);
         DeleteAllChildrenInEditor(t.pool.transform);
-        
     }
     private void DeleteAllChildrenInEditor(Transform parent)
     {
