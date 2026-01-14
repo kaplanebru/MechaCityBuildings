@@ -3,19 +3,23 @@ using UnityEngine;
 
 public class Substitutor
 {
-    public void Substitute(List<Placeholder> placeholders, Transform parent, ReplacementPool pool)
+    public Replacement[] Substitute(List<Placeholder> placeholders, Transform parent, ReplacementPool pool)
     {
+        List<Replacement> replacements = new List<Replacement>();
         foreach (var placeholder in placeholders)
         {
             //pools[placeholder.replacementType].GetItem();
-            var newPrefab = pool.GetItem();
+            var replacement = pool.GetItem();
 
-            newPrefab.transform.position = placeholder.transform.position;
-            newPrefab.transform.rotation = placeholder.transform.rotation;
-            newPrefab.transform.localScale = placeholder.transform.localScale; //lossyScale before
+            replacement.transform.position = placeholder.transform.position;
+            replacement.transform.rotation = placeholder.transform.rotation;
+            replacement.transform.localScale = placeholder.transform.localScale; //lossyScale before
 
-            newPrefab.transform.SetParent(parent);
+            replacement.transform.SetParent(parent);
+            replacements.Add(replacement);
         }
+
+        return replacements.ToArray();
     }
     
 }

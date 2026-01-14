@@ -37,6 +37,14 @@ using UnityEngine;
             // print(pool.Count);
         }
 
+        public void ReleaseItemsToPool(T[] items)
+        {
+            foreach (T item in items)
+            {
+                ReleaseItem(item);
+            }
+        }
+
 
         public void RestorePool(T[] items)
         {

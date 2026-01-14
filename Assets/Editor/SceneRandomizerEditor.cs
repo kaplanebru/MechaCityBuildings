@@ -13,10 +13,10 @@ public class SceneRandomizerEditor : Editor
         DrawDefaultInspector();
 
         EditorGUILayout.Space(8);
-        t = (SceneRandomizer)target;
 
         if (GUILayout.Button("Randomize"))
         {
+            t = (SceneRandomizer)target;
             Undo.RecordObject(t, "Randomizer Apply");
 
             t.MixAndApply();
@@ -34,6 +34,8 @@ public class SceneRandomizerEditor : Editor
 
             if (GUILayout.Button("Reset"))
             {
+                if(t == null) t = (SceneRandomizer)target;
+                
                 Undo.RecordObject(t, "Reset");
                 t.ResetAllToGivenType(_resetType); 
                 EditorUtility.SetDirty(t);

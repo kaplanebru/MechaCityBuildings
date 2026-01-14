@@ -21,39 +21,42 @@ public class SubstitutionMediator : MonoBehaviour
 {
     [SerializeField] private ReplacementType replacementType;
     [SerializeField] private PoolData poolData;
-    
+
     public ReplacementPool pool;
     public Transform parent;
-
+    [SerializeField] private List<Placeholder> selectedPlaceholders = new();
+    
+    private List<Placeholder> _placeholdersProvidedFromScene = new();
     private Substitutor substitutor = new Substitutor();
-    private Placeholder[] collectables;
-    private List<Placeholder> _placeholders = new();
+    private PlaceholderProvider _placeholderProvider = new();
+    public Replacement[] Replacements { get; set; }
 
-    public void Substitute()
+    public void ReplaceSelected()
     {
-        CollectPlaceholders();
-        
-        pool.InitializePool(poolData);
+        selectedPlaceholders.ForEach(p=>p.canBeCollectedRandomly = false);
+        Replace(selectedPlaceholders);
+    }
+    public void ReplaceAllFromScene()
+    {
+        _placeholdersProvidedFromScene = _placeholderProvider.GetPlaceholdersFromScene(replacementType);
+        Replace(_placeholdersProvidedFromScene);
+    }
 
-        if (poolData.PoolSize < _placeholders.Count)
+    private void Replace(List<Placeholder> placeholders)
+    {
+        if (pool.transform.childCount == 0)
+            pool.InitializePool(poolData);
+
+        if (poolData.PoolSize < _placeholdersProvidedFromScene.Count)
         {
             Debug.LogWarning("Pool size is too small for " + replacementType);
             return;
         }
 
-        substitutor.Substitute(
-            _placeholders,
+        Replacements = substitutor.Substitute(
+            placeholders,
             parent,
             pool);
     }
-
-    private void CollectPlaceholders()
-    {
-        _placeholders.Clear();
-
-        _placeholders = FindObjectsByType<Placeholder>(FindObjectsSortMode.None).
-            Where(p=> p.canBeCollectedRandomly && p.replacementType == replacementType).ToList();
-        
-        print(_placeholders.Count);
-    }
+    
 }
