@@ -39,9 +39,12 @@ using UnityEngine;
 
         public void ReleaseItemsToPool(T[] items)
         {
+            if(items.Length == 0) return;
+            
             foreach (T item in items)
             {
                 ReleaseItem(item);
+                item.transform.SetParent(transform);
             }
         }
 

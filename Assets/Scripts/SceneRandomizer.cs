@@ -22,7 +22,7 @@ public class SceneRandomizer : MonoBehaviour
     {
         _placeholders.Clear();
         _placeholders = FindObjectsByType<Placeholder>(FindObjectsSortMode.None)
-            .Where(p=>p.canBeSetRandomly).ToList();
+            .Where(p=>p.canBeOrderedRandomly).ToList();
     }
 
     public void MixAndApply()

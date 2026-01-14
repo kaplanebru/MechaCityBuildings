@@ -45,5 +45,10 @@ public abstract class ReplacementMediator : MonoBehaviour
             parent,
             pool);
     }
+
+    public virtual void ReleaseItemsToPool()
+    {
+        pool.ReleaseItemsToPool(Replacements);
+    }
     
 }

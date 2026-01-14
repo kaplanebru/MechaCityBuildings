@@ -15,4 +15,10 @@ public class ReplacerSelected : ReplacementMediator
     {
         ReplaceSelected();
     }
+
+    public override void ReleaseItemsToPool()
+    {
+        base.ReleaseItemsToPool();
+        selectedPlaceholders.ForEach(p=>p.canBeCollectedRandomly = true);
+    }
 }

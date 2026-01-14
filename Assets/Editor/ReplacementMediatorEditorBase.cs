@@ -41,7 +41,7 @@ public class ReplacementMediatorEditorBase : Editor
     }
     protected void ReleaseItemsToPool()
     {
-        t.pool.ReleaseItemsToPool(t.Replacements);
+        t.ReleaseItemsToPool();
     }
 
     protected void HardReset()
