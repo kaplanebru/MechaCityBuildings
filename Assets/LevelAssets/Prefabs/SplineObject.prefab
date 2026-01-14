@@ -115,6 +115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   replacementType: 2
   canBeCollectedRandomly: 1
+  canBeSetRandomly: 0
 --- !u!4 &6726193203266399588 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 475950788213655192, guid: b3c1b259dd9ba44a1978863539bc09d0, type: 3}
