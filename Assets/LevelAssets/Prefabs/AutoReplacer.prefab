@@ -84,9 +84,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6908631236943679037}
-  - component: {fileID: 3172310230854448196}
+  - component: {fileID: 2992822261027757824}
   m_Layer: 0
-  m_Name: Substitutor
+  m_Name: AutoReplacer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -109,7 +109,7 @@ Transform:
   - {fileID: 8233803484074666604}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3172310230854448196
+--- !u!114 &2992822261027757824
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,13 +118,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 9040705995481963925}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70f40546d3fa34c1d947c95794c28cac, type: 3}
+  m_Script: {fileID: 11500000, guid: 940b5caca22d54fd9b5f5fa58fd5607f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   replacementType: 0
   poolData:
-    PoolSize: 300
-    Type: 0
-    Prefab: {fileID: 1265165791473464453, guid: 6f52e15ca6d0745c68ec8ab183b2217f, type: 3}
+    PoolSize: 200
+    Prefab: {fileID: 0}
   pool: {fileID: 3893843766524186537}
   parent: {fileID: 2521586217700022474}

@@ -17,37 +17,24 @@ public class PoolData
     public Replacement Prefab;
 }
 
-public class SubstitutionMediator : MonoBehaviour
+public abstract class ReplacementMediator : MonoBehaviour
 {
-    [SerializeField] private ReplacementType replacementType;
+    [SerializeField] protected ReplacementType replacementType;
     [SerializeField] private PoolData poolData;
 
     public ReplacementPool pool;
     public Transform parent;
-    [SerializeField] private List<Placeholder> selectedPlaceholders = new();
     
-    private List<Placeholder> _placeholdersProvidedFromScene = new();
     private Substitutor substitutor = new Substitutor();
-    private PlaceholderProvider _placeholderProvider = new();
     public Replacement[] Replacements { get; set; }
 
-    public void ReplaceSelected()
-    {
-        selectedPlaceholders.ForEach(p=>p.canBeCollectedRandomly = false);
-        Replace(selectedPlaceholders);
-    }
-    public void ReplaceAllFromScene()
-    {
-        _placeholdersProvidedFromScene = _placeholderProvider.GetPlaceholdersFromScene(replacementType);
-        Replace(_placeholdersProvidedFromScene);
-    }
-
-    private void Replace(List<Placeholder> placeholders)
+    public abstract void ExecuteReplacements();
+    protected void Substitute(List<Placeholder> placeholders)
     {
         if (pool.transform.childCount == 0)
             pool.InitializePool(poolData);
 
-        if (poolData.PoolSize < _placeholdersProvidedFromScene.Count)
+        if (poolData.PoolSize < placeholders.Count)
         {
             Debug.LogWarning("Pool size is too small for " + replacementType);
             return;

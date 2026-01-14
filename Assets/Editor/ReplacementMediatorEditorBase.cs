@@ -1,0 +1,94 @@
+using UnityEditor;
+using UnityEngine;
+
+
+[CustomEditor(typeof(ReplacementMediator), true)]
+[CanEditMultipleObjects]
+public class ReplacementMediatorEditorBase : Editor
+{
+    protected ReplacementMediator t;
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+
+        EditorGUILayout.Space(8);
+
+        if (GUILayout.Button("Replace : Same Pool"))
+            ReplaceSamePool();
+        
+        if (GUILayout.Button("Replace : Reset Pool"))
+            ReplaceResetPool();
+
+        EditorGUILayout.Space(8);
+
+        if (GUILayout.Button("Reset To Pool"))
+        {
+            CacheTarget();
+            ReleaseItemsToPool();
+        }
+
+        if (GUILayout.Button("Hard Reset"))
+        {
+            CacheTarget();
+            HardReset();
+        }
+    }
+
+    protected void CacheTarget()
+    {
+        if (t == null)
+            t = (ReplacementMediator)target; // Works for subclasses too
+    }
+    protected void ReleaseItemsToPool()
+    {
+        t.pool.ReleaseItemsToPool(t.Replacements);
+    }
+
+    protected void HardReset()
+    {
+        DeleteAllChildrenInEditor(t.parent);
+        DeleteAllChildrenInEditor(t.pool.transform);
+    }
+
+    private void DeleteAllChildrenInEditor(Transform parent)
+    {
+        if (parent == null) return;
+        if (parent.childCount == 0) return;
+
+        for (int i = parent.childCount - 1; i >= 0; i--)
+        {
+            var child = parent.GetChild(i).gameObject;
+            Undo.DestroyObjectImmediate(child);
+        }
+
+        EditorUtility.SetDirty(parent);
+    }
+
+    protected void SetSceneDirty()
+    {
+        EditorUtility.SetDirty(t);
+        if (!Application.isPlaying)
+            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(t.gameObject.scene);
+    }
+    protected void ReplaceSamePool()
+    {
+        CacheTarget();
+        Undo.RecordObject(t, "Replace All: Same Pool");
+
+        ReleaseItemsToPool();
+        t.ExecuteReplacements();
+
+        SetSceneDirty();
+    }
+
+    protected void ReplaceResetPool()
+    {
+        CacheTarget();
+        Undo.RecordObject(t, "Replace All: Reset Pool");
+
+        HardReset();
+        t.ExecuteReplacements();
+
+        SetSceneDirty();
+    }
+}
