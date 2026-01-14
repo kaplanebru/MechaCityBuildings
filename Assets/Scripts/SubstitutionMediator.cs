@@ -54,7 +54,6 @@ public class SubstitutionMediator : MonoBehaviour
         _placeholders = FindObjectsByType<Placeholder>(FindObjectsSortMode.None).
             Where(p=> p.canBeCollectedRandomly && p.replacementType == replacementType).ToList();
         
-        _placeholders = FindObjectsByType<Placeholder>(FindObjectsSortMode.None).Where(p=> p.replacementType == ReplacementType.Stairs).ToList();
         print(_placeholders.Count);
     }
 }
