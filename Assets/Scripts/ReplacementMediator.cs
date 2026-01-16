@@ -22,6 +22,8 @@ public abstract class ReplacementMediator : MonoBehaviour
 {
     [SerializeField] protected ReplacementType replacementType;
     [SerializeField] private PoolData poolData;
+    public bool randomizable = true;
+
 
     public ReplacementPool pool;
     public Transform parent;

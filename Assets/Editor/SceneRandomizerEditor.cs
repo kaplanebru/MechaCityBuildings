@@ -16,14 +16,20 @@ public class SceneRandomizerEditor : Editor
 
         if (GUILayout.Button("Randomize"))
         {
-            t = (SceneRandomizer)target;
-            Undo.RecordObject(t, "Randomizer Apply");
-
-            t.MixAndApply();
-
-            EditorUtility.SetDirty(t);
-            if (!Application.isPlaying)
-                UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(t.gameObject.scene);
+           Randomize();
+        }
+        
+        EditorGUILayout.Space(8);
+        
+        if (GUILayout.Button("Randomize And Apply To AutoReplacers: New Pool"))
+        {
+            Randomize();
+            Eventbus.OnRandomizerApplyButtonClickedForNewPool?.Invoke();
+        }
+        if (GUILayout.Button("Randomize And Apply To AutoReplacers: Same Pool"))
+        {
+            Randomize();
+            Eventbus.OnRandomizerApplyButtonClickedForSamePool?.Invoke();
         }
         
         EditorGUILayout.Space(8);
@@ -34,13 +40,30 @@ public class SceneRandomizerEditor : Editor
 
             if (GUILayout.Button("Reset"))
             {
-                if(t == null) t = (SceneRandomizer)target;
-                
-                Undo.RecordObject(t, "Reset");
-                t.ResetAllToGivenType(_resetType); 
-                EditorUtility.SetDirty(t);
+               Reset();
             }
         }
+    }
+
+    private void Randomize()
+    {
+        t = (SceneRandomizer)target;
+        Undo.RecordObject(t, "Randomizer Apply");
+
+        t.MixAndApply();
+
+        EditorUtility.SetDirty(t);
+        if (!Application.isPlaying)
+            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(t.gameObject.scene);
+    }
+
+    private void Reset()
+    {
+        if(t == null) t = (SceneRandomizer)target;
+                
+        Undo.RecordObject(t, "Reset");
+        t.ResetAllToGivenType(_resetType); 
+        EditorUtility.SetDirty(t);
     }
 }
 

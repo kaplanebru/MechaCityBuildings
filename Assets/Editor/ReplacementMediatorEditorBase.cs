@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,15 +8,41 @@ using UnityEngine;
 public class ReplacementMediatorEditorBase : Editor
 {
     protected ReplacementMediator t;
+
+    private void SubscribeToEvents()
+    {
+        CacheTarget();
+        if (!t.randomizable) return;
+        UnsubscribeFromEvents();
+        Eventbus.OnRandomizerApplyButtonClickedForNewPool += ReplaceResetPool;
+        Eventbus.OnRandomizerApplyButtonClickedForSamePool += ReplaceResetPool;
+        Debug.Log("enabled");
+        
+    }
+
+    private void UnsubscribeFromEvents()
+    {
+        CacheTarget();
+        if (!t.randomizable) return;
+        Eventbus.OnRandomizerApplyButtonClickedForNewPool -= ReplaceResetPool;
+        Eventbus.OnRandomizerApplyButtonClickedForSamePool -= ReplaceResetPool;
+    }
+
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
+        EditorGUILayout.Space(8);
+        
+        if (GUILayout.Button("Suscribe To Events"))
+            SubscribeToEvents();
+        if (GUILayout.Button("Unsubscribe From Events"))
+            UnsubscribeFromEvents();
 
         EditorGUILayout.Space(8);
 
         if (GUILayout.Button("Replace : Same Pool"))
             ReplaceSamePool();
-        
+
         if (GUILayout.Button("Replace : Reset Pool"))
             ReplaceResetPool();
 
@@ -39,6 +66,7 @@ public class ReplacementMediatorEditorBase : Editor
         if (t == null)
             t = (ReplacementMediator)target; // Works for subclasses too
     }
+
     protected void ReleaseItemsToPool()
     {
         if (t.pool.pool.Count == 0)
@@ -73,6 +101,7 @@ public class ReplacementMediatorEditorBase : Editor
         if (!Application.isPlaying)
             UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(t.gameObject.scene);
     }
+
     protected void ReplaceSamePool()
     {
         CacheTarget();
