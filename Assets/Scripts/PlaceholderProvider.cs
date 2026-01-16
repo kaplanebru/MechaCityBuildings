@@ -11,8 +11,6 @@ public class PlaceholderProvider
         placeholders = Object.FindObjectsByType<Placeholder>(FindObjectsSortMode.None).
             Where(p=> p.canBeCollectedRandomly && p.replacementType == replacementType).ToList();
         
-        Debug.Log(placeholders.Count);
-
         return placeholders;
     }
 }

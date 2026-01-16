@@ -16,7 +16,7 @@ public class SceneRandomizer : MonoBehaviour
     [SerializeField] private RandomizerData[] datas;
 
     private List<Placeholder> _placeholders = new List<Placeholder>();
-    private Placeholder[] _shuffled;
+    private List<Placeholder> _shuffled = new();
 
     private void GetAllPlaceholders()
     {
@@ -27,10 +27,12 @@ public class SceneRandomizer : MonoBehaviour
 
     public void MixAndApply()
     {
-        if (_placeholders.Count == 0)
+        //if (_placeholders.Count == 0)
             GetAllPlaceholders();
-
-        _shuffled = _placeholders.OrderBy(_ => UnityEngine.Random.value).ToArray();
+            
+            _shuffled.Clear();
+            
+        _shuffled = _placeholders.OrderBy(_ => UnityEngine.Random.value).ToList();
         
         SetAmountsByRatio();
         ApplyTypes();
@@ -38,19 +40,20 @@ public class SceneRandomizer : MonoBehaviour
 
     private void ApplyTypes()
     {
-        int amount = 0;
-        int rest = 0;
+        int leftAmount = 0;
+        int startAmount = 0;
         foreach (var data in datas)
         {
-            amount += data.Amount;
-            for (int i = rest; i < amount; i++)
+            startAmount = leftAmount;
+            leftAmount = startAmount + data.Amount;
+            
+            for (int i = startAmount; i < leftAmount; i++)
             {
                 _shuffled[i].replacementType = data.Type;
             }
-            rest += amount;
         }
         
-        CheckForRest(rest);
+        CheckForRest(leftAmount);
     }
 
     private int GetRatioSum()
@@ -65,7 +68,6 @@ public class SceneRandomizer : MonoBehaviour
         foreach (var data in datas)
         {
             data.Amount = Mathf.FloorToInt(totalAmount * data.Ratio / ratioSum);
-            Debug.Log("Amount: " + data.Amount);
         }
     }
 

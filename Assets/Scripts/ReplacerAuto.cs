@@ -8,6 +8,7 @@ public class ReplacerAuto : ReplacementMediator
     
     private void ReplaceAllFromScene()
     {
+        
         _placeholders = _placeholderProvider.GetPlaceholdersFromScene(replacementType);
         Substitute(_placeholders);
     }
