@@ -41,6 +41,8 @@ public class ReplacementMediatorEditorBase : Editor
     }
     protected void ReleaseItemsToPool()
     {
+        if (t.pool.pool.Count == 0)
+            return;
         t.ReleaseItemsToPool();
     }
 
@@ -48,6 +50,7 @@ public class ReplacementMediatorEditorBase : Editor
     {
         DeleteAllChildrenInEditor(t.parent);
         DeleteAllChildrenInEditor(t.pool.transform);
+        t.pool.ClearPool();
     }
 
     private void DeleteAllChildrenInEditor(Transform parent)

@@ -8,7 +8,6 @@ using UnityEngine;
         public static Pool<T> Instance;
         [SerializeField] public Queue<T> pool = new Queue<T>();
 
-
         public T GetItem(Action<T> callback = null)
         {
             T itemFromPool = pool.Dequeue(); //sıranın BAŞINDAN alma, sıradan çıkartma
