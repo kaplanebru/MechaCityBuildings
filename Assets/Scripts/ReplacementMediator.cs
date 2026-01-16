@@ -7,7 +7,8 @@ public enum ReplacementType
 {
     RightBatiment,
     LeftBatiment,
-    Stairs
+    Stairs,
+    VariedBatiment
 }
 
 [Serializable]
