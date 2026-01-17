@@ -7,11 +7,23 @@ using UnityEngine;
 public class ArrangementData
 {
     public string Name;
-    public PlaceholderData[] SavedBuildings { get; private set; }
+    public Dictionary<ReplacementType, List<PlaceholderData>> CategorizedBuildings { get; private set; } = new();
     public ArrangementData(string name, PlaceholderData[] savedBuildings)
     {
         Name = name;
-        SavedBuildings = savedBuildings;
+        CategorizeBuildings(savedBuildings);
+    }
+
+    private void CategorizeBuildings(PlaceholderData[] savedBuildings)
+    {
+        foreach (var savedBuilding in savedBuildings)
+        {
+            if(!CategorizedBuildings.ContainsKey(savedBuilding.Type))
+                CategorizedBuildings.Add(savedBuilding.Type, new List<PlaceholderData>());
+            
+            var buildingGroup = CategorizedBuildings[savedBuilding.Type];
+            buildingGroup.Add(savedBuilding);
+        }
     }
 }
 public class ArrangementCache
@@ -49,11 +61,13 @@ public class ArrangementCache
     
     public void ResurrectArrangement(string arrangementName)
     {
-        var savedBuildings = GetArrangement(arrangementName).SavedBuildings;
-        Eventbus.OnReplacementRequest?.Invoke(savedBuildings);
-        
-        //TODO: SUBSTITUTE
-        //typelara ayır: ona göre pool'a event publish et
+        var categorizedBuildings = GetArrangement(arrangementName).CategorizedBuildings;
+
+        Debug.Log("cat: " + categorizedBuildings.Count);
+        foreach (var categorizedBuilding in categorizedBuildings)
+        {
+            Eventbus.OnReplacementRequest?.Invoke(categorizedBuilding.Key, categorizedBuilding.Value.ToArray());
+        }
        
     }
 }

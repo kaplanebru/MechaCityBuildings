@@ -35,17 +35,25 @@ public abstract class ReplacementMediator : MonoBehaviour
 
     public void Subscribe()
     {
-        Eventbus.OnReplacementRequest += Replace;
+        Eventbus.OnReplacementRequest += ReplaceSaved;
     }
 
     public void Unsubscribe()
     {
-        Eventbus.OnReplacementRequest -= Replace;
+        Eventbus.OnReplacementRequest -= ReplaceSaved;
+    }
+
+    private void ReplaceSaved(ReplacementType type, PlaceholderData[] placeholderDataSet)
+    {
+        if(type != replacementType) return;
+        Replace(placeholderDataSet);
     }
     protected void Replace(PlaceholderData[] placeholderDataSet)
     {
         if (pool.transform.childCount == 0)
             pool.InitializePool(poolData);
+        else
+            ReleaseItemsToPool(); //todo: test
 
         if (poolData.PoolSize < placeholderDataSet.Length)
         {
@@ -70,6 +78,8 @@ public abstract class ReplacementMediator : MonoBehaviour
 
     public virtual void ReleaseItemsToPool()
     {
+        if (pool.pool.Count == 0)
+            return;
         pool.ReleaseItemsToPool(Replacements);
     }
     

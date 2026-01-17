@@ -7,5 +7,5 @@ public static class Eventbus
     public static Action OnRandomizerApplyButtonClickedForNewPool;
     public static Action OnRandomizerApplyButtonClickedForSamePool;
 
-    public static Action<PlaceholderData[]> OnReplacementRequest;
+    public static Action<ReplacementType, PlaceholderData[]> OnReplacementRequest;
 }

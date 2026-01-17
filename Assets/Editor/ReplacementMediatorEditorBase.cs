@@ -53,7 +53,7 @@ public class ReplacementMediatorEditorBase : Editor
         if (GUILayout.Button("Reset To Pool"))
         {
             CacheTarget();
-            ReleaseItemsToPool();
+            //ReleaseItemsToPool();
         }
 
         if (GUILayout.Button("Hard Reset"))
@@ -69,12 +69,12 @@ public class ReplacementMediatorEditorBase : Editor
             t = (ReplacementMediator)target; // Works for subclasses too
     }
 
-    protected void ReleaseItemsToPool()
+    /*protected void ReleaseItemsToPool()
     {
         if (t.pool.pool.Count == 0)
             return;
         t.ReleaseItemsToPool();
-    }
+    }*/
 
     protected void HardReset()
     {
@@ -109,7 +109,7 @@ public class ReplacementMediatorEditorBase : Editor
         CacheTarget();
         Undo.RecordObject(t, "Replace All: Same Pool");
 
-        ReleaseItemsToPool();
+        //ReleaseItemsToPool();
         t.ExecuteReplacements();
 
         SetSceneDirty();

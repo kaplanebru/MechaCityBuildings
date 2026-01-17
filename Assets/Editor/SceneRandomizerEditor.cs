@@ -8,7 +8,6 @@ using UnityEngine;
 public class SceneRandomizerEditor : Editor
 {
     private SceneRandomizer t;
-    private ReplacementType _resetType = ReplacementType.RightBatiment;
     
     public string[] arrangementKeys;
     private int _selectedArrangementIndex;
