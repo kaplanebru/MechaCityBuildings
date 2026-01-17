@@ -14,6 +14,7 @@ public class RandomizerData
 public class SceneRandomizer : MonoBehaviour
 {
     [SerializeField] private RandomizerData[] datas;
+    public ArrangementCache arrangementCache = new();
     
     private List<Placeholder> _placeholders = new List<Placeholder>();
     private List<Placeholder> _shuffled = new();
