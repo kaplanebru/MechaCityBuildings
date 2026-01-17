@@ -15,7 +15,9 @@ public class ArrangementData
 public class ArrangementCache
 {
     public Dictionary<string, ArrangementData> arrangements { get; private set; } = new ();
-    public string[] GetNames() => arrangements.Keys.ToArray();
+    public string[] RefreshNames() => arrangements.Keys.OrderBy(k => k).ToArray();
+    
+    public ArrangementData GetArrangement(string name) => arrangements[name];
 
     private bool IsNameTaken(string name)
     {

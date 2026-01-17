@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -8,51 +9,15 @@ public class SceneRandomizerEditor : Editor
 {
     private SceneRandomizer t;
     private ReplacementType _resetType = ReplacementType.RightBatiment;
-    private string[] arrangementNames;
+    
+    public string[] arrangementKeys;
     private int _selectedArrangementIndex;
 
-    private string ShowArrangements()
-    {
-        var dict = t.arrangementCache.arrangements;
-
-        if (dict == null || dict.Count == 0)
-        {
-            EditorGUILayout.HelpBox("No arrangements.", MessageType.Info);
-            return null;
-        }
-
-        var keys = dict.Keys.OrderBy(k => k).ToArray();
-
-
-        _selectedArrangementIndex = Mathf.Clamp(_selectedArrangementIndex, 0, keys.Length - 1);
-
-        _selectedArrangementIndex = EditorGUILayout.Popup(
-            "Arrangement",
-            _selectedArrangementIndex,
-            keys,
-            GUILayout.MaxWidth(160)
-        );
-        
-        return keys[_selectedArrangementIndex];
-
-    }
+  
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
-        EditorGUILayout.Space(8);
         
-        string selectedKey = ShowArrangements();
-
-        using (new EditorGUI.DisabledScope(string.IsNullOrEmpty(selectedKey)))
-        {
-            if (GUILayout.Button("Remove Arrangement"))
-            {
-                Undo.RecordObject(t, "Remove Arrangement");
-                t.arrangementCache.Remove(selectedKey);
-            }
-        }
-        
-
         EditorGUILayout.Space(8);
 
         if (GUILayout.Button("Randomize"))
@@ -73,23 +38,29 @@ public class SceneRandomizerEditor : Editor
             Randomize();
             Eventbus.OnRandomizerApplyButtonClickedForSamePool?.Invoke();
         }
-
+        
+        EditorGUILayout.Space(16);
+        SaveArrangement();
+        
+        EditorGUILayout.Space(8);
+        ApplyOrRemoveArrangement();
         EditorGUILayout.Space(8);
 
-        using (new EditorGUILayout.HorizontalScope())
-        {
-            _resetType = (ReplacementType)EditorGUILayout.EnumPopup(_resetType, GUILayout.MaxWidth(160));
+        
+        /*using (new EditorGUILayout.HorizontalScope())
+       {
+           _resetType = (ReplacementType)EditorGUILayout.EnumPopup(_resetType, GUILayout.MaxWidth(160));
 
-            if (GUILayout.Button("Reset"))
-            {
-                Reset();
-            }
-        }
+           if (GUILayout.Button("Reset"))
+           {
+               Reset();
+           }
+       }*/
     }
 
     private void Randomize()
     {
-        t = (SceneRandomizer)target;
+        CacheTarget();
         Undo.RecordObject(t, "Randomizer Apply");
 
         t.MixAndApply();
@@ -101,11 +72,81 @@ public class SceneRandomizerEditor : Editor
 
     private void Reset()
     {
-        if (t == null) t = (SceneRandomizer)target;
+        CacheTarget();
 
         Undo.RecordObject(t, "Reset");
         t.ResetAllToGivenType(_resetType);
         EditorUtility.SetDirty(t);
+    }
+    
+    protected void CacheTarget()
+    {
+        if (t == null)
+            t = (SceneRandomizer)target; // Works for subclasses too
+    }
+
+    private string _newArrangementName;
+    private void SaveArrangement()
+    {
+        CacheTarget();
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            _newArrangementName = EditorGUILayout.TextField(
+                new GUIContent("New Arrangement Name"),
+                _newArrangementName
+            );
+
+            if (GUILayout.Button("Save", GUILayout.Width(80)))
+            {
+                t.SaveCurrentArrangement(_newArrangementName);
+                arrangementKeys = t.arrangementCache.RefreshNames();
+            }
+        }
+    }
+    
+    private string ShowArrangements()
+    {
+        if (arrangementKeys == null || arrangementKeys.Length == 0)
+        {
+            EditorGUILayout.HelpBox("No arrangements.", MessageType.Info);
+            return null;
+        }
+        
+        _selectedArrangementIndex = Mathf.Clamp(_selectedArrangementIndex, 0, arrangementKeys.Length - 1);
+
+        _selectedArrangementIndex = EditorGUILayout.Popup(
+            "Arrangement",
+            _selectedArrangementIndex,
+            arrangementKeys,
+            GUILayout.MaxWidth(160)
+        );
+        
+        return arrangementKeys[_selectedArrangementIndex];
+    }
+
+    private void ApplyOrRemoveArrangement()
+    {
+        string selectedName = ShowArrangements();
+
+        using (new EditorGUI.DisabledScope(string.IsNullOrEmpty(selectedName)))
+        {
+            if (GUILayout.Button("Resurrect Arrangement"))
+            {
+                t.ResurrectArrangement(selectedName);
+                Undo.RecordObject(t, "Resurrect Arrangement");
+                Eventbus.OnRandomizerApplyButtonClickedForSamePool?.Invoke();
+                
+                EditorUtility.SetDirty(t);
+                if (!Application.isPlaying)
+                    UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(t.gameObject.scene);
+            }
+            if (GUILayout.Button("Remove Arrangement"))
+            {
+                t.arrangementCache.Remove(selectedName);
+                arrangementKeys = t.arrangementCache.RefreshNames();
+                Undo.RecordObject(t, "Remove Arrangement");
+            }
+        }
     }
 
     
