@@ -59,8 +59,9 @@ public class SceneRandomizer : MonoBehaviour
     {
         if (_placeholders.Count == 0 || _placeholders == null)
         {
-            Debug.LogWarning("No arrangement to save");
-            return;
+            //Debug.LogWarning("No arrangement to save");
+            GetAllPlaceholders();
+            //return;
         }
         Dictionary<string, ReplacementType> buildingTypesById = new();
         foreach (var placeholder in _placeholders)

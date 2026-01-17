@@ -118,7 +118,7 @@ public class SceneRandomizerEditor : Editor
             "Arrangement",
             _selectedArrangementIndex,
             arrangementKeys,
-            GUILayout.MaxWidth(160)
+            GUILayout.MaxWidth(400)
         );
         
         return arrangementKeys[_selectedArrangementIndex];
