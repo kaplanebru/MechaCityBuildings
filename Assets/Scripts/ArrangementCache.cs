@@ -2,14 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+
+
 public class ArrangementData
 {
     public string Name;
-    public Dictionary<string, ReplacementType> BuildingsByType { get; private set; } = new();
-    public ArrangementData(string name, Dictionary<string, ReplacementType> buildingsByType)
+    public PlaceholderData[] SavedBuildings { get; private set; }
+    public ArrangementData(string name, PlaceholderData[] savedBuildings)
     {
         Name = name;
-        BuildingsByType = buildingsByType;
+        SavedBuildings = savedBuildings;
     }
 }
 public class ArrangementCache
@@ -24,14 +26,14 @@ public class ArrangementCache
         return arrangements.ContainsKey(name);
     }
 
-    public void Add(string name, Dictionary<string, ReplacementType> buildingsByType)
+    public void Add(string name, PlaceholderData[] savedBuildings)
     {
         if (IsNameTaken(name))
         {
             Debug.LogWarning($"Name {name} is already taken");
             return;
         }
-        var arrangement = new ArrangementData(name, buildingsByType);
+        var arrangement = new ArrangementData(name, savedBuildings);
         arrangements.Add(arrangement.Name, arrangement);
     }
 
@@ -43,6 +45,16 @@ public class ArrangementCache
         {
             Debug.LogWarning($"Name {name} doesn't exist");
         }
+    }
+    
+    public void ResurrectArrangement(string arrangementName)
+    {
+        var savedBuildings = GetArrangement(arrangementName).SavedBuildings;
+        Eventbus.OnReplacementRequest?.Invoke(savedBuildings);
+        
+        //TODO: SUBSTITUTE
+        //typelara ayır: ona göre pool'a event publish et
+       
     }
 }
 

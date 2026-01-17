@@ -32,21 +32,40 @@ public abstract class ReplacementMediator : MonoBehaviour
     public Replacement[] Replacements { get; set; }
 
     public abstract void ExecuteReplacements();
-    protected void Substitute(List<Placeholder> placeholders)
+
+    public void Subscribe()
+    {
+        Eventbus.OnReplacementRequest += Replace;
+    }
+
+    public void Unsubscribe()
+    {
+        Eventbus.OnReplacementRequest -= Replace;
+    }
+    protected void Replace(PlaceholderData[] placeholderDataSet)
     {
         if (pool.transform.childCount == 0)
             pool.InitializePool(poolData);
 
-        if (poolData.PoolSize < placeholders.Count)
+        if (poolData.PoolSize < placeholderDataSet.Length)
         {
             Debug.LogWarning("Pool size is too small for " + replacementType);
             return;
         }
 
         Replacements = substitutor.Substitute(
-            placeholders,
+            placeholderDataSet,
             parent,
             pool);
+    }
+
+    protected void SetPlaceholderDatas(List<Placeholder> placeholders)
+    {
+        placeholders.ForEach(p=>p.SetDataTransformValues());
+    }
+    protected List<PlaceholderData> ResolvePlaceholderDataSet(List<Placeholder> placeholders)
+    {
+        return placeholders.Select(placeholder => placeholder.data).ToList();
     }
 
     public virtual void ReleaseItemsToPool()

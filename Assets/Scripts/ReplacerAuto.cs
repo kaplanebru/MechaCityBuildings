@@ -8,10 +8,12 @@ public class ReplacerAuto : ReplacementMediator
     
     private void ReplaceAllFromScene()
     {
-        
         _placeholders = _placeholderProvider.GetPlaceholdersFromScene(replacementType);
-        Substitute(_placeholders);
+        SetPlaceholderDatas(_placeholders);
+        Replace(ResolvePlaceholderDataSet(_placeholders).ToArray());
     }
+
+   
 
     public override void ExecuteReplacements()
     {

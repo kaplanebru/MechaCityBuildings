@@ -9,7 +9,7 @@ public class PlaceholderProvider
         List<Placeholder> placeholders = new();
 
         placeholders = Object.FindObjectsByType<Placeholder>(FindObjectsSortMode.None).
-            Where(p=> p.canBeCollectedRandomly && p.replacementType == replacementType).ToList();
+            Where(p=> p.canBeCollectedRandomly && p.data.Type == replacementType).ToList();
         
         return placeholders;
     }

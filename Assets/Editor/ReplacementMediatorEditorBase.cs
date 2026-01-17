@@ -16,6 +16,7 @@ public class ReplacementMediatorEditorBase : Editor
         UnsubscribeFromEvents();
         Eventbus.OnRandomizerApplyButtonClickedForNewPool += ReplaceResetPool;
         Eventbus.OnRandomizerApplyButtonClickedForSamePool += ReplaceResetPool;
+        t.Subscribe();
         Debug.Log("enabled");
         
     }
@@ -26,6 +27,7 @@ public class ReplacementMediatorEditorBase : Editor
         if (!t.randomizable) return;
         Eventbus.OnRandomizerApplyButtonClickedForNewPool -= ReplaceResetPool;
         Eventbus.OnRandomizerApplyButtonClickedForSamePool -= ReplaceResetPool;
+        t.Unsubscribe();
     }
 
     public override void OnInspectorGUI()

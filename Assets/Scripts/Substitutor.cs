@@ -3,17 +3,16 @@ using UnityEngine;
 
 public class Substitutor
 {
-    public Replacement[] Substitute(List<Placeholder> placeholders, Transform parent, ReplacementPool pool)
+    public Replacement[] Substitute(PlaceholderData[] placeholderDataSet, Transform parent, ReplacementPool pool)
     {
         List<Replacement> replacements = new List<Replacement>();
-        foreach (var placeholder in placeholders)
+        foreach (var placeholderData in placeholderDataSet)
         {
-            //pools[placeholder.replacementType].GetItem();
             var replacement = pool.GetItem();
 
-            replacement.transform.position = placeholder.transform.position;
-            replacement.transform.rotation = placeholder.transform.rotation;
-            replacement.transform.localScale = placeholder.transform.localScale; //lossyScale before
+            replacement.transform.position = placeholderData.Position;
+            replacement.transform.rotation = placeholderData.Rotation;
+            replacement.transform.localScale = placeholderData.Scale;
 
             replacement.transform.SetParent(parent);
             replacements.Add(replacement);

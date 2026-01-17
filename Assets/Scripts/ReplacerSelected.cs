@@ -8,7 +8,8 @@ public class ReplacerSelected : ReplacementMediator
     public void ReplaceSelected()
     {
         selectedPlaceholders.ForEach(p=>p.canBeCollectedRandomly = false);
-        Substitute(selectedPlaceholders);
+        SetPlaceholderDatas(selectedPlaceholders);
+        Replace(ResolvePlaceholderDataSet(selectedPlaceholders).ToArray());
     }
 
     public override void ExecuteReplacements()

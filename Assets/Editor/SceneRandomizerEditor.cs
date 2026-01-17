@@ -45,17 +45,6 @@ public class SceneRandomizerEditor : Editor
         EditorGUILayout.Space(8);
         ApplyOrRemoveArrangement();
         EditorGUILayout.Space(8);
-
-        
-        /*using (new EditorGUILayout.HorizontalScope())
-       {
-           _resetType = (ReplacementType)EditorGUILayout.EnumPopup(_resetType, GUILayout.MaxWidth(160));
-
-           if (GUILayout.Button("Reset"))
-           {
-               Reset();
-           }
-       }*/
     }
 
     private void Randomize()
@@ -68,15 +57,6 @@ public class SceneRandomizerEditor : Editor
         EditorUtility.SetDirty(t);
         if (!Application.isPlaying)
             UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(t.gameObject.scene);
-    }
-
-    private void Reset()
-    {
-        CacheTarget();
-
-        Undo.RecordObject(t, "Reset");
-        t.ResetAllToGivenType(_resetType);
-        EditorUtility.SetDirty(t);
     }
     
     protected void CacheTarget()
