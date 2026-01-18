@@ -18,7 +18,7 @@ public class PoolData
     public Replacement Prefab;
 }
 
-public abstract partial class ReplacerBase : MonoBehaviour
+public abstract class ReplacerBase : MonoBehaviour
 {
     public ReplacementType replacementType;
     [SerializeField] private PoolData poolData;
@@ -35,11 +35,13 @@ public abstract partial class ReplacerBase : MonoBehaviour
     
     public void ReplaceGiven(PlaceholderData[] placeholderDataSet)
     {
-        if (pool.transform.childCount == 0)
+        pool.CheckPoolActivity();
+        
+        if(!pool.IsInitialized())//if (pool.transform.childCount == 0)
             pool.InitializePool(poolData);
         else
-            ReleaseItemsToPool(); //todo: test
-
+            ReleaseItemsToPool(); 
+        
         if (poolData.PoolSize < placeholderDataSet.Length)
         {
             Debug.LogWarning("Pool size is too small for " + replacementType);
@@ -63,8 +65,11 @@ public abstract partial class ReplacerBase : MonoBehaviour
 
     public virtual void ReleaseItemsToPool()
     {
-        if (pool.pool.Count == 0)
-            return;
+        if ( Replacements == null) //Replacements.Length == 0 ||
+        {
+            print("yes");
+            Replacements = FindObjectsByType<Replacement>(FindObjectsSortMode.None).Where(r=>r.type == replacementType).ToArray();
+        }
         pool.ReleaseItemsToPool(Replacements);
     }
     
