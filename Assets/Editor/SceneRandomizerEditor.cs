@@ -20,22 +20,14 @@ public class SceneRandomizerEditor : Editor
         EditorGUILayout.Space(8);
 
         if (GUILayout.Button("Randomize"))
-        {
             Randomize();
-        }
+        
 
         EditorGUILayout.Space(8);
-
-        if (GUILayout.Button("Randomize And Apply To AutoReplacers: New Pool"))
+        if (GUILayout.Button("Randomize And Apply"))
         {
             Randomize();
-            Eventbus.OnRandomizerApplyButtonClickedForNewPool?.Invoke();
-        }
-
-        if (GUILayout.Button("Randomize And Apply To AutoReplacers: Same Pool"))
-        {
-            Randomize();
-            Eventbus.OnRandomizerApplyButtonClickedForSamePool?.Invoke();
+            Eventbus.OnRandomizingExecuted?.Invoke();
         }
         
         EditorGUILayout.Space(16);
@@ -113,7 +105,6 @@ public class SceneRandomizerEditor : Editor
             {
                 t.ResurrectArrangement(selectedName);
                 Undo.RecordObject(t, "Resurrect Arrangement");
-                Eventbus.OnRandomizerApplyButtonClickedForSamePool?.Invoke();
                 
                 EditorUtility.SetDirty(t);
                 if (!Application.isPlaying)

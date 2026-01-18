@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ReplacerAuto : ReplacementMediator
+public class ReplacerAuto : ReplacerBase
 {
     private PlaceholderProvider _placeholderProvider = new();
     private List<Placeholder> _placeholders = new();
@@ -10,7 +10,7 @@ public class ReplacerAuto : ReplacementMediator
     {
         _placeholders = _placeholderProvider.GetPlaceholdersFromScene(replacementType);
         SetPlaceholderDatas(_placeholders);
-        Replace(ResolvePlaceholderDataSet(_placeholders).ToArray());
+        ReplaceGiven(ResolvePlaceholderDataSet(_placeholders).ToArray());
     }
 
    

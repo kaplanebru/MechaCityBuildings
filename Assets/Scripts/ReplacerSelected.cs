@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ReplacerSelected : ReplacementMediator
+public class ReplacerSelected : ReplacerBase
 {
     [SerializeField] private List<Placeholder> selectedPlaceholders = new();
     
@@ -9,7 +9,7 @@ public class ReplacerSelected : ReplacementMediator
     {
         selectedPlaceholders.ForEach(p=>p.canBeCollectedRandomly = false);
         SetPlaceholderDatas(selectedPlaceholders);
-        Replace(ResolvePlaceholderDataSet(selectedPlaceholders).ToArray());
+        ReplaceGiven(ResolvePlaceholderDataSet(selectedPlaceholders).ToArray());
     }
 
     public override void ExecuteReplacements()

@@ -62,13 +62,8 @@ public class ArrangementCache
     public void ResurrectArrangement(string arrangementName)
     {
         var categorizedBuildings = GetArrangement(arrangementName).CategorizedBuildings;
-
-        Debug.Log("cat: " + categorizedBuildings.Count);
-        foreach (var categorizedBuilding in categorizedBuildings)
-        {
-            Eventbus.OnReplacementRequest?.Invoke(categorizedBuilding.Key, categorizedBuilding.Value.ToArray());
-        }
-       
+        
+        Eventbus.OnReplacementWithSavedRequest?.Invoke(categorizedBuildings);
     }
 }
 

@@ -11,9 +11,6 @@ public class Substitutor
         {
             var replacement = pool.GetItem();
             replacements.Add(replacement);
-            if(replacements.Count == 1)
-                Debug.Log("repacement pos: " + replacements[0].transform.position);
-
             replacement.transform.position = placeholderData.Position;
             replacement.transform.rotation = placeholderData.Rotation;
             replacement.transform.localScale = placeholderData.Scale;
@@ -23,9 +20,7 @@ public class Substitutor
 
         }
 
-        Debug.Log("placeholder pos: " + placeholderDataSet[0].Position);
         Debug.Log("...");
-
         return replacements.ToArray();
     }
     
