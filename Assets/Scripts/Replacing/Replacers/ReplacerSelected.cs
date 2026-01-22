@@ -9,7 +9,7 @@ public class ReplacerSelected : ReplacerBase
     {
         selectedPlaceholders.ForEach(p=>p.canBeCollectedRandomly = false);
         var placeholderDataSet = PlaceholderProvider
-            .SetAndGetPlaceholderDataSetByType(replacementType, selectedPlaceholders).ToArray();
+            .GetPlaceholderDataSetByGivenPlaceholders(selectedPlaceholders).ToArray();
            
         ReplaceGiven(placeholderDataSet);
     }

@@ -19,11 +19,9 @@ public class PlaceholderProvider : MonoBehaviour
         return SetPlaceholderDataSetByType(type, PlaceholderDatas);
     }
 
-    public static List<PlaceholderData> SetAndGetPlaceholderDataSetByType
-        (ReplacementType type, List<Placeholder> placeholders)
+    public static List<PlaceholderData> GetPlaceholderDataSetByGivenPlaceholders(List<Placeholder> placeholders)
     {
-        var datas = SetPlaceholderDataSet(placeholders);
-        return SetPlaceholderDataSetByType(type, datas);
+         return SetPlaceholderDataSet(placeholders);
     }
 
     public static List<PlaceholderData> GetPlaceholderDataSet() => PlaceholderDatas.ToList();
