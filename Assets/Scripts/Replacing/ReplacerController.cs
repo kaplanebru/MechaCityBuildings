@@ -6,7 +6,6 @@ public class ReplacerController : MonoBehaviour
 {
     public List<ReplacerAuto> autoReplacers = new();
     [SerializeField] private Transform placeholderParent;
-    private PlaceholderProvider _placeholderProvider = new();
     
     private readonly Dictionary<ReplacementType, ReplacerBase> _byType = new();
     public IReadOnlyDictionary<ReplacementType, ReplacerBase> ByType => _byType;

@@ -14,27 +14,20 @@ public class RandomizerData
 public class CityRandomizer : MonoBehaviour
 {
     [SerializeField] private RandomizerData[] randomizerDataSet;
+    [SerializeField] private Transform placeholderParent;
     public ArrangementCache arrangementCache = new();
     private Randomizer _randomizer = new();
+    private PlaceholderProvider _placeholderProvider;
 
-    private List<Placeholder> _placeholders = new();
     private List<PlaceholderData> _placeholderDataSet = new();
 
     private void GetAllPlaceholders()
     {
-        _placeholders.Clear();
-        _placeholders = FindObjectsByType<Placeholder>(FindObjectsSortMode.None)
-            .Where(p => p.canBeOrderedRandomly).ToList();
-        _placeholderDataSet = FillPlaceholderDataSet(_placeholders);
+        _placeholderProvider = new(placeholderParent);
+        _placeholderDataSet = _placeholderProvider.GetPlaceholderDataSet();
         _randomizer.Setup(randomizerDataSet, _placeholderDataSet);
     }
     
-    //TODO: HELPER YAP
-    private List<PlaceholderData> FillPlaceholderDataSet(List<Placeholder> placeholders)
-    {
-        return placeholders.Select(placeholder => placeholder.data).ToList();
-    }
-
     public void MixAndApply()
     { 
         GetAllPlaceholders();

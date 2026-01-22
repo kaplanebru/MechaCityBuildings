@@ -4,13 +4,13 @@ using UnityEngine;
 public class ReplacerAuto : ReplacerBase
 {
     [SerializeField] private Transform placeholderParent;
-    private PlaceholderProvider _placeholderProvider = new();
     private List<Placeholder> _placeholders = new();
+    private PlaceholderProvider _placeholderProvider;
+    private List<PlaceholderData> _placeholderDataSet = new();
 
 
     private void SetPlaceholders()
     {
-        _placeholderProvider.Initialize(placeholderParent);
         _placeholders = _placeholderProvider.GetPlaceholdersByType(replacementType);
         SetPlaceholderDatas(_placeholders);
     }
@@ -18,7 +18,8 @@ public class ReplacerAuto : ReplacerBase
     public override void ExecuteReplacements()
     {
         SetPlaceholders();
-        ReplaceGiven(CreatePlaceholderDataSet(_placeholders).ToArray());
+        ReplaceGiven(
+            PlaceholderProvider.CreatePlaceholderDataSet(_placeholders).ToArray());
     }
     
     /*public void SetPlaceholders(List<Placeholder> placeholders)
