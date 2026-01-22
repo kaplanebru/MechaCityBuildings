@@ -12,7 +12,6 @@ public class PlaceholderData
     
     //For Randomizer
     public void SetType(ReplacementType type) => Type = type;
-    public void SetDistrict(int district) => District = district;
     
     //For Substitutor
     public void SetTransformValues(Vector3 position, Quaternion rotation, Vector3 scale) 
@@ -25,14 +24,12 @@ public class PlaceholderData
 public class Placeholder : MonoBehaviour
 {
     public PlaceholderData data = new();
-    public int district;
     public bool canBeCollectedRandomly = true;
     public bool canBeOrderedRandomly = true;
 
     public void SetDataTransformValues()
     {
         data.SetTransformValues(transform.position, transform.rotation, transform.localScale);
-        data.SetDistrict(district);
     }
 }
 

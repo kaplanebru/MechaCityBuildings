@@ -17,14 +17,12 @@ public class CityRandomizer : MonoBehaviour
     [SerializeField] private Transform placeholderParent;
     public ArrangementCache arrangementCache = new();
     private Randomizer _randomizer = new();
-    private PlaceholderProvider _placeholderProvider;
 
     private List<PlaceholderData> _placeholderDataSet = new();
 
     private void GetAllPlaceholders()
     {
-        _placeholderProvider = new(placeholderParent);
-        _placeholderDataSet = _placeholderProvider.GetPlaceholderDataSet();
+        _placeholderDataSet = PlaceholderProvider.GetPlaceholderDataSet();
         _randomizer.Setup(randomizerDataSet, _placeholderDataSet);
     }
     

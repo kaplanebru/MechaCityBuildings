@@ -8,8 +8,10 @@ public class ReplacerSelected : ReplacerBase
     public void ReplaceSelected()
     {
         selectedPlaceholders.ForEach(p=>p.canBeCollectedRandomly = false);
-        SetPlaceholderDatas(selectedPlaceholders);
-        ReplaceGiven(PlaceholderProvider.CreatePlaceholderDataSet(selectedPlaceholders).ToArray());
+        var placeholderDataSet = PlaceholderProvider
+            .SetAndGetPlaceholderDataSetByType(replacementType, selectedPlaceholders).ToArray();
+           
+        ReplaceGiven(placeholderDataSet);
     }
 
     public override void ExecuteReplacements()

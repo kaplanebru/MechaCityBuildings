@@ -1,41 +1,67 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PlaceholderProvider 
+public class PlaceholderProvider : MonoBehaviour
 {
-    private List<Placeholder> placeholders = new();
-    private Transform _placeholderParent;
+    private static List<Placeholder> Placeholders { get; set; } = new();
+    private static List<PlaceholderData> PlaceholderDatas { get; set; } = new();
 
-
-    public PlaceholderProvider(Transform placeholderParent)
+    private void OnEnable()
     {
-        _placeholderParent = placeholderParent;
+        TryFillPlaceholders();
+        TryFillPlaceholdersData();
     }
 
-    public void GetAllPlaceholders()
+    public static List<PlaceholderData> GetPlaceholderDataSetByType(ReplacementType type)
     {
-        placeholders = _placeholderParent.GetComponentsInChildren<Placeholder>()
-            .Where(p => p.canBeCollectedRandomly)
-            .ToList();
+        return SetPlaceholderDataSetByType(type, PlaceholderDatas);
     }
 
-    public List<PlaceholderData> GetPlaceholderDataSet()
+    public static List<PlaceholderData> SetAndGetPlaceholderDataSetByType
+        (ReplacementType type, List<Placeholder> placeholders)
     {
-        GetAllPlaceholders();
-        return placeholders.Select(placeholder => placeholder.data).ToList();
+        var datas = SetPlaceholderDataSet(placeholders);
+        return SetPlaceholderDataSetByType(type, datas);
     }
-    public List<Placeholder> GetPlaceholdersByType(ReplacementType replacementType)
-    {
-        GetAllPlaceholders();
-        return placeholders.Where(p => p.data.Type == replacementType).ToList();
-    }
-    
-    public static List<PlaceholderData> CreatePlaceholderDataSet(List<Placeholder> placeholders)
-    {
-        return placeholders.Select(placeholder => placeholder.data).ToList();
-    }
-    
 
- 
+    public static List<PlaceholderData> GetPlaceholderDataSet() => PlaceholderDatas.ToList();
+
+    private static List<PlaceholderData> SetPlaceholderDataSetByType
+        (ReplacementType type, List<PlaceholderData> placeholderDatas)
+    {
+        return placeholderDatas.Where(d => d.Type == type).ToList();
+    }
+
+    private void TryFillPlaceholders()
+    {
+        if (Placeholders.Count == 0)
+        {
+            Placeholders = transform.GetComponentsInChildren<Placeholder>()
+                .Where(p => p.canBeCollectedRandomly)
+                .ToList();
+            
+            TryFillPlaceholdersData();
+        }
+    }
+
+    private static void TryFillPlaceholdersData()
+    {
+        if (PlaceholderDatas.Count == 0)
+        {
+            SetPlaceholderDataSet(Placeholders);
+        }
+    }
+
+    private static List<PlaceholderData> SetPlaceholderDataSet(List<Placeholder> placeholders)
+    {
+        PlaceholderDatas = placeholders.Select(placeholder =>
+        {
+            placeholder.SetDataTransformValues();
+            return placeholder.data;
+        }).ToList();
+
+        return PlaceholderDatas;
+    }
 }
