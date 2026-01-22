@@ -37,7 +37,7 @@ public class ReplacerControllerEditor: Editor
     private void ReplaceAll()
     {
         CacheTarget();
-        t.replacers.ForEach(ReplacerEditorHelper.Replace);
+        t.autoReplacers.ForEach(ReplacerEditorHelper.Replace);
         Debug.Log("Replace all");
 
     }
@@ -45,13 +45,13 @@ public class ReplacerControllerEditor: Editor
     private void ReleaseAll()
     {
         CacheTarget();
-        t.replacers.ForEach(ReplacerEditorHelper.ReleaseItemsToPool);
+        t.autoReplacers.ForEach(ReplacerEditorHelper.ReleaseItemsToPool);
     }
 
     private void RefreshPool()
     {
         CacheTarget();
-        t.replacers.ForEach(ReplacerEditorHelper.RefreshPool);
+        t.autoReplacers.ForEach(ReplacerEditorHelper.RefreshPool);
         ReplaceAll();
     }
     

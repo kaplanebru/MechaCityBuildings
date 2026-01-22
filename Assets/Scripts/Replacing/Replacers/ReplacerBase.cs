@@ -54,11 +54,12 @@ public abstract class ReplacerBase : MonoBehaviour
             pool);
     }
 
+
     protected void SetPlaceholderDatas(List<Placeholder> placeholders)
     {
         placeholders.ForEach(p=>p.SetDataTransformValues());
     }
-    protected List<PlaceholderData> ResolvePlaceholderDataSet(List<Placeholder> placeholders)
+    protected List<PlaceholderData> CreatePlaceholderDataSet(List<Placeholder> placeholders)
     {
         return placeholders.Select(placeholder => placeholder.data).ToList();
     }

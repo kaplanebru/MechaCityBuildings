@@ -9,14 +9,14 @@ public class ReplacerSelected : ReplacerBase
     {
         selectedPlaceholders.ForEach(p=>p.canBeCollectedRandomly = false);
         SetPlaceholderDatas(selectedPlaceholders);
-        ReplaceGiven(ResolvePlaceholderDataSet(selectedPlaceholders).ToArray());
+        ReplaceGiven(CreatePlaceholderDataSet(selectedPlaceholders).ToArray());
     }
 
     public override void ExecuteReplacements()
     {
         ReplaceSelected();
     }
-
+    
     public override void ReleaseItemsToPool()
     {
         base.ReleaseItemsToPool();

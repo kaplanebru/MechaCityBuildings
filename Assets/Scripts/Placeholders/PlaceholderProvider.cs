@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class PlaceholderProvider 
 {
-    public List<Placeholder> GetPlaceholdersFromScene(ReplacementType replacementType)
+    List<Placeholder> placeholders = new();
+    
+    public void Initialize(Transform parent)
     {
-        List<Placeholder> placeholders = new();
-
-        placeholders = Object.FindObjectsByType<Placeholder>(FindObjectsSortMode.None).
-            Where(p=> p.canBeCollectedRandomly && p.data.Type == replacementType).ToList();
+        placeholders = parent.GetComponentsInChildren<Placeholder>()
+            .Where(p => p.canBeCollectedRandomly)
+            .ToList();
         
-        return placeholders;
+    }
+
+    public List<Placeholder> GetPlaceholdersByType(ReplacementType replacementType)
+    {
+        return placeholders.Where(p => p.data.Type == replacementType).ToList();
     }
 }

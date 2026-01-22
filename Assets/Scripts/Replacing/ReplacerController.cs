@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class ReplacerController : MonoBehaviour
 {
-    public List<ReplacerBase> replacers = new();
+    public List<ReplacerAuto> autoReplacers = new();
+    [SerializeField] private Transform placeholderParent;
+    private PlaceholderProvider _placeholderProvider = new();
     
     private readonly Dictionary<ReplacementType, ReplacerBase> _byType = new();
     public IReadOnlyDictionary<ReplacementType, ReplacerBase> ByType => _byType;
@@ -17,7 +19,7 @@ public class ReplacerController : MonoBehaviour
 
     private void EnsureBuilt()
     {
-        if (_byType.Count == replacers.Count) return;
+        if (_byType.Count == autoReplacers.Count) return;
         Rebuild();
     }
 
@@ -25,7 +27,7 @@ public class ReplacerController : MonoBehaviour
     {
         _byType.Clear();
 
-        foreach (var r in replacers)
+        foreach (var r in autoReplacers)
         {
             if (!r) continue;
             _byType[r.replacementType] = r;
