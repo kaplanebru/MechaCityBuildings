@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlaceholderProvider : MonoBehaviour
 {
-    private static List<Placeholder> Placeholders { get; set; } = new();
+    [SerializeField] private List<Placeholder> Placeholders = new();
     private static List<PlaceholderData> PlaceholderDatas { get; set; } = new();
 
     private void OnEnable()
@@ -21,7 +21,7 @@ public class PlaceholderProvider : MonoBehaviour
 
     public static List<PlaceholderData> GetPlaceholderDataSetByGivenPlaceholders(List<Placeholder> placeholders)
     {
-         return SetPlaceholderDataSet(placeholders);
+        return SetPlaceholderDataSet(placeholders);
     }
 
     public static List<PlaceholderData> GetPlaceholderDataSet() => PlaceholderDatas.ToList();
@@ -39,12 +39,12 @@ public class PlaceholderProvider : MonoBehaviour
             Placeholders = transform.GetComponentsInChildren<Placeholder>()
                 .Where(p => p.canBeCollectedRandomly)
                 .ToList();
-            
+
             TryFillPlaceholdersData();
         }
     }
 
-    private static void TryFillPlaceholdersData()
+    private void TryFillPlaceholdersData()
     {
         if (PlaceholderDatas.Count == 0)
         {
