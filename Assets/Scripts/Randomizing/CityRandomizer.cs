@@ -11,10 +11,11 @@ public class RandomizerData
     public int Amount { get; set; }
 }
 
-public class SceneRandomizer : MonoBehaviour
+public class CityRandomizer : MonoBehaviour
 {
     [SerializeField] private RandomizerData[] randomizerDataSet;
     public ArrangementCache arrangementCache = new();
+    private Randomizer _randomizer = new();
 
     private List<Placeholder> _placeholders = new();
     private List<PlaceholderData> _placeholderDataSet = new();
@@ -24,28 +25,27 @@ public class SceneRandomizer : MonoBehaviour
         _placeholders.Clear();
         _placeholders = FindObjectsByType<Placeholder>(FindObjectsSortMode.None)
             .Where(p => p.canBeOrderedRandomly).ToList();
-        _placeholderDataSet = ResolvePlaceholderDataSet(_placeholders);
+        _placeholderDataSet = FillPlaceholderDataSet(_placeholders);
+        _randomizer.Setup(randomizerDataSet, _placeholderDataSet);
     }
     
     //TODO: HELPER YAP
-    private List<PlaceholderData> ResolvePlaceholderDataSet(List<Placeholder> placeholders)
+    private List<PlaceholderData> FillPlaceholderDataSet(List<Placeholder> placeholders)
     {
         return placeholders.Select(placeholder => placeholder.data).ToList();
     }
 
     public void MixAndApply()
-    {
-        //if (_placeholders.Count == 0)
+    { 
         GetAllPlaceholders();
-
         _placeholderDataSet = _placeholderDataSet.OrderBy(_ => UnityEngine.Random.value).ToList();
 
-        SetAmountsByRatio();
-        ApplyTypes();
+        _randomizer.SetAmountsByRatio();
+        ApplyTypesToPlaceholders();
     }
 
     
-    private void ApplyTypes()
+    private void ApplyTypesToPlaceholders()
     {
         int leftAmount = 0;
         int startAmount = 0;
@@ -60,34 +60,10 @@ public class SceneRandomizer : MonoBehaviour
             }
         }
 
-        CheckForRest(leftAmount);
+        _randomizer.CheckForRest(leftAmount);
     }
 
-    private int GetRatioSum()
-    {
-        return randomizerDataSet.Sum(d => d.Ratio);
-    }
-
-    private void SetAmountsByRatio()
-    {
-        int totalAmount = _placeholderDataSet.Count;
-        float ratioSum = GetRatioSum();
-
-        foreach (var data in randomizerDataSet)
-        {
-            data.Amount = Mathf.FloorToInt(totalAmount * data.Ratio / ratioSum);
-        }
-    }
-
-    private void CheckForRest(int rest)
-    {
-        if (rest == _placeholderDataSet.Count) return;
-
-        for (int i = _placeholderDataSet.Count - 1; i >= rest; i--)
-        {
-            _placeholderDataSet[i].SetType(randomizerDataSet.Last().Type);
-        }
-    }
+   
     
     public void SaveCurrentArrangement(string arrangementName)
     {

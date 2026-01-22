@@ -4,10 +4,10 @@ using UnityEditor;
 using UnityEngine;
 
 
-[CustomEditor(typeof(SceneRandomizer))]
-public class SceneRandomizerEditor : Editor
+[CustomEditor(typeof(CityRandomizer))]
+public class CityRandomizerEditor : Editor
 {
-    private SceneRandomizer t;
+    private CityRandomizer t;
     
     public string[] arrangementKeys;
     private int _selectedArrangementIndex;
@@ -53,7 +53,7 @@ public class SceneRandomizerEditor : Editor
     protected void CacheTarget()
     {
         if (t == null)
-            t = (SceneRandomizer)target; // Works for subclasses too
+            t = (CityRandomizer)target; // Works for subclasses too
     }
 
     private string _newArrangementName;
