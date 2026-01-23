@@ -13,7 +13,7 @@ public class ReplacementData : ScriptableObject
 public class ReplacementDataHolder
 {
     public Dictionary<ReplacementType, ReplacementData> _datasByType = new Dictionary<ReplacementType, ReplacementData>();
-    public ReplacementData ResolveDataFromType(ReplacementType type)
+    public ReplacementData ResolvedDataFromType(ReplacementType type)
     {
         if (!_datasByType.ContainsKey(type))
         {

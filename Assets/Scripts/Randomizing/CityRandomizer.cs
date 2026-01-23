@@ -1,41 +1,38 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[Serializable]
-public class RandomizerData
-{
-    public ReplacementType Type;
-    [Range(0, 100)] public int Ratio = 50;
-    public int Amount { get; set; }
-}
-
 public class CityRandomizer : MonoBehaviour
 {
     [SerializeField] private RandomizerData[] randomizerDataSet;
-    [SerializeField] private Transform placeholderParent;
+    [SerializeField] private CityData cityData;
+    [SerializeField] private Transform placeholderRoot;
+
     public ArrangementCache arrangementCache = new();
-    private Randomizer _randomizer = new();
+    private FrequencyToAmountConverter _frequencyToAmountConverter = new();
+    private CityOrderRegulator _orderRegulator;
 
     private List<PlaceholderData> _placeholderDataSet = new();
 
     private void GetAllPlaceholders()
     {
-        _placeholderDataSet = PlaceholderProvider.GetPlaceholderDataSet();
-        _randomizer.Setup(randomizerDataSet, _placeholderDataSet);
+        _orderRegulator = new CityOrderRegulator(cityData.HeightGap);
+        _placeholderDataSet = _orderRegulator.GetRegulatedPlaceholdersData().ToList();
+
+        FrequencyData[] frequencyDatas = randomizerDataSet.Select(r => r.FrequencyData).ToArray();
+        _frequencyToAmountConverter.Setup(frequencyDatas, _placeholderDataSet.Count);
     }
-    
+
     public void MixAndApply()
-    { 
+    {
         GetAllPlaceholders();
         _placeholderDataSet = _placeholderDataSet.OrderBy(_ => UnityEngine.Random.value).ToList();
 
-        _randomizer.SetAmountsByRatio();
+        _frequencyToAmountConverter.SetAmountsByRatio();
         ApplyTypesToPlaceholders();
     }
 
-    
+
     private void ApplyTypesToPlaceholders()
     {
         int leftAmount = 0;
@@ -43,19 +40,23 @@ public class CityRandomizer : MonoBehaviour
         foreach (var randomizerData in randomizerDataSet)
         {
             startAmount = leftAmount;
-            leftAmount = startAmount + randomizerData.Amount;
+            leftAmount = startAmount + randomizerData.FrequencyData.Amount;
 
             for (int i = startAmount; i < leftAmount; i++)
             {
-                _placeholderDataSet[i].SetType(randomizerData.Type);
+                SetType(i, randomizerData.Type);
             }
         }
-
-        _randomizer.CheckForRest(leftAmount);
+        
+        _frequencyToAmountConverter.CheckForRest(leftAmount, j => SetType(j));
     }
 
-   
-    
+    private void SetType(int i, ReplacementType type = ReplacementType.LeftBatiment)
+    {
+        _placeholderDataSet[i].SetType(type);
+    }
+
+
     public void SaveCurrentArrangement(string arrangementName)
     {
         arrangementCache.Add(arrangementName, _placeholderDataSet.ToArray());
