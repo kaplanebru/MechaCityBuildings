@@ -21,35 +21,89 @@ public class CityRandomizer : MonoBehaviour
 
         FrequencyData[] frequencyDatas = randomizerDataSet.Select(r => r.FrequencyData).ToArray();
         _frequencyToAmountConverter.Setup(frequencyDatas, _placeholderDataSet.Count);
+        _frequencyToAmountConverter.SetAmountsByRatio();
     }
 
     public void MixAndApply()
     {
         GetAllPlaceholders();
-        _placeholderDataSet = _placeholderDataSet.OrderBy(_ => UnityEngine.Random.value).ToList();
-
-        _frequencyToAmountConverter.SetAmountsByRatio();
         ApplyTypesToPlaceholders();
     }
 
+    private Dictionary<ReplacementType, int> _amountsByType = new Dictionary<ReplacementType, int>();
+
+    DiceRoller _diceRoller = new();
+
+    private void HandleSingleTypeCase(PlaceholderData placeholder)
+    {
+        var lastType = _amountsByType.Keys.First();
+        _amountsByType[lastType]--;
+        placeholder.SetType(lastType);
+
+        if (_amountsByType[lastType] <= 0)
+            _amountsByType.Remove(lastType);
+    }
 
     private void ApplyTypesToPlaceholders()
     {
-        int leftAmount = 0;
-        int startAmount = 0;
-        foreach (var randomizerData in randomizerDataSet)
+        foreach (var placeholder in _placeholderDataSet)
         {
-            startAmount = leftAmount;
-            leftAmount = startAmount + randomizerData.FrequencyData.Amount;
-
-            for (int i = startAmount; i < leftAmount; i++)
+            while (true)
             {
-                SetType(i, randomizerData.Type);
+                if (_amountsByType.Count == 0)
+                    return;
+
+                if (_amountsByType.Count == 1)
+                {
+                    HandleSingleTypeCase(placeholder);
+                    break;
+                }
+
+                var type = _diceRoller.RollDices(_amountsByType);
+
+                if (_amountsByType.TryGetValue(type, out var remaining) && remaining > 0)
+                {
+                    remaining--;
+                    if (remaining <= 0) _amountsByType.Remove(type);
+                    else _amountsByType[type] = remaining;
+
+                    placeholder.SetType(type);
+                    break;
+                }
+
+                _amountsByType.Remove(type);
             }
         }
-        
-        _frequencyToAmountConverter.CheckForRest(leftAmount, j => SetType(j));
     }
+
+    /*private void ApplyTypesToPlaceholders()
+    {
+        foreach (var placeholder in _placeholderDataSet)
+        {
+            Roll:
+            if(_amountsByType.Count == 0) return;
+
+            if (_amountsByType.Count == 1)
+            {
+                var lastType = _amountsByType.ElementAt(0).Key;
+                _amountsByType[lastType]--;
+                placeholder.SetType(lastType);
+                goto Roll;
+            }
+
+            var type = _diceRoller.RollDices(_amountsByType);
+            if (_amountsByType[type] > 0)
+            {
+                _amountsByType[type]--;
+                placeholder.SetType(type);
+            }
+            else
+            {
+                _amountsByType.Remove(type);
+                goto Roll;
+            }
+        }
+    }*/
 
     private void SetType(int i, ReplacementType type = ReplacementType.LeftBatiment)
     {

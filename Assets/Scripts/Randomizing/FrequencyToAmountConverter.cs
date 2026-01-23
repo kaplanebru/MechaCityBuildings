@@ -28,13 +28,13 @@ public class FrequencyToAmountConverter
         }
     }
 
-    public void CheckForRest(int rest, Action<int> setValueCallback)
+    public void CheckForRest(int rest, Action<int> applyValueCallback)
     {
         if (rest == _totalBodyCount) return;
 
         for (int i = _totalBodyCount - 1; i >= rest; i--)
         {
-            setValueCallback(i);
+            applyValueCallback(i);
            // _placeholderDataSet[i].SetType(randomizerDataSet.Last().Type);
         }
     }
