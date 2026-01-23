@@ -3,12 +3,53 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[ExecuteAlways]
 public class PlaceholderProvider : MonoBehaviour
 {
+    //TODO: compare child count before (> 0)
     [SerializeField] private List<Placeholder> Placeholders = new();
     private static List<PlaceholderData> PlaceholderDatas { get; set; } = new();
-
+    
     private void OnEnable()
+    {
+#if UNITY_EDITOR
+        if (!Application.isPlaying)
+        {
+            UnityEditor.EditorApplication.delayCall += EditorInit;
+            return;
+        }
+#endif
+        RebuildCache();
+    }
+    
+#if UNITY_EDITOR
+    private void OnDisable()
+    {
+        UnityEditor.EditorApplication.delayCall -= EditorInit;
+    }
+    
+    private void OnValidate()
+    {
+// Inspector'da değer değişince / child ekle-çıkar olunca editörde güncel tut
+        if (Application.isPlaying) return;
+        UnityEditor.EditorApplication.delayCall -= EditorInit;
+        UnityEditor.EditorApplication.delayCall += EditorInit;
+    }
+
+
+    private void EditorInit()
+    {
+        if (this == null) return;
+        RebuildCache();
+        UnityEditor.EditorUtility.SetDirty(this);
+        if (UnityEditor.PrefabUtility.IsPartOfPrefabInstance(this))
+            UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
+
+        UnityEditor.EditorApplication.delayCall -= EditorInit;
+    }
+#endif
+
+    private void RebuildCache()
     {
         TryFillPlaceholders();
         TryFillPlaceholdersData();
@@ -46,7 +87,7 @@ public class PlaceholderProvider : MonoBehaviour
 
     private void TryFillPlaceholdersData()
     {
-        if (PlaceholderDatas.Count == 0)
+        if (PlaceholderDatas.Count == 0 || PlaceholderDatas.Count != Placeholders.Count)
         {
             SetPlaceholderDataSet(Placeholders);
         }

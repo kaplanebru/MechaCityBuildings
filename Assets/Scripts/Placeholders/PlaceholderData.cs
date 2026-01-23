@@ -10,7 +10,7 @@ public class PlaceholderData
     public Vector3 Scale;
     
     //For Randomizer
-    public void SetType(ReplacementType type) => Type = type;
+    public void ApplyType(ReplacementType type) => Type = type;
     public void SetOrderIndex(int orderIndex) => OrderIndex = orderIndex;
     
     //For Substitutor

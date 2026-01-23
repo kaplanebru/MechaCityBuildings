@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class ReplacerAuto : ReplacerBase
 {
-    [SerializeField] private Transform placeholderParent;
     private List<PlaceholderData> _placeholderDataSet = new();
     
     public override void ExecuteReplacements()
