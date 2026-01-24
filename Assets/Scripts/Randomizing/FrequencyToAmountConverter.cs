@@ -26,16 +26,26 @@ public class FrequencyToAmountConverter
         {
             data.Amount = Mathf.FloorToInt(totalAmount * data.Frequency / ratioSum);
         }
+        
+        HandleRest();
     }
 
-    public void CheckForRest(int rest, Action<int> applyValueCallback)
+    private void HandleRest()
     {
-        if (rest == _totalBodyCount) return;
-
-        for (int i = _totalBodyCount - 1; i >= rest; i--)
+        var totalAmount = _frequencyDataSet.Sum(d => d.Amount);
+        int rest = _totalBodyCount - totalAmount;
+        
+        if(rest == 0) return;
+        _frequencyDataSet = _frequencyDataSet.OrderBy(d => d.Amount).ToArray();
+        
+        while (rest > 0)
         {
-            applyValueCallback(i);
-           // _placeholderDataSet[i].SetType(randomizerDataSet.Last().Type);
+            foreach (var data in _frequencyDataSet)
+            {
+                data.Amount++;
+                rest--;
+                if(rest == 0) return;
+            }
         }
     }
 }

@@ -18,10 +18,10 @@ public class ArrangementData
     {
         foreach (var savedBuilding in savedBuildings)
         {
-            if(!CategorizedBuildings.ContainsKey(savedBuilding.Type))
-                CategorizedBuildings.Add(savedBuilding.Type, new List<PlaceholderData>());
+            if(!CategorizedBuildings.ContainsKey(savedBuilding.GetReplacementType()))
+                CategorizedBuildings.Add(savedBuilding.GetReplacementType(), new List<PlaceholderData>());
             
-            var buildingGroup = CategorizedBuildings[savedBuilding.Type];
+            var buildingGroup = CategorizedBuildings[savedBuilding.GetReplacementType()];
             buildingGroup.Add(savedBuilding);
         }
     }

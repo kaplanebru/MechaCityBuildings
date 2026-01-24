@@ -17,7 +17,7 @@ public class CityOrderRegulator
     public PlaceholderData[] GetRegulatedPlaceholdersData()
     {
         Regulate();
-        var placeholders = placeholdersByColumn.Values.SelectMany(v => v).ToArray();
+        var placeholders = placeholdersByColumn.Values.SelectMany(d => d).ToArray();
         placeholders = placeholders.OrderBy(p=>p.OrderIndex).ToArray();
         return placeholders;
     }
@@ -31,6 +31,8 @@ public class CityOrderRegulator
     private void SetPlaceholderData()
     {
         placeholderDataSet = PlaceholderProvider.GetPlaceholderDataSet().ToArray();
+        //Debug.Log("placeholder dataset: " + placeholderDataSet.Length);
+
     }
     private void SortPlaceholdersByColumn()
     {

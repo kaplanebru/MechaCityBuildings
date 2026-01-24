@@ -70,7 +70,16 @@ public class PlaceholderProvider : MonoBehaviour
     private static List<PlaceholderData> SetPlaceholderDataSetByType
         (ReplacementType type, List<PlaceholderData> placeholderDatas)
     {
-        return placeholderDatas.Where(d => d.Type == type).ToList();
+        return placeholderDatas.Where(d =>
+        {
+            if (d.ReplacementData != null)
+            {
+                return d.GetReplacementType() == type;
+            }
+
+            Debug.Log("Placeholder data not assigned");
+            return false;
+        }).ToList();
     }
 
     private void TryFillPlaceholders()

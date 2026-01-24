@@ -14,7 +14,7 @@ public class Substitutor
             replacement.transform.position = placeholderData.Position;
             replacement.transform.rotation = placeholderData.Rotation;
             replacement.transform.localScale = placeholderData.Scale;
-            replacement.type = placeholderData.Type;
+            replacement.type = placeholderData.GetReplacementType();
 
             replacement.transform.SetParent(parent);
         }

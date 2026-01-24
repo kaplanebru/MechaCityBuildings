@@ -7,9 +7,11 @@ public class CityRandomizer : MonoBehaviour
     [SerializeField] private RandomizerData[] randomizerDataSet;
     [SerializeField] private CityData cityData;
     [SerializeField] private Transform placeholderRoot;
+    [SerializeField] private ReplacementDataBase replacementDatabase;
 
     public ArrangementCache arrangementCache = new();
     private DiceRoller _diceRoller = new();
+    private FrequencyToAmountConverter _frequencyToAmountConverter = new();
     private CityOrderRegulator _orderRegulator;
 
     private List<PlaceholderData> _placeholderDataSet = new();
@@ -21,9 +23,17 @@ public class CityRandomizer : MonoBehaviour
         _placeholderDataSet = _orderRegulator.GetRegulatedPlaceholdersData().ToList();
     }
 
+    private void ConvertFrequenciesToAmounts()
+    {
+        FrequencyData[] frequencyDatas = randomizerDataSet.Select(r => r.FrequencyData).ToArray();
+        _frequencyToAmountConverter.Setup(frequencyDatas, _placeholderDataSet.Count);
+        _frequencyToAmountConverter.SetAmountsByRatio();
+    }
+
     public void MixAndApply()
     {
         GetAllPlaceholders();
+        ConvertFrequenciesToAmounts();
         InitiateAmountsByType();
         ApplyTypesToPlaceholders();
     }
@@ -34,13 +44,15 @@ public class CityRandomizer : MonoBehaviour
         foreach (var data in randomizerDataSet)
         {
             _amountsByType.Add(data.Type, data.FrequencyData.Amount);
+            //Debug.Log($"{data.Type}: {data.FrequencyData.Amount}");
         }
     }
     private void HandleSingleTypeCase(PlaceholderData placeholder)
     {
         var lastType = _amountsByType.Keys.First();
         _amountsByType[lastType]--;
-        placeholder.ApplyType(lastType);
+        MarkPlaceholder(placeholder, lastType);
+
 
         if (_amountsByType[lastType] <= 0)
             _amountsByType.Remove(lastType);
@@ -48,6 +60,8 @@ public class CityRandomizer : MonoBehaviour
 
     private void ApplyTypesToPlaceholders()
     {
+        //Debug.Log("place holder count: " + _placeholderDataSet.Count);
+        //Debug.Log("amounts by types: " + _amountsByType.Values.Sum());
         foreach (var placeholder in _placeholderDataSet)
         {
             while (true)
@@ -71,7 +85,8 @@ public class CityRandomizer : MonoBehaviour
                     else 
                         _amountsByType[type] = remaining;
 
-                    placeholder.ApplyType(type);
+                    MarkPlaceholder(placeholder, type);
+                    
                     break;
                 }
 
@@ -80,6 +95,12 @@ public class CityRandomizer : MonoBehaviour
         }
     }
 
+    private void MarkPlaceholder(PlaceholderData placeholder, ReplacementType type)
+    {
+        replacementDatabase.TryGet(type, out var replacementData);
+        placeholder.ApplyReplacementData(replacementData);
+        //Debug.Log("placeholder type: " + placeholder.GetReplacementType());
+    }
 
     public void SaveCurrentArrangement(string arrangementName)
     {

@@ -6,6 +6,10 @@ public class DiceRoller
     public ReplacementType RollDices(Dictionary<ReplacementType, int> amountsByType)
     {
         var sum = amountsByType.Values.Sum();
+        if (sum == 0)
+        {
+            Debug.LogWarning("roll sum is zero");
+        }
         int roll = Random.Range(0, sum);
         int cumulative = 0;
 

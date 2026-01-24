@@ -2,15 +2,18 @@ using UnityEngine;
 
 public class PlaceholderData
 {
-    public ReplacementType Type { get; private set; }
+    public ReplacementData ReplacementData;
     public int OrderIndex { get; private set; }
     
     public Vector3 Position;
     public Quaternion Rotation;
     public Vector3 Scale;
+
+    public ReplacementType GetReplacementType() => ReplacementData.Type;
     
     //For Randomizer
-    public void ApplyType(ReplacementType type) => Type = type;
+    //TODO: fix it for single applications as well, except from randomizer
+    public void ApplyReplacementData(ReplacementData data) => ReplacementData = data;
     public void SetOrderIndex(int orderIndex) => OrderIndex = orderIndex;
     
     //For Substitutor

@@ -8,34 +8,39 @@ using UnityEngine;
 public class CityRandomizerEditor : Editor
 {
     private CityRandomizer t;
-    
+
     public string[] arrangementKeys;
     private int _selectedArrangementIndex;
 
-  
+
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
-        
+
         EditorGUILayout.Space(8);
 
         if (GUILayout.Button("Randomize"))
             Randomize();
-        
+
 
         EditorGUILayout.Space(8);
         if (GUILayout.Button("Randomize And Apply"))
         {
             Randomize();
-            Eventbus.OnRandomizingExecuted?.Invoke();
+            PublishExecutionCompletedEvent();
         }
-        
+
         EditorGUILayout.Space(16);
         SaveArrangement();
-        
+
         EditorGUILayout.Space(8);
         ApplyOrRemoveArrangement();
         EditorGUILayout.Space(8);
+    }
+
+    private void PublishExecutionCompletedEvent()
+    {
+        Eventbus.OnRandomizingExecuted?.Invoke();
     }
 
     private void Randomize()
@@ -49,7 +54,7 @@ public class CityRandomizerEditor : Editor
         if (!Application.isPlaying)
             UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(t.gameObject.scene);
     }
-    
+
     protected void CacheTarget()
     {
         if (t == null)
@@ -57,6 +62,7 @@ public class CityRandomizerEditor : Editor
     }
 
     private string _newArrangementName;
+
     private void SaveArrangement()
     {
         CacheTarget();
@@ -74,7 +80,7 @@ public class CityRandomizerEditor : Editor
             }
         }
     }
-    
+
     private string ShowArrangements()
     {
         if (arrangementKeys == null || arrangementKeys.Length == 0)
@@ -82,7 +88,7 @@ public class CityRandomizerEditor : Editor
             EditorGUILayout.HelpBox("No arrangements.", MessageType.Info);
             return null;
         }
-        
+
         _selectedArrangementIndex = Mathf.Clamp(_selectedArrangementIndex, 0, arrangementKeys.Length - 1);
 
         _selectedArrangementIndex = EditorGUILayout.Popup(
@@ -91,7 +97,7 @@ public class CityRandomizerEditor : Editor
             arrangementKeys,
             GUILayout.MaxWidth(400)
         );
-        
+
         return arrangementKeys[_selectedArrangementIndex];
     }
 
@@ -105,11 +111,12 @@ public class CityRandomizerEditor : Editor
             {
                 t.ResurrectArrangement(selectedName);
                 Undo.RecordObject(t, "Resurrect Arrangement");
-                
+
                 EditorUtility.SetDirty(t);
                 if (!Application.isPlaying)
                     UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(t.gameObject.scene);
             }
+
             if (GUILayout.Button("Remove Arrangement"))
             {
                 t.arrangementCache.Remove(selectedName);
@@ -118,6 +125,4 @@ public class CityRandomizerEditor : Editor
             }
         }
     }
-
-    
 }
