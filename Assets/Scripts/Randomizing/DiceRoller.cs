@@ -5,6 +5,9 @@ public class DiceRoller
 {
     public ReplacementType RollDices(Dictionary<ReplacementType, int> amountsByType)
     {
+        if(amountsByType.Count == 1)
+            return amountsByType.First().Key;
+        
         var sum = amountsByType.Values.Sum();
         if (sum == 0)
         {

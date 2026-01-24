@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CityRandomizer : MonoBehaviour
@@ -17,10 +18,22 @@ public class CityRandomizer : MonoBehaviour
     private List<PlaceholderData> _placeholderDataSet = new();
     private Dictionary<ReplacementType, int> _amountsByType = new Dictionary<ReplacementType, int>();
 
+    Dictionary<int, int> _quotaLimitsByHeight = new();
+    Dictionary<int, int> _currentQuotas = new();
+
     private void GetAllPlaceholders()
     {
         _orderRegulator = new CityOrderRegulator(cityData.HeightGap);
         _placeholderDataSet = _orderRegulator.GetRegulatedPlaceholdersData().ToList();
+    }
+
+    private void InitiateQuotas()
+    {
+        _quotaLimitsByHeight = cityData.GetQuotaByHeight();
+        foreach (var heightTier in _quotaLimitsByHeight.Keys)
+        {
+            _currentQuotas[heightTier] = 0;
+        }
     }
 
     private void ConvertFrequenciesToAmounts()
@@ -34,6 +47,7 @@ public class CityRandomizer : MonoBehaviour
     {
         GetAllPlaceholders();
         ConvertFrequenciesToAmounts();
+        InitiateQuotas();
         InitiateAmountsByType();
         ApplyTypesToPlaceholders();
     }
@@ -44,62 +58,68 @@ public class CityRandomizer : MonoBehaviour
         foreach (var data in randomizerDataSet)
         {
             _amountsByType.Add(data.Type, data.FrequencyData.Amount);
-            //Debug.Log($"{data.Type}: {data.FrequencyData.Amount}");
         }
     }
-    private void HandleSingleTypeCase(PlaceholderData placeholder)
+
+
+    private bool HasQuota(int heightTier)
     {
-        var lastType = _amountsByType.Keys.First();
-        _amountsByType[lastType]--;
-        MarkPlaceholder(placeholder, lastType);
+        if (_currentQuotas[heightTier] >= _quotaLimitsByHeight[heightTier])
+        {
+            _currentQuotas[heightTier] = 0;
+            return false;
+        }
 
-
-        if (_amountsByType[lastType] <= 0)
-            _amountsByType.Remove(lastType);
+        _currentQuotas[heightTier]++;
+        return true;
     }
 
     private void ApplyTypesToPlaceholders()
     {
-        //Debug.Log("place holder count: " + _placeholderDataSet.Count);
-        //Debug.Log("amounts by types: " + _amountsByType.Values.Sum());
+        //eliminate zeros at start:
+        _amountsByType = _amountsByType.Where(kvp => kvp.Value != 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        
         foreach (var placeholder in _placeholderDataSet)
         {
-            while (true)
-            {
-                if (_amountsByType.Count == 0)
-                    return;
+            if (_amountsByType.Count == 0)
+                return;
 
-                if (_amountsByType.Count == 1)
-                {
-                    HandleSingleTypeCase(placeholder);
-                    break;
-                }
-
-                var type = _diceRoller.RollDices(_amountsByType);
-
-                if (_amountsByType.TryGetValue(type, out var remaining) && remaining > 0)
-                {
-                    remaining--;
-                    if (remaining <= 0) 
-                        _amountsByType.Remove(type);
-                    else 
-                        _amountsByType[type] = remaining;
-
-                    MarkPlaceholder(placeholder, type);
-                    
-                    break;
-                }
-
-                _amountsByType.Remove(type);
-            }
+            var replacementData = GetReplacementData();
+            var selectedType = replacementData.Type;
+            _amountsByType[selectedType]--;
+            
+            if (_amountsByType[selectedType] == 0)
+                _amountsByType.Remove(selectedType);
+            
+            placeholder.ApplyReplacementData(replacementData);
         }
     }
 
-    private void MarkPlaceholder(PlaceholderData placeholder, ReplacementType type)
+
+    Dictionary<ReplacementType, int> tempAmountsByType = new ();
+
+    private ReplacementData GetReplacementData()
     {
-        replacementDatabase.TryGet(type, out var replacementData);
-        placeholder.ApplyReplacementData(replacementData);
-        //Debug.Log("placeholder type: " + placeholder.GetReplacementType());
+        tempAmountsByType.Clear();
+        tempAmountsByType.AddRange(_amountsByType);
+
+        while (tempAmountsByType.Count > 0)
+        {
+            var examinedType = _diceRoller.RollDices(_amountsByType);
+            var replacementData = replacementDatabase.Get(examinedType);
+
+            if (HasQuota(replacementData.HeightTier))
+            {
+                return replacementData;
+            }
+
+            tempAmountsByType.Remove(examinedType);
+        }
+
+        var inevitableType = _diceRoller.RollDices(_amountsByType);
+        var inevitableData = replacementDatabase.Get(inevitableType);
+        _currentQuotas[inevitableData.HeightTier] = _quotaLimitsByHeight[inevitableData.HeightTier];
+        return inevitableData;
     }
 
     public void SaveCurrentArrangement(string arrangementName)

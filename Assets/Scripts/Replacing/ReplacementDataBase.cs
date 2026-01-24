@@ -15,10 +15,11 @@ public class ReplacementDataBase: ScriptableObject
     [SerializeField] private List<ReplacementDataByType> datas = new();
     private static Dictionary<ReplacementType, ReplacementData> _datasByType = new Dictionary<ReplacementType, ReplacementData>();
     
-    public bool TryGet(ReplacementType type, out ReplacementData data)
+    public ReplacementData Get(ReplacementType type)
     {
         EnsureBuilt();
-        return _datasByType.TryGetValue(type, out data);
+         _datasByType.TryGetValue(type, out var data);
+         return data;
     }
 
     private void EnsureBuilt()
