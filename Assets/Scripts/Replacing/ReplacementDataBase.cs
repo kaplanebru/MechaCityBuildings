@@ -10,28 +10,37 @@ public class ReplacementDataByType
 }
 
 [CreateAssetMenu(fileName = "ReplacementDataBase", menuName = "Scriptable Objects/ReplacementDataBase")]
-public class ReplacementDataBase: ScriptableObject
+public class ReplacementDataBase : ScriptableObject
 {
     [SerializeField] private List<ReplacementDataByType> datas = new();
-    private static Dictionary<ReplacementType, ReplacementData> _datasByType = new Dictionary<ReplacementType, ReplacementData>();
-    
-    public ReplacementData Get(ReplacementType type)
+    private static Dictionary<ReplacementType, ReplacementData> _datasByType = new ();
+    private static Dictionary<ReplacementType, int> _heightTierByType = new ();
+
+    public ReplacementData GetData(ReplacementType type)
     {
         EnsureBuilt();
-         _datasByType.TryGetValue(type, out var data);
-         return data;
+        _datasByType.TryGetValue(type, out var data);
+        return data;
+    }
+
+    public int GetHeightTierByType(ReplacementType type)
+    {
+        EnsureBuilt();
+        return _heightTierByType[type];
     }
 
     private void EnsureBuilt()
     {
-        if (_datasByType.Count == datas.Count) return;
+        if (_datasByType.Count == datas.Count && 
+            _heightTierByType.Count == datas.Count) return;
         Rebuild();
     }
-    
+
     private void Rebuild()
     {
         _datasByType.Clear();
-        
+        _heightTierByType.Clear();
+
         foreach (var d in datas)
         {
             if (d.Data == null)
@@ -39,22 +48,24 @@ public class ReplacementDataBase: ScriptableObject
                 Debug.LogWarning($"Rebuilding {GetType().Name} due to null data");
                 return;
             }
+
             if (_datasByType.ContainsKey(d.Type))
             {
                 Debug.LogWarning($"Duplicate replacement type: {d.Type}");
                 return;
             }
-            
+
             if (d.Data.Type != d.Type)
             {
-               Debug.LogWarning("Data type doesn't match the type");
-               return;
+                Debug.LogWarning("Data type doesn't match the type");
+                return;
             }
-            
+
             _datasByType[d.Type] = d.Data;
+            _heightTierByType[d.Type] = d.Data.HeightTier;
         }
     }
-    
+
 #if UNITY_EDITOR
     private void OnValidate()
     {

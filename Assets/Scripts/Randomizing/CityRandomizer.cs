@@ -62,64 +62,82 @@ public class CityRandomizer : MonoBehaviour
     }
 
 
-    private bool HasQuota(int heightTier)
-    {
-        if (_currentQuotas[heightTier] >= _quotaLimitsByHeight[heightTier])
-        {
-            _currentQuotas[heightTier] = 0;
-            return false;
-        }
-
-        _currentQuotas[heightTier]++;
-        return true;
-    }
+  
 
     private void ApplyTypesToPlaceholders()
     {
         //eliminate zeros at start:
         _amountsByType = _amountsByType.Where(kvp => kvp.Value != 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        
+
         foreach (var placeholder in _placeholderDataSet)
         {
             if (_amountsByType.Count == 0)
                 return;
 
-            var replacementData = GetReplacementData();
+            var replacementData = CheckQuotasAndGetReplacementData();
+
+            _lastHeightTier = replacementData.HeightTier;
             var selectedType = replacementData.Type;
             _amountsByType[selectedType]--;
-            
+
             if (_amountsByType[selectedType] == 0)
                 _amountsByType.Remove(selectedType);
-            
+
             placeholder.ApplyReplacementData(replacementData);
         }
     }
 
+    private int _lastHeightTier;
 
-    Dictionary<ReplacementType, int> tempAmountsByType = new ();
-
-    private ReplacementData GetReplacementData()
+    private bool HasQuota(int heightTier)
     {
-        tempAmountsByType.Clear();
-        tempAmountsByType.AddRange(_amountsByType);
-
-        while (tempAmountsByType.Count > 0)
+        return _currentQuotas[heightTier] < _quotaLimitsByHeight[heightTier];
+    }
+    bool _firstAttempt = true;
+    private ReplacementData CheckQuotasAndGetReplacementData()
+    {
+        int attempts = _amountsByType.Count;
+        while (attempts > 0)
         {
             var examinedType = _diceRoller.RollDices(_amountsByType);
-            var replacementData = replacementDatabase.Get(examinedType);
+            var examinedTier = replacementDatabase.GetHeightTierByType(examinedType);
 
-            if (HasQuota(replacementData.HeightTier))
+            if (examinedTier == _lastHeightTier && !_firstAttempt)
             {
-                return replacementData;
+                if (HasQuota(examinedTier))
+                {
+                    ResetQuotasExcept(examinedTier);
+                    _currentQuotas[examinedTier]++;
+                    return replacementDatabase.GetData(examinedType);
+                }
             }
-
-            tempAmountsByType.Remove(examinedType);
+            else
+            {
+                if(_firstAttempt) _firstAttempt = false;
+                
+                ResetQuotas();
+                _currentQuotas[examinedTier]++;
+                return replacementDatabase.GetData(examinedType);
+            }
+            attempts--;
         }
 
-        var inevitableType = _diceRoller.RollDices(_amountsByType);
-        var inevitableData = replacementDatabase.Get(inevitableType);
-        _currentQuotas[inevitableData.HeightTier] = _quotaLimitsByHeight[inevitableData.HeightTier];
-        return inevitableData;
+        Debug.LogError($"Safety replacement with No more quotas left" + " amountsByType: " + _amountsByType.Count);
+        return replacementDatabase.GetData(_amountsByType.First().Key);
+    }
+
+    private void ResetQuotasExcept(int selectedHeightTier)
+    {
+        foreach (var key in _currentQuotas.Keys)
+        {
+            if(key == selectedHeightTier) continue;
+            _currentQuotas[key] = 0;
+        }
+    }
+
+    private void ResetQuotas()
+    {
+        _currentQuotas.Keys.ToList().ForEach(key => _currentQuotas[key] = 0);
     }
 
     public void SaveCurrentArrangement(string arrangementName)
