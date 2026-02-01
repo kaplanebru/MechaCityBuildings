@@ -38,8 +38,6 @@ public class ReplacerControllerEditor: Editor
     {
         CacheTarget();
         t.autoReplacers.ForEach(ReplacerEditorHelper.Replace);
-        Debug.Log("Replace all");
-
     }
 
     private void ReleaseAll()

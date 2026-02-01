@@ -16,7 +16,7 @@ public class CityRandomizer : MonoBehaviour
     private CityOrderRegulator _orderRegulator;
 
     private List<PlaceholderData> _placeholderDataSet = new();
-    private Dictionary<ReplacementType, int> _amountsByType = new Dictionary<ReplacementType, int>();
+    private Dictionary<ReplacementType, int> _pendingReplacements = new Dictionary<ReplacementType, int>();
 
     Dictionary<int, int> _quotaLimitsByHeight = new();
     Dictionary<int, int> _currentQuotasByHeight = new();
@@ -38,6 +38,15 @@ public class CityRandomizer : MonoBehaviour
         }
     }
 
+    private void InitiateUnassignedBuildings()
+    {
+        _pendingReplacements.Clear();
+        foreach (var data in randomizerDataSet)
+        {
+            _pendingReplacements.Add(data.Type, data.FrequencyData.Amount);
+        }
+    }
+
     private void ConvertFrequenciesToAmounts()
     {
         FrequencyData[] frequencyDatas = randomizerDataSet.Select(r => r.FrequencyData).ToArray();
@@ -50,57 +59,89 @@ public class CityRandomizer : MonoBehaviour
         GetAllPlaceholders();
         ConvertFrequenciesToAmounts();
         InitiateQuotas();
-        InitiateAmountsByType();
+        InitiateUnassignedBuildings();
         ApplyTypesToPlaceholders();
     }
 
-    private void InitiateAmountsByType()
-    {
-        _amountsByType.Clear();
-        foreach (var data in randomizerDataSet)
-        {
-            _amountsByType.Add(data.Type, data.FrequencyData.Amount);
-        }
-    }
+
     private void ApplyTypesToPlaceholders()
     {
         //eliminate zeros at start:
-        _amountsByType = _amountsByType.Where(kvp => kvp.Value != 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        _pendingReplacements = _pendingReplacements.Where(kvp => kvp.Value != 0)
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
         foreach (var placeholder in _placeholderDataSet)
         {
-            if (_amountsByType.Count == 0)
+            if (_pendingReplacements.Count == 0)
                 return;
 
-            var replacementData = CheckQuotasAndGetReplacementData();
+            var replacementData = GetReplacementDataByCheckingQuotas();
 
             _lastHeightTier = replacementData.HeightTier;
             var selectedType = replacementData.Type;
-            _amountsByType[selectedType]--;
-
-            if (_amountsByType[selectedType] == 0)
-                _amountsByType.Remove(selectedType);
-
             placeholder.ApplyReplacementType(selectedType);
+
+            _pendingReplacements[selectedType]--;
+            if (_pendingReplacements[selectedType] == 0)
+                _pendingReplacements.Remove(selectedType);
         }
+        Debug.LogWarning($"Safety replacement count/" + counter);
+        counter = 0;
+
     }
 
     private int _lastHeightTier;
 
     private bool HasQuota(int heightTier)
     {
+       // print("current quota: " + _currentQuotasByHeight[heightTier] + " limit: " + _quotaLimitsByHeight[heightTier]);
         return _currentQuotasByHeight[heightTier] < _quotaLimitsByHeight[heightTier];
     }
-    bool _firstAttempt = true;
-    private ReplacementData CheckQuotasAndGetReplacementData()
+
+    private int counter = 0;
+    private ReplacementData GetReplacementDataByCheckingQuotas()
     {
-        int attempts = _amountsByType.Count;
+        var candidateType = _diceRoller.RollDices(_pendingReplacements);
+        //return replacementDatabase.GetData(examinedType); //to debug
+        var candidateTier = replacementDatabase.GetHeightTierByType(candidateType);
+        
+        if (candidateTier != _lastHeightTier)
+        {
+            ResetQuotas(); //bug: sonuncuyu sıfırlamadan artırmak mı lazım
+            _currentQuotasByHeight[candidateTier]++;
+            return replacementDatabase.GetData(candidateType);
+        }
+
+        Dictionary<ReplacementType, int> remainingReplacements = new();
+        remainingReplacements.AddRange(_pendingReplacements);
+
+        while (true)
+        {
+            if (HasQuota(candidateTier))
+            {
+                ResetQuotasExcept(candidateTier);
+                _currentQuotasByHeight[candidateTier]++;
+                return replacementDatabase.GetData(candidateType);
+            }
+
+            remainingReplacements.Remove(candidateType);
+            if (remainingReplacements.Count == 0)
+                break;
+
+            candidateType = _diceRoller.RollDices(remainingReplacements);
+            candidateTier = replacementDatabase.GetHeightTierByType(candidateType);
+        }
+        
+        counter++;
+        return replacementDatabase.GetData(candidateType);
+
+        /*int attempts = _unassignedReplacements.Count; //3 type, 2 tier olsun
         while (attempts > 0)
         {
-            var examinedType = _diceRoller.RollDices(_amountsByType);
+            var examinedType = _diceRoller.RollDices(_unassignedReplacements); //aynı dice'ı verebilir temp grup lazım
             var examinedTier = replacementDatabase.GetHeightTierByType(examinedType);
 
-            if (examinedTier == _lastHeightTier && !_firstAttempt)
+            if (examinedTier == _lastHeightTier)
             {
                 if (HasQuota(examinedTier))
                 {
@@ -111,24 +152,19 @@ public class CityRandomizer : MonoBehaviour
             }
             else
             {
-                if(_firstAttempt) _firstAttempt = false;
-                
                 ResetQuotas();
                 _currentQuotasByHeight[examinedTier]++;
                 return replacementDatabase.GetData(examinedType);
             }
             attempts--;
-        }
-
-        Debug.LogError($"Safety replacement with No more quotas left" + " amountsByType: " + _amountsByType.Count);
-        return replacementDatabase.GetData(_amountsByType.First().Key);
+        }*/
     }
 
     private void ResetQuotasExcept(int selectedHeightTier)
     {
         foreach (var heightKey in heightKeys)
         {
-            if(heightKey == selectedHeightTier) continue;
+            if (heightKey == selectedHeightTier) continue;
             _currentQuotasByHeight[heightKey] = 0;
         }
     }
