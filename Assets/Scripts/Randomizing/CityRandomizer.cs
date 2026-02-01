@@ -55,11 +55,11 @@ public class CityRandomizer : MonoBehaviour
         _pendingReplacements.Clear();
         foreach (var data in randomizerDataSet)
         {
-            var x = new PendingReplacement(
+            var pendingReplacement = new PendingReplacement(
                 data.Type,
                 data.FrequencyData.Amount);
-            _pendingReplacements.Add(data.Type, x);
-            x.SetRemainingQuota(_heightTierHelper.GetRemainingQuota(replacementDatabase.GetHeightTierByType(data.Type)));
+            _pendingReplacements.Add(data.Type, pendingReplacement);
+            pendingReplacement.SetRemainingQuota(_heightTierHelper.GetRemainingQuota(replacementDatabase.GetHeightTierByType(data.Type)));
 
         }
     }
@@ -112,6 +112,11 @@ public class CityRandomizer : MonoBehaviour
     private int _lastHeightTier;
     private int counter = 0;
 
+    private void UpdateQuota(int tier,ReplacementType type)
+    {
+        _heightTierHelper.UpdateUsedQuota(tier);
+        _pendingReplacements[type].SetRemainingQuota(_heightTierHelper.GetRemainingQuota(tier));
+    }
     private ReplacementData GetReplacementDataByCheckingQuotas()
     {
         var candidateType = _diceRoller.RollDices(_pendingReplacements.Values.ToArray());
@@ -120,8 +125,7 @@ public class CityRandomizer : MonoBehaviour
         if (candidateTier != _lastHeightTier)
         {
             _heightTierHelper.ResetQuotas();
-            _heightTierHelper.UpdateUsedQuota(candidateTier);
-            _pendingReplacements[candidateType].SetRemainingQuota(_heightTierHelper.GetRemainingQuota(candidateTier));
+            UpdateQuota(candidateTier, candidateType);
             return replacementDatabase.GetData(candidateType);
         }
 
@@ -133,8 +137,7 @@ public class CityRandomizer : MonoBehaviour
             if (_heightTierHelper.HasQuota(candidateTier))
             {
                 _heightTierHelper.ResetQuotasExcept(candidateTier);
-                _heightTierHelper.UpdateUsedQuota(candidateTier);
-                _pendingReplacements[candidateType].SetRemainingQuota(_heightTierHelper.GetRemainingQuota(candidateTier));
+                UpdateQuota(candidateTier, candidateType);
                 return replacementDatabase.GetData(candidateType);
             }
 

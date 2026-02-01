@@ -9,13 +9,9 @@ public class DiceRoller
         if (pendingReplacements.Length == 1)
             return pendingReplacements.First().Type;
 
-        foreach (var replacement in pendingReplacements)
+        foreach (var pending in pendingReplacements)
         {
-            /*if (replacement.RemainingQuota == 0)
-            {
-                Debug.LogError("zero remaining quota");
-            }*/
-            replacement.Amount += Mathf.RoundToInt(100/(replacement.RemainingQuota + 1));
+            pending.Amount += Mathf.RoundToInt(100f/(pending.RemainingQuota + 1));
         }
         
         var sum = pendingReplacements.Sum(p=>p.Amount);
@@ -26,11 +22,11 @@ public class DiceRoller
         int roll = Random.Range(0, sum);
         int cumulative = 0;
 
-        foreach (var replacement in pendingReplacements)
+        foreach (var pending in pendingReplacements)
         {
-            cumulative += replacement.Amount;
+            cumulative += pending.Amount;
             if (roll < cumulative)
-                return replacement.Type;
+                return pending.Type;
         }
         
         Debug.LogError("RollDices don't match");

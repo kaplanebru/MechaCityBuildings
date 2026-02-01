@@ -25,5 +25,5 @@ public class CityData
 public class JuxtapositionData
 {
     public int HeightTier;
-    [Range(1, 100)] public int MaxJuxtapositionQuota = 2;
+    [Range(1, 20)] public int MaxJuxtapositionQuota = 2;
 }
