@@ -72,13 +72,15 @@ public class PlaceholderProvider : MonoBehaviour
     {
         return placeholderDatas.Where(d =>
         {
-            if (d.ReplacementData != null)
+            if (d.ReplacementType != ReplacementType.Undefined)
             {
                 return d.GetReplacementType() == type;
             }
 
-            Debug.Log("Placeholder data not assigned");
+            Debug.Log("Placeholder type not assigned");
             return false;
+            //return d.GetReplacementType() == type;
+
         }).ToList();
     }
 
@@ -107,6 +109,7 @@ public class PlaceholderProvider : MonoBehaviour
         PlaceholderDatas = placeholders.Select(placeholder =>
         {
             placeholder.SetDataTransformValues();
+            //placeholder.data.ApplyReplacementType(ReplacementType.Undefined);
             return placeholder.data;
         }).ToList();
 

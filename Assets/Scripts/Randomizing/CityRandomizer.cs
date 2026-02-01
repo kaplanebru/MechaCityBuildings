@@ -19,7 +19,8 @@ public class CityRandomizer : MonoBehaviour
     private Dictionary<ReplacementType, int> _amountsByType = new Dictionary<ReplacementType, int>();
 
     Dictionary<int, int> _quotaLimitsByHeight = new();
-    Dictionary<int, int> _currentQuotas = new();
+    Dictionary<int, int> _currentQuotasByHeight = new();
+    private List<int> heightKeys = new();
 
     private void GetAllPlaceholders()
     {
@@ -32,7 +33,8 @@ public class CityRandomizer : MonoBehaviour
         _quotaLimitsByHeight = cityData.GetQuotaByHeight();
         foreach (var heightTier in _quotaLimitsByHeight.Keys)
         {
-            _currentQuotas[heightTier] = 0;
+            _currentQuotasByHeight[heightTier] = 0;
+            heightKeys.Add(heightTier);
         }
     }
 
@@ -60,10 +62,6 @@ public class CityRandomizer : MonoBehaviour
             _amountsByType.Add(data.Type, data.FrequencyData.Amount);
         }
     }
-
-
-  
-
     private void ApplyTypesToPlaceholders()
     {
         //eliminate zeros at start:
@@ -83,7 +81,7 @@ public class CityRandomizer : MonoBehaviour
             if (_amountsByType[selectedType] == 0)
                 _amountsByType.Remove(selectedType);
 
-            placeholder.ApplyReplacementData(replacementData);
+            placeholder.ApplyReplacementType(selectedType);
         }
     }
 
@@ -91,7 +89,7 @@ public class CityRandomizer : MonoBehaviour
 
     private bool HasQuota(int heightTier)
     {
-        return _currentQuotas[heightTier] < _quotaLimitsByHeight[heightTier];
+        return _currentQuotasByHeight[heightTier] < _quotaLimitsByHeight[heightTier];
     }
     bool _firstAttempt = true;
     private ReplacementData CheckQuotasAndGetReplacementData()
@@ -107,7 +105,7 @@ public class CityRandomizer : MonoBehaviour
                 if (HasQuota(examinedTier))
                 {
                     ResetQuotasExcept(examinedTier);
-                    _currentQuotas[examinedTier]++;
+                    _currentQuotasByHeight[examinedTier]++;
                     return replacementDatabase.GetData(examinedType);
                 }
             }
@@ -116,7 +114,7 @@ public class CityRandomizer : MonoBehaviour
                 if(_firstAttempt) _firstAttempt = false;
                 
                 ResetQuotas();
-                _currentQuotas[examinedTier]++;
+                _currentQuotasByHeight[examinedTier]++;
                 return replacementDatabase.GetData(examinedType);
             }
             attempts--;
@@ -128,16 +126,16 @@ public class CityRandomizer : MonoBehaviour
 
     private void ResetQuotasExcept(int selectedHeightTier)
     {
-        foreach (var key in _currentQuotas.Keys)
+        foreach (var heightKey in heightKeys)
         {
-            if(key == selectedHeightTier) continue;
-            _currentQuotas[key] = 0;
+            if(heightKey == selectedHeightTier) continue;
+            _currentQuotasByHeight[heightKey] = 0;
         }
     }
 
     private void ResetQuotas()
     {
-        _currentQuotas.Keys.ToList().ForEach(key => _currentQuotas[key] = 0);
+        _currentQuotasByHeight.Keys.ToList().ForEach(key => _currentQuotasByHeight[key] = 0);
     }
 
     public void SaveCurrentArrangement(string arrangementName)
