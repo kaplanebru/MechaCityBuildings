@@ -13,15 +13,13 @@ public class CityRandomizer : MonoBehaviour
     public ArrangementCache arrangementCache = new();
     private DiceRoller _diceRoller = new();
     private FrequencyToAmountConverter _frequencyToAmountConverter = new();
+    
+    private HeightTierHelper _heightTierHelper;
     private CityOrderRegulator _orderRegulator;
-
+    
     private List<PlaceholderData> _placeholderDataSet = new();
-    private Dictionary<ReplacementType, int> _pendingReplacements = new Dictionary<ReplacementType, int>();
-
-    Dictionary<int, int> _quotaLimitsByHeight = new();
-    Dictionary<int, int> _currentQuotasByHeight = new();
-    private List<int> heightKeys = new();
-
+    private Dictionary<ReplacementType, int> _pendingReplacements = new ();
+    
     private void GetAllPlaceholders()
     {
         _orderRegulator = new CityOrderRegulator(cityData.HeightGap);
@@ -30,12 +28,8 @@ public class CityRandomizer : MonoBehaviour
 
     private void InitiateQuotas()
     {
-        _quotaLimitsByHeight = cityData.GetQuotaByHeight();
-        foreach (var heightTier in _quotaLimitsByHeight.Keys)
-        {
-            _currentQuotasByHeight[heightTier] = 0;
-            heightKeys.Add(heightTier);
-        }
+        _heightTierHelper = new HeightTierHelper();
+        _heightTierHelper.SetHeightTierDatas(cityData.GetQuotaByHeight());
     }
 
     private void InitiateUnassignedBuildings()
@@ -92,23 +86,16 @@ public class CityRandomizer : MonoBehaviour
 
     private int _lastHeightTier;
 
-    private bool HasQuota(int heightTier)
-    {
-       // print("current quota: " + _currentQuotasByHeight[heightTier] + " limit: " + _quotaLimitsByHeight[heightTier]);
-        return _currentQuotasByHeight[heightTier] < _quotaLimitsByHeight[heightTier];
-    }
-
     private int counter = 0;
     private ReplacementData GetReplacementDataByCheckingQuotas()
     {
         var candidateType = _diceRoller.RollDices(_pendingReplacements);
-        //return replacementDatabase.GetData(examinedType); //to debug
         var candidateTier = replacementDatabase.GetHeightTierByType(candidateType);
         
         if (candidateTier != _lastHeightTier)
         {
-            ResetQuotas(); //bug: sonuncuyu sıfırlamadan artırmak mı lazım
-            _currentQuotasByHeight[candidateTier]++;
+            _heightTierHelper.ResetQuotas(); 
+            _heightTierHelper.UpdateUsedQuota(candidateTier);
             return replacementDatabase.GetData(candidateType);
         }
 
@@ -117,10 +104,10 @@ public class CityRandomizer : MonoBehaviour
 
         while (true)
         {
-            if (HasQuota(candidateTier))
+            if (_heightTierHelper.HasQuota(candidateTier))
             {
-                ResetQuotasExcept(candidateTier);
-                _currentQuotasByHeight[candidateTier]++;
+                _heightTierHelper.ResetQuotasExcept(candidateTier);
+                _heightTierHelper.UpdateUsedQuota(candidateTier);
                 return replacementDatabase.GetData(candidateType);
             }
 
@@ -134,44 +121,6 @@ public class CityRandomizer : MonoBehaviour
         
         counter++;
         return replacementDatabase.GetData(candidateType);
-
-        /*int attempts = _unassignedReplacements.Count; //3 type, 2 tier olsun
-        while (attempts > 0)
-        {
-            var examinedType = _diceRoller.RollDices(_unassignedReplacements); //aynı dice'ı verebilir temp grup lazım
-            var examinedTier = replacementDatabase.GetHeightTierByType(examinedType);
-
-            if (examinedTier == _lastHeightTier)
-            {
-                if (HasQuota(examinedTier))
-                {
-                    ResetQuotasExcept(examinedTier);
-                    _currentQuotasByHeight[examinedTier]++;
-                    return replacementDatabase.GetData(examinedType);
-                }
-            }
-            else
-            {
-                ResetQuotas();
-                _currentQuotasByHeight[examinedTier]++;
-                return replacementDatabase.GetData(examinedType);
-            }
-            attempts--;
-        }*/
-    }
-
-    private void ResetQuotasExcept(int selectedHeightTier)
-    {
-        foreach (var heightKey in heightKeys)
-        {
-            if (heightKey == selectedHeightTier) continue;
-            _currentQuotasByHeight[heightKey] = 0;
-        }
-    }
-
-    private void ResetQuotas()
-    {
-        _currentQuotasByHeight.Keys.ToList().ForEach(key => _currentQuotasByHeight[key] = 0);
     }
 
     public void SaveCurrentArrangement(string arrangementName)
