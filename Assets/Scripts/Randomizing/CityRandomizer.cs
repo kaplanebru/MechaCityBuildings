@@ -3,6 +3,24 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public class PendingReplacement
+{
+    public ReplacementType Type;
+    public int Amount;
+    public int RemainingQuota;
+
+    public PendingReplacement(ReplacementType type, int amount)
+    {
+        Type = type;
+        Amount = amount;
+    }
+
+    public void SetRemainingQuota(int remainingQuota)
+    {
+        RemainingQuota = remainingQuota;
+    }
+}
+
 public class CityRandomizer : MonoBehaviour
 {
     [SerializeField] private RandomizerData[] randomizerDataSet;
@@ -13,13 +31,13 @@ public class CityRandomizer : MonoBehaviour
     public ArrangementCache arrangementCache = new();
     private DiceRoller _diceRoller = new();
     private FrequencyToAmountConverter _frequencyToAmountConverter = new();
-    
+
     private HeightTierHelper _heightTierHelper;
     private CityOrderRegulator _orderRegulator;
-    
+
     private List<PlaceholderData> _placeholderDataSet = new();
-    private Dictionary<ReplacementType, int> _pendingReplacements = new ();
-    
+    private Dictionary<ReplacementType, PendingReplacement> _pendingReplacements = new();
+
     private void GetAllPlaceholders()
     {
         _orderRegulator = new CityOrderRegulator(cityData.HeightGap);
@@ -32,12 +50,17 @@ public class CityRandomizer : MonoBehaviour
         _heightTierHelper.SetHeightTierDatas(cityData.GetQuotaByHeight());
     }
 
-    private void InitiateUnassignedBuildings()
+    private void InitiatePendingReplacements()
     {
         _pendingReplacements.Clear();
         foreach (var data in randomizerDataSet)
         {
-            _pendingReplacements.Add(data.Type, data.FrequencyData.Amount);
+            var x = new PendingReplacement(
+                data.Type,
+                data.FrequencyData.Amount);
+            _pendingReplacements.Add(data.Type, x);
+            x.SetRemainingQuota(_heightTierHelper.GetRemainingQuota(replacementDatabase.GetHeightTierByType(data.Type)));
+
         }
     }
 
@@ -53,7 +76,7 @@ public class CityRandomizer : MonoBehaviour
         GetAllPlaceholders();
         ConvertFrequenciesToAmounts();
         InitiateQuotas();
-        InitiateUnassignedBuildings();
+        InitiatePendingReplacements();
         ApplyTypesToPlaceholders();
     }
 
@@ -61,7 +84,7 @@ public class CityRandomizer : MonoBehaviour
     private void ApplyTypesToPlaceholders()
     {
         //eliminate zeros at start:
-        _pendingReplacements = _pendingReplacements.Where(kvp => kvp.Value != 0)
+        _pendingReplacements = _pendingReplacements.Where(kvp => kvp.Value.Amount != 0)
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
         foreach (var placeholder in _placeholderDataSet)
@@ -75,31 +98,34 @@ public class CityRandomizer : MonoBehaviour
             var selectedType = replacementData.Type;
             placeholder.ApplyReplacementType(selectedType);
 
-            _pendingReplacements[selectedType]--;
-            if (_pendingReplacements[selectedType] == 0)
+            _pendingReplacements[selectedType].Amount--;
+            if (_pendingReplacements[selectedType].Amount == 0)
                 _pendingReplacements.Remove(selectedType);
         }
-        Debug.LogWarning($"Safety replacement count/" + counter);
-        counter = 0;
 
+        if(counter>0)
+            Debug.LogWarning($"Safety replacement count/" + counter);
+        counter = 0;
     }
 
-    private int _lastHeightTier;
 
+    private int _lastHeightTier;
     private int counter = 0;
+
     private ReplacementData GetReplacementDataByCheckingQuotas()
     {
-        var candidateType = _diceRoller.RollDices(_pendingReplacements);
+        var candidateType = _diceRoller.RollDices(_pendingReplacements.Values.ToArray());
         var candidateTier = replacementDatabase.GetHeightTierByType(candidateType);
-        
+
         if (candidateTier != _lastHeightTier)
         {
-            _heightTierHelper.ResetQuotas(); 
+            _heightTierHelper.ResetQuotas();
             _heightTierHelper.UpdateUsedQuota(candidateTier);
+            _pendingReplacements[candidateType].SetRemainingQuota(_heightTierHelper.GetRemainingQuota(candidateTier));
             return replacementDatabase.GetData(candidateType);
         }
 
-        Dictionary<ReplacementType, int> remainingReplacements = new();
+        Dictionary<ReplacementType, PendingReplacement> remainingReplacements = new();
         remainingReplacements.AddRange(_pendingReplacements);
 
         while (true)
@@ -108,6 +134,7 @@ public class CityRandomizer : MonoBehaviour
             {
                 _heightTierHelper.ResetQuotasExcept(candidateTier);
                 _heightTierHelper.UpdateUsedQuota(candidateTier);
+                _pendingReplacements[candidateType].SetRemainingQuota(_heightTierHelper.GetRemainingQuota(candidateTier));
                 return replacementDatabase.GetData(candidateType);
             }
 
@@ -115,10 +142,10 @@ public class CityRandomizer : MonoBehaviour
             if (remainingReplacements.Count == 0)
                 break;
 
-            candidateType = _diceRoller.RollDices(remainingReplacements);
+            candidateType = _diceRoller.RollDices(remainingReplacements.Values.ToArray());
             candidateTier = replacementDatabase.GetHeightTierByType(candidateType);
         }
-        
+
         counter++;
         return replacementDatabase.GetData(candidateType);
     }

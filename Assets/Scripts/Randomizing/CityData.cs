@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
 public class CityData
@@ -24,5 +25,5 @@ public class CityData
 public class JuxtapositionData
 {
     public int HeightTier;
-    public int MaxJuxtapositionQuota = 2;
+    [Range(1, 100)] public int MaxJuxtapositionQuota = 2;
 }

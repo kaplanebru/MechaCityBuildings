@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class DiceRoller
 {
-    public ReplacementType RollDices(Dictionary<ReplacementType, int> amountsByType)
+    public ReplacementType RollDices(PendingReplacement[] pendingReplacements)
     {
-        if(amountsByType.Count == 1)
-            return amountsByType.First().Key;
+        if (pendingReplacements.Length == 1)
+            return pendingReplacements.First().Type;
+
+        foreach (var replacement in pendingReplacements)
+        {
+            /*if (replacement.RemainingQuota == 0)
+            {
+                Debug.LogError("zero remaining quota");
+            }*/
+            replacement.Amount += Mathf.RoundToInt(100/(replacement.RemainingQuota + 1));
+        }
         
-        
-        
-        var sum = amountsByType.Values.Sum();
+        var sum = pendingReplacements.Sum(p=>p.Amount);
         if (sum == 0)
         {
             Debug.LogWarning("roll sum is zero");
@@ -19,15 +26,15 @@ public class DiceRoller
         int roll = Random.Range(0, sum);
         int cumulative = 0;
 
-        foreach (var amountByType in amountsByType)
+        foreach (var replacement in pendingReplacements)
         {
-            cumulative += amountByType.Value;
+            cumulative += replacement.Amount;
             if (roll < cumulative)
-                return amountByType.Key;
+                return replacement.Type;
         }
         
         Debug.LogError("RollDices don't match");
-        return amountsByType.First().Key;
+        return pendingReplacements.First().Type;
     }
     
    /* public class DiceData

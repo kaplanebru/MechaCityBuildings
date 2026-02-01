@@ -35,4 +35,10 @@ public class HeightTierHelper
     
     public bool HasQuota(int heightTier) => GetDataByTier(heightTier).HasQuota();
 
+    public int GetRemainingQuota(int heightTier)
+    {
+        var data = GetDataByTier(heightTier);
+        return data.MaxQuota - data.UsedQuota;
+    }
+
 }
