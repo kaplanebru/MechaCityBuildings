@@ -11,7 +11,7 @@ public class GridToConstruction: IGridTool
 
     public void SetSecondaryTools(params IGridTool[] secondaryTools) {}
 
-    public Vector3 CellIndexToWorldPositionCenter(int xIndex, int yIndex)
+    public Vector3 GetCellIndexToWorldPositionCenter(int xIndex, int yIndex)
     {
         float worldX = Data.OriginWorld.x + (xIndex + 0.5f) * Data.CellSize;
         float worldZ = Data.OriginWorld.z + (yIndex + 0.5f) * Data.CellSize;

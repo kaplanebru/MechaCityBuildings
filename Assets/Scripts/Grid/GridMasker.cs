@@ -1,9 +1,13 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class GridMasker: IGridTool
 {
     private bool[,] selectedCells;
     private bool[,] occupiedCells;
+    
+    private List<Vector2Int> cellTracker = new();
 
     private int gridWidthInCells;
     private int gridHeightInCells;
@@ -16,10 +20,28 @@ public class GridMasker: IGridTool
         this.overlayPainter = overlayPainter;
     }
 
+    public List<Vector2Int> GetTrackedCells()
+    { 
+        List<Vector2Int> completedTracker = new();
+        completedTracker.AddRange(cellTracker);
+        
+        cellTracker.Clear();
+        return completedTracker;
+    }
+
     public void SetSelected(int xIndex, int yIndex, bool selected)
     {
         selectedCells[xIndex, yIndex] = selected;
         overlayPainter.SetCellPainted(xIndex, yIndex, selected);
+        UpdateTracker(new Vector2Int(xIndex, yIndex), selected);
+    }
+
+    private void UpdateTracker(Vector2Int point, bool selected)
+    {
+        if(selected) 
+            cellTracker.Add(point);
+        else
+            cellTracker.Remove(point);
     }
     public void SetGridRelatedData(IGridRelatedData[] gridRelatedData)
     {

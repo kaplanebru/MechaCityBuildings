@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GridSystem : MonoBehaviour
 {
+    public GameObject dummy;
     public GridData gridData;
     public PaintData paintData;
     [SerializeField] private OverlayGridPainter overlayGridPainter;
@@ -15,6 +16,7 @@ public class GridSystem : MonoBehaviour
     private GridSearcher searcher = new();
     private GridMasker masker = new();
     private SearcherPainter searcherPainter = new();
+    private GridToConstruction contstructor = new();
 
     private void Start()
     {
@@ -24,10 +26,30 @@ public class GridSystem : MonoBehaviour
 
     private void SetTools()
     {
-        tools = new IGridTool[] { painter, searcher, masker, searcherPainter };
+        tools = new IGridTool[] { painter, searcher, masker, searcherPainter, contstructor};
         masker.SetOverlayPainter(overlayGridPainter);
         InjectSecondaryTools();
         DistributeData();
+    }
+
+    List<Vector3> trackedCellsInWorld = new();
+    public void ConstructBuildingsOnCells()
+    {
+        var trackedCells = masker.GetTrackedCells();
+
+        if (trackedCells.Count == 0)
+        {
+            print("No tracked cells found");
+            return;
+        }
+        
+        trackedCellsInWorld.Clear();
+        foreach (var trackedCell in trackedCells)
+        {
+            Vector3 pos = contstructor.GetCellIndexToWorldPositionCenter(trackedCell.x, trackedCell.y);
+            trackedCellsInWorld.Add(pos);
+            Instantiate(dummy, pos, Quaternion.identity);
+        }
     }
 
     private void InjectSecondaryTools()
