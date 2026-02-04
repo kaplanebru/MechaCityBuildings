@@ -17,6 +17,8 @@ public class GridSystem : MonoBehaviour
     private GridMasker masker = new();
     private SearcherPainter searcherPainter = new();
     private GridToConstruction contstructor = new();
+    
+    private GridOptimizer optimizer = new();
 
     private void Start()
     {
@@ -48,7 +50,13 @@ public class GridSystem : MonoBehaviour
         {
             Vector3 pos = contstructor.GetCellIndexToWorldPositionCenter(trackedCell.x, trackedCell.y);
             trackedCellsInWorld.Add(pos);
-            Instantiate(dummy, pos, Quaternion.identity);
+            //Instantiate(dummy, pos, Quaternion.identity);
+        }
+
+        var edgeCells = optimizer.GetEdges(trackedCellsInWorld, 1);
+        foreach (var edgeCell in edgeCells)
+        {
+            Instantiate(dummy, edgeCell, Quaternion.identity);
         }
     }
 
