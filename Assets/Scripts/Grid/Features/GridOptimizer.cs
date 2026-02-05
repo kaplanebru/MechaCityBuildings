@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GridOptimizer
 {
-    private List<Vector3> trackedCells = new();
+   /* private List<Vector3> trackedCells = new();
 
     private Vector3 GetCenter()
     {
@@ -101,5 +101,5 @@ public class GridOptimizer
 
         //edgeCells.Add(center);
         return edgeCells;
-    }
+    }*/
 }

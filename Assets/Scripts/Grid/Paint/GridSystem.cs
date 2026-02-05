@@ -46,18 +46,22 @@ public class GridSystem : MonoBehaviour
         }
         
         trackedCellsInWorld.Clear();
+        
+        trackedCells = BoundaryFinder.GetBoundsWithInner(1, trackedCells);
+
         foreach (var trackedCell in trackedCells)
         {
             Vector3 pos = contstructor.GetCellIndexToWorldPositionCenter(trackedCell.x, trackedCell.y);
             trackedCellsInWorld.Add(pos);
-            //Instantiate(dummy, pos, Quaternion.identity);
+            Instantiate(dummy, pos, Quaternion.identity);
         }
 
-        var edgeCells = optimizer.GetEdges(trackedCellsInWorld, 1);
-        foreach (var edgeCell in edgeCells)
+        
+        //var edgeCells = optimizer.GetEdges(trackedCellsInWorld, 1);
+        /*foreach (var edgeCell in edgeCells)
         {
             Instantiate(dummy, edgeCell, Quaternion.identity);
-        }
+        }*/
     }
 
     private void InjectSecondaryTools()
