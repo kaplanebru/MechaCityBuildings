@@ -53,7 +53,7 @@ public class GridSystem : MonoBehaviour
         {
             Vector3 pos = contstructor.GetCellIndexToWorldPositionCenter(trackedCell.x, trackedCell.y);
             trackedCellsInWorld.Add(pos);
-            Instantiate(dummy, pos, Quaternion.identity);
+            Instantiate(dummy, pos, gridData.OriginWorldTransform.rotation);
         }
 
         

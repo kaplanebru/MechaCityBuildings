@@ -2,23 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Paint overlay renderer for a flat ground mesh (Sims-style).
-/// 
-/// What this does:
-/// - Builds ONE mesh that contains a quad for every grid cell.
-/// - Uses vertex color alpha to show/hide painted cells.
-/// - Provides APIs to update a single cell or a batch of touched cells.
-/// 
-/// IMPORTANT FIX (your "mesh moves / grows" issue):
-/// - Vertices are generated in LOCAL space.
-/// - The overlay GameObject transform.position is set to GridData.OriginWorld.
-/// - Do NOT scale this overlay object or its parents.
-/// 
-/// Requirements:
-/// - Assign a transparent material (Unlit/Transparent or URP Unlit with transparent surface).
-/// - Ground must have a collider for your raycast system, but this overlay does not need a collider.
-/// </summary>
+//TODO: Aslında grid size ve plane aynı olmalı. ya da grid 1 birimi değişir. ama plane ile eşleşse iyi olur
+
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public sealed class OverlayGridPainter : MonoBehaviour
 {
@@ -58,13 +43,10 @@ public sealed class OverlayGridPainter : MonoBehaviour
 
     private void Awake()
     {
+        isInitialized = false; //added later
         InitializeIfNeeded();
     }
 
-    /// <summary>
-    /// Builds mesh and sets transform position to grid origin.
-    /// Safe to call multiple times.
-    /// </summary>
     public void InitializeIfNeeded()
     {
         if (isInitialized)
@@ -84,9 +66,10 @@ public sealed class OverlayGridPainter : MonoBehaviour
 
         // Place overlay at grid origin in WORLD space.
         // Vertices are LOCAL.
-        transform.position = gridData.OriginWorld;
-        transform.rotation = Quaternion.identity;
-        transform.localScale = Vector3.one;
+        transform.position = gridData.OriginWorldTransform.position;
+        transform.rotation = gridData.OriginWorldTransform.rotation;
+        var scale = gridData.OriginWorldTransform.localScale;
+        transform.localScale = new Vector3(scale.x, scale.y, scale.x);//Vector3.one;
 
         int cellCount = gridWidthInCells * gridHeightInCells;
 

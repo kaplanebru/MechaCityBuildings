@@ -3,22 +3,19 @@ using UnityEngine;
 
 public class BoundaryFinder
 {
-    //TODO: Unitlerim 1 olmayabilir
-    static readonly Vector2Int[] N4 =
-    {
-        Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right
-    };
 
-    public static List<Vector2Int> GetBoundary4(HashSet<Vector2Int> filled)
+    //TODO: Unitlerim 1 olmayabilir
+
+    private static List<Vector2Int> GetBoundary4(HashSet<Vector2Int> filled, int cellUnit)
     {
         var boundary = new List<Vector2Int>();
 
         foreach (var c in filled)
         {
-            if (!filled.Contains(c + Vector2Int.up) ||
-                !filled.Contains(c + Vector2Int.down) ||
-                !filled.Contains(c + Vector2Int.left) ||
-                !filled.Contains(c + Vector2Int.right))
+            if (!filled.Contains(c + Vector2Int.up * cellUnit) ||
+                !filled.Contains(c + Vector2Int.down * cellUnit) ||
+                !filled.Contains(c + Vector2Int.left * cellUnit) ||
+                !filled.Contains(c + Vector2Int.right * cellUnit))
             {
                 boundary.Add(c);
             }
@@ -26,8 +23,8 @@ public class BoundaryFinder
 
         return boundary;
     }
-    
-    public static List<Vector2Int> GetBoundsWithInner(int layer, IReadOnlyCollection<Vector2Int> filled)
+
+    public static List<Vector2Int> GetBoundsWithInner(int layer, IReadOnlyCollection<Vector2Int> filled, int unit = 1)
     {
         if (layer <= 0)
             layer = 1;
@@ -39,11 +36,11 @@ public class BoundaryFinder
 
         for (int i = 0; i < layer; i++)
         {
-            if (remaining.Count == 0) 
+            if (remaining.Count == 0)
                 break;
 
-            var currentBoundary = GetBoundary4(remaining);
-            if (currentBoundary.Count == 0) 
+            var currentBoundary = GetBoundary4(remaining, unit);
+            if (currentBoundary.Count == 0)
                 break;
 
             foreach (var b in currentBoundary)

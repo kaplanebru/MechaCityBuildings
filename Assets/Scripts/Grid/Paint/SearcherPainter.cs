@@ -8,10 +8,12 @@ public sealed class SearcherPainter : IGridTool
     private PaintData _paintData;
     private GridSearcher _searcher;
     private GridPainter _painter;
+    private Camera cam;
 
     public void SetGridRelatedData(IGridRelatedData[] gridRelatedData)
     {
         _paintData = gridRelatedData[1] as PaintData;
+        cam = Camera.main;
     }
 
     public void SetSecondaryTools(params IGridTool[] secondaryTools)
@@ -71,10 +73,10 @@ public sealed class SearcherPainter : IGridTool
     {
         hitPointWorld = default;
 
-        if (_paintData.CameraToUse == null)
+        if (cam == null)
             return false;
 
-        Ray ray = _paintData.CameraToUse.ScreenPointToRay(Input.mousePosition);
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         float maxDistance = 10000f;
 
         if (!Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance, _paintData.GroundLayerMask))

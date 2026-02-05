@@ -30,7 +30,7 @@ public class GridSearcher: IGridTool
     
     private Vector2Int WorldPositionToCellIndex(Vector3 worldPosition)
     {
-        Vector3 localPosition = worldPosition - Data.OriginWorld;
+        Vector3 localPosition = worldPosition - Data.OriginWorldTransform.position;
 
         int xIndex = Mathf.FloorToInt(localPosition.x / Data.CellSize);
         int yIndex = Mathf.FloorToInt(localPosition.z / Data.CellSize);

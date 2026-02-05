@@ -13,11 +13,11 @@ public class GridToConstruction: IGridTool
 
     public Vector3 GetCellIndexToWorldPositionCenter(int xIndex, int yIndex)
     {
-        float worldX = Data.OriginWorld.x + (xIndex + 0.5f) * Data.CellSize;
-        float worldZ = Data.OriginWorld.z + (yIndex + 0.5f) * Data.CellSize;
+        float worldX = Data.OriginWorldTransform.position.x + (xIndex + 0.5f) * Data.CellSize;
+        float worldZ = Data.OriginWorldTransform.position.z + (yIndex + 0.5f) * Data.CellSize;
 
 
-        float worldY = Data.OriginWorld.y;
+        float worldY = Data.OriginWorldTransform.position.y;
 
         return new Vector3(worldX, worldY, worldZ);
     }
@@ -25,9 +25,9 @@ public class GridToConstruction: IGridTool
    
     public Vector3 CellIndexToWorldPositionCorner(int xIndex, int yIndex)
     {
-        float worldX = Data.OriginWorld.x + xIndex * Data.CellSize;
-        float worldZ = Data.OriginWorld.z + yIndex * Data.CellSize;
-        float worldY = Data.OriginWorld.y;
+        float worldX = Data.OriginWorldTransform.position.x + xIndex * Data.CellSize;
+        float worldZ = Data.OriginWorldTransform.position.z + yIndex * Data.CellSize;
+        float worldY = Data.OriginWorldTransform.position.y;
 
         return new Vector3(worldX, worldY, worldZ);
     }
