@@ -4,13 +4,18 @@ using UnityEngine;
 public class GridToConstruction: IGridTool
 {
     public GridData Data { get; private set; }
+    private FloorProtocoles _floorProtocoles;
 
     public void SetGridRelatedData(IGridRelatedData[] gridRelatedData)
     {
         Data = gridRelatedData[0] as GridData;
     }
-
     public void SetSecondaryTools(params IGridTool[] secondaryTools) {}
+
+    public void SetFloorProtocoles(FloorProtocoles floorProtocoles)
+    {
+        _floorProtocoles = floorProtocoles;
+    }
 
     public Vector3 GetCellIndexToWorldPositionCenter(int xIndex, int yIndex)
     {
@@ -49,7 +54,7 @@ public class GridToConstruction: IGridTool
             Vector3 pos = GetCellIndexToWorldPositionCenter(trackedCell.x, trackedCell.y);
             pos.y += groundHeight;
             var dummyInstance = Object.Instantiate(data.Dummy, pos, Data.OriginWorldTransform.rotation);
-            dummyInstance.transform.SetParent(data.BuildingsRoot);
+            dummyInstance.transform.SetParent(_floorProtocoles.GetWorkingFloor());
             constructedDummies.Add(dummyInstance);
         }
     }
@@ -72,6 +77,5 @@ public class GridToConstruction: IGridTool
 [System.Serializable]
 public class ConstructionData
 {
-    public Transform BuildingsRoot;
     public Transform Dummy;
 }

@@ -6,7 +6,6 @@ using UnityEngine;
 public class UserMapData
 {
     [Header("Floor Settings")]
-    public int CurrentFloor = 0;
     public int AverageFloorHeight = 2;
     
     [Header("Grid Settings")]
@@ -17,37 +16,39 @@ public class UserMapData
 
 public class GridSystem : MonoBehaviour
 {
-    public UserMapData userMapData;
-    public GridData gridData;
-    public PaintData paintData;
-    public ConstructionData constructionData;
-    [SerializeField] private OverlayGridPainter overlayGridPainter;
+    [SerializeField] private  UserMapData userMapData;
+    [SerializeField] private  GridData gridData;
+    [SerializeField] private  PaintData paintData;
+    [SerializeField] private  ConstructionData constructionData;
+    [SerializeField] private FloorData floorData;
+    
     [SerializeField] private MapSizeToGridSize mapSizeToGridSize;
+    private GridProjector _projector = new();
+    private GridMasker masker = new();
+    
+    [SerializeField] private OverlayGridPainter overlayGridPainter;
+    private PainterProjected _painterProjected = new();
+    private PainterInGrid painter = new();
+
+    private GridToConstruction contstructor = new();
+    private FloorProtocoles floorProtocoles = new();
     
     private IGridRelatedData[] gridRelatedData;
     private IGridTool[] tools;
-    
-    private PainterInGrid painter = new();
-    private GridProjector _projector = new();
-    private GridMasker masker = new();
-    private PainterProjected _painterProjected = new();
-    private GridToConstruction contstructor = new();
     private float groundHeight;
     
     private void Start()
     {
         AdaptGridSizeToUserCellSize();
-        SetFloor();
+        
+        floorProtocoles.Setup(floorData);
+        UpdateGroundByFloor();
+        
         SetTools(); 
-        overlayGridPainter.Setup(gridData);
+        overlayGridPainter.Setup(gridData); //todo add to tools
         StartCoroutine(_painterProjected.PaintRoutine());
     }
 
-    private void SetFloor()
-    {
-        groundHeight = userMapData.AverageFloorHeight * userMapData.CurrentFloor;
-        overlayGridPainter.SetHeight(groundHeight);
-    }
 
     private void AdaptGridSizeToUserCellSize()
     {
@@ -66,6 +67,7 @@ public class GridSystem : MonoBehaviour
     {
         tools = new IGridTool[] { painter, _projector, masker, _painterProjected, contstructor};
         masker.SetOverlayPainter(overlayGridPainter);
+        contstructor.SetFloorProtocoles(floorProtocoles);
         InjectSecondaryTools();
         DistributeData();
     }
@@ -86,17 +88,26 @@ public class GridSystem : MonoBehaviour
 
     public void DestroyBuildingsOnCells()
     {
-        //masker.RestoreSelectedCells();
         contstructor.DeconstructBuildingsOnCells();
     }
 
-    public void IncreaseFloor()
+    private void UpdateGroundByFloor()
     {
-        userMapData.CurrentFloor++;
-        SetFloor();
+        groundHeight = userMapData.AverageFloorHeight * floorProtocoles.WorkingFloor;
+        overlayGridPainter.SetHeight(groundHeight);
     }
     
-    
+    public void IncreaseFloor()
+    {
+        floorProtocoles.IncreaseFloorSet();
+        UpdateGroundByFloor();
+    }
+
+    public void SwitchFloor(string charCount)
+    {
+       floorProtocoles.SwitchWorkingFloor(charCount.Length);
+       UpdateGroundByFloor();
+    }
 
     private void InjectSecondaryTools()
     {
