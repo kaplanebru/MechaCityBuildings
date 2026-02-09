@@ -35,7 +35,7 @@ public class GridToConstruction: IGridTool
     
    
     List<Transform> constructedDummies = new List<Transform>();
-    public void ConstructBuildingsOnCells(List<Vector2Int> trackedCells, ConstructionData data)
+    public void ConstructBuildingsOnCells(List<Vector2Int> trackedCells, ConstructionData data, float groundHeight)
     {
         if (trackedCells.Count == 0)
         {
@@ -47,6 +47,7 @@ public class GridToConstruction: IGridTool
         foreach (var trackedCell in trackedCells)
         {
             Vector3 pos = GetCellIndexToWorldPositionCenter(trackedCell.x, trackedCell.y);
+            pos.y += groundHeight;
             var dummyInstance = Object.Instantiate(data.Dummy, pos, Data.OriginWorldTransform.rotation);
             dummyInstance.transform.SetParent(data.BuildingsRoot);
             constructedDummies.Add(dummyInstance);

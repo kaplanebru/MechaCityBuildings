@@ -5,6 +5,11 @@ using UnityEngine;
 [Serializable]
 public class UserMapData
 {
+    [Header("Floor Settings")]
+    public int CurrentFloor = 0;
+    public int AverageFloorHeight = 2;
+    
+    [Header("Grid Settings")]
     public int BuildingCellSize = 2;
     public bool UseMapSizeForGridSize = true;
     public Vector2Int ProjectedGridSize = new(100, 50);
@@ -27,13 +32,21 @@ public class GridSystem : MonoBehaviour
     private GridMasker masker = new();
     private PainterProjected _painterProjected = new();
     private GridToConstruction contstructor = new();
+    private float groundHeight;
     
     private void Start()
     {
         AdaptGridSizeToUserCellSize();
+        SetFloor();
         SetTools(); 
         overlayGridPainter.Setup(gridData);
         StartCoroutine(_painterProjected.PaintRoutine());
+    }
+
+    private void SetFloor()
+    {
+        groundHeight = userMapData.AverageFloorHeight * userMapData.CurrentFloor;
+        overlayGridPainter.SetHeight(groundHeight);
     }
 
     private void AdaptGridSizeToUserCellSize()
@@ -66,13 +79,21 @@ public class GridSystem : MonoBehaviour
             return;
         }
         
-        contstructor.ConstructBuildingsOnCells(trackedCells, constructionData);
+        contstructor.ConstructBuildingsOnCells(trackedCells, constructionData, groundHeight);
+        masker.RestoreSelectedCells();
+
     }
 
     public void DestroyBuildingsOnCells()
     {
-        masker.RestoreSelectedCells();
+        //masker.RestoreSelectedCells();
         contstructor.DeconstructBuildingsOnCells();
+    }
+
+    public void IncreaseFloor()
+    {
+        userMapData.CurrentFloor++;
+        SetFloor();
     }
     
     

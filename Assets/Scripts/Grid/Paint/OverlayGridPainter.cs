@@ -31,6 +31,7 @@ public sealed class OverlayGridPainter : MonoBehaviour
     private Vector3[] vertices;
     private int[] triangles;
     private Color32[] colors;
+    private float _height;
 
     // Grid dimensions.
     private int gridWidthInCells;
@@ -45,6 +46,11 @@ public sealed class OverlayGridPainter : MonoBehaviour
         isInitialized = false; //added later
         GridData = gridData;
         CreateOverlayMeshIfNeeded();
+    }
+
+    public void SetHeight(float height)
+    {
+        _height = overlayHeightOffset + height;
     }
     
     public void CreateOverlayMeshIfNeeded()
@@ -128,7 +134,7 @@ public sealed class OverlayGridPainter : MonoBehaviour
         float cellSize = GridData.CellSize;
 
         // LOCAL offset above ground.
-        float y = overlayHeightOffset;
+        float y = _height;//overlayHeightOffset;
 
         int vertexBaseIndex = 0;
         int triangleBaseIndex = 0;
