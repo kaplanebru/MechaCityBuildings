@@ -2,18 +2,22 @@ using UnityEngine;
 
 public class MapSizeToGridSize : MonoBehaviour
 {
-   public Transform plane;
-
+   [SerializeField] private Transform plane;
+   [SerializeField] private Transform cityBuilder; //to prevent bugs
    public Vector2Int GetToGridSizeFromMesh()
    {
-      Vector2Int size = new();
+      Vector2Int size = new()
+      {
+          x = Mathf.RoundToInt(plane.localScale.x 
+                               * transform.localScale.x 
+                               * cityBuilder.localScale.x 
+                               * 10),
+          y = Mathf.RoundToInt(plane.localScale.z 
+                               * transform.localScale.z 
+                               * cityBuilder.localScale.z 
+                               * 10)
+      };
 
-      var planeX = plane.localScale.x;
-      var planeZ = plane.localScale.z;
-
-      size.x = Mathf.RoundToInt(planeX * transform.localScale.x * 10);
-      size.y = Mathf.RoundToInt(planeZ * transform.localScale.z * 10);
-      
       print(size);
       return size;
    }
