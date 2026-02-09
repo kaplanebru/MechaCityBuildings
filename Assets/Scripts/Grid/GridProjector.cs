@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GridSearcher: IGridTool
+public class GridProjector: IGridTool
 {
     public GridData Data { get; private set; }
 
@@ -11,8 +11,8 @@ public class GridSearcher: IGridTool
 
     public void SetSecondaryTools(params IGridTool[] secondaryTools) {}
 
-    private int GridWidthInCells => Data.GridSize.x;
-    private int GridHeightInCells => Data.GridSize.y;
+    private int GridWidthInCells => Data.AdaptiveGridSize.x;
+    private int GridHeightInCells => Data.AdaptiveGridSize.y;
     
     public bool TryWorldPositionToCellIndex(Vector3 worldPosition, out Vector2Int cellIndex)
     {

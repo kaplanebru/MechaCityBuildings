@@ -732,7 +732,7 @@ Transform:
   m_GameObject: {fileID: 984985642}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -17.6, y: 0, z: 4.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -753,10 +753,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d94dcf6b01404957b978bd4f03daae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  userMapData:
+    BuildingCellSize: 3
+    ProjectedGridSize: {x: 100, y: 50}
   gridData:
     OriginWorldTransform: {fileID: 1162789278}
-    CellSize: 1
-    GridSize: {x: 100, y: 50}
   paintData: {fileID: 11400000, guid: b36737068d2ef42d396c373a92113fae, type: 2}
   constructionData:
     BuildingsRoot: {fileID: 1242897597}
@@ -772,7 +773,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1162789278}
   m_Layer: 0
-  m_Name: GridCanvas
+  m_Name: Map
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -971,7 +972,7 @@ GameObject:
   - component: {fileID: 1261648743}
   - component: {fileID: 1261648742}
   m_Layer: 7
-  m_Name: Plane
+  m_Name: PlaneMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1061,8 +1062,8 @@ Transform:
   m_GameObject: {fileID: 1261648741}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 15, y: 0, z: 15}
-  m_LocalScale: {x: 3, y: 1, z: 3}
+  m_LocalPosition: {x: 50, y: 0, z: 12.5}
+  m_LocalScale: {x: 10, y: 1, z: 2.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1162789278}

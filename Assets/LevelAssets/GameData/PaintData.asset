@@ -15,7 +15,7 @@ MonoBehaviour:
   GroundLayerMask:
     serializedVersion: 2
     m_Bits: 128
-  BrushRadiusInWorldUnits: 2
+  BrushRadiusInWorldUnits: 1
   CellSizeInWorldUnits: 1
   PaintWithLeftMouse: 1
   EraseWithRightMouse: 1

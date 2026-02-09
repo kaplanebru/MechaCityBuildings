@@ -3,11 +3,11 @@ using System.Collections;
 using UnityEngine;
 
 
-public sealed class SearcherPainter : IGridTool
+public sealed class PainterProjected : IGridTool
 {
     private PaintData _paintData;
-    private GridSearcher _searcher;
-    private GridPainter _painter;
+    private GridProjector _projector;
+    private PainterInGrid _painterInGrid;
     private Camera cam;
 
     public void SetGridRelatedData(IGridRelatedData[] gridRelatedData)
@@ -20,11 +20,11 @@ public sealed class SearcherPainter : IGridTool
     {
         foreach (var tool in secondaryTools)
         {
-            if (tool is GridPainter painter)
-                _painter = painter;
+            if (tool is PainterInGrid painter)
+                _painterInGrid = painter;
             
-            else if (tool is GridSearcher searcher)
-                _searcher = searcher;
+            else if (tool is GridProjector searcher)
+                _projector = searcher;
         }
     }
 
@@ -35,22 +35,19 @@ public sealed class SearcherPainter : IGridTool
             bool isPainting = _paintData.PaintWithLeftMouse && Input.GetMouseButton(0);
             bool isErasing = _paintData.EraseWithRightMouse && Input.GetMouseButton(1);
 
-// No input this frame -> do nothing.
             if (!isPainting && !isErasing)
             {
                 yield return null;
                 continue;
             }
 
-// Raycast to ground.
             if (!TryGetMouseGroundHitPoint(out Vector3 hitPointWorld))
             {
                 yield return null;
                 continue;
             }
 
-// Convert hit point to grid cell.
-            if (!_searcher.TryWorldPositionToCellIndex(hitPointWorld, out Vector2Int centerCellIndex))
+            if (!_projector.TryWorldPositionToCellIndex(hitPointWorld, out Vector2Int centerCellIndex))
             {
                 yield return null;
                 continue;
@@ -62,7 +59,7 @@ public sealed class SearcherPainter : IGridTool
 // IMPORTANT:
 // Painter must know WHICH cell is the center.
 // If your painter method signature is different, adjust accordingly.
-            _painter.PaintSelectedCellsInBrush(paintValue, centerCellIndex); //centerCellIndex,
+            _painterInGrid.PaintSelectedCellsInBrush(paintValue, centerCellIndex); //centerCellIndex,
 
             yield return null;
         }

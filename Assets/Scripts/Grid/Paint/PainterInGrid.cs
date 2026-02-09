@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
 
-public class GridPainter : IGridTool
+public class PainterInGrid : IGridTool
 {
     private PaintData _paintData;
-    private GridSearcher _searcher;
+    private GridProjector _projector;
     private GridMasker _masker;
 
     public void SetGridRelatedData(IGridRelatedData[] gridRelatedData)
@@ -15,8 +15,8 @@ public class GridPainter : IGridTool
     public void SetSecondaryTools(params IGridTool[] secondaryTools)
     {
         foreach (var tool in secondaryTools)
-            if (tool is GridSearcher)
-                _searcher = tool as GridSearcher;
+            if (tool is GridProjector)
+                _projector = tool as GridProjector;
             else if (tool is GridMasker)
                 _masker = tool as GridMasker;
     }
@@ -30,7 +30,6 @@ public class GridPainter : IGridTool
         if (_paintData.BrushRadiusInWorldUnits < 0f)
             return;
 
-        // Convert brush radius from world units (meters) to cell units.
         int brushRadiusInCells = Mathf.CeilToInt(_paintData.BrushRadiusInWorldUnits / _paintData.CellSizeInWorldUnits);
 
         int brushRadiusSquared = brushRadiusInCells * brushRadiusInCells;
@@ -48,10 +47,9 @@ public class GridPainter : IGridTool
                 int yIndex = centerCellIndex.y + yOffset;
 
 
-                if (!_searcher.IsInsideGrid(xIndex, yIndex))
+                if (!_projector.IsInsideGrid(xIndex, yIndex))
                     continue;
 
-                //_masker.selectedCells[xIndex, yIndex] = paintValue;
                 _masker.SetSelected(xIndex, yIndex, paintValue);
             }
         }

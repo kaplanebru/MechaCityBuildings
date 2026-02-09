@@ -83,8 +83,8 @@ public class GridMasker: IGridTool
     {
         Data = (GridData)gridRelatedData[0];
         
-        gridWidthInCells = Data.GridSize.x;
-        gridHeightInCells = Data.GridSize.y;
+        gridWidthInCells = Data.AdaptiveGridSize.x;
+        gridHeightInCells = Data.AdaptiveGridSize.y;
         
         if (gridWidthInCells <= 0)
             throw new ArgumentOutOfRangeException(nameof(gridWidthInCells));

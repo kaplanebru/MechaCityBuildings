@@ -36,38 +36,24 @@ public sealed class OverlayGridPainter : MonoBehaviour
     private int gridWidthInCells;
     private int gridHeightInCells;
 
-    // Dirty tracking (we still push all colors because Unity vertex-color upload is not partial).
     private bool hasAnyColorChanges;
 
     private bool isInitialized;
-
-    private void Awake()
-    {
-        //InitializeIfNeeded();
-    }
 
     public void Setup(GridData gridData)
     {
         isInitialized = false; //added later
         GridData = gridData;
-        InitializeIfNeeded();
+        CreateOverlayMeshIfNeeded();
     }
     
-    
-
-    public void InitializeIfNeeded()
+    public void CreateOverlayMeshIfNeeded()
     {
         if (isInitialized)
             return;
-
-        if (GridData == null)
-            throw new InvalidOperationException("OverlayGridPainter: gridData is not assigned.");
-
-        if (GridData.CellSize <= 0f)
-            throw new InvalidOperationException("OverlayGridPainter: gridData.CellSize must be > 0.");
-
-        gridWidthInCells = GridData.GridSize.x;
-        gridHeightInCells = GridData.GridSize.y;
+        
+        gridWidthInCells = GridData.AdaptiveGridSize.x;
+        gridHeightInCells = GridData.AdaptiveGridSize.y;
 
         if (gridWidthInCells <= 0 || gridHeightInCells <= 0)
             throw new InvalidOperationException("OverlayGridPainter: gridData.GridSize must be positive.");
@@ -105,62 +91,11 @@ public sealed class OverlayGridPainter : MonoBehaviour
         isInitialized = true;
     }
 
-    /// <summary>
-    /// Call after changing GridData (GridSize, CellSize, OriginWorld).
-    /// This rebuilds geometry and resets colors.
-    /// </summary>
-    public void RebuildAll()
-    {
-        if (!allowFullRebuild)
-            return;
-
-        isInitialized = false;
-
-        // Reset mesh reference.
-        MeshFilter meshFilter = GetComponent<MeshFilter>();
-        if (meshFilter != null)
-            meshFilter.sharedMesh = null;
-
-        overlayMesh = null;
-        vertices = null;
-        triangles = null;
-        colors = null;
-
-        InitializeIfNeeded();
-    }
-
-    /// <summary>
-    /// Apply a whole selection mask to the overlay.
-    /// Useful after loading or after a big operation.
-    /// </summary>
-    public void ApplySelectionMask(bool[,] selectedCells)
-    {
-        InitializeIfNeeded();
-
-        if (selectedCells == null)
-            throw new ArgumentNullException(nameof(selectedCells));
-
-        int width = selectedCells.GetLength(0);
-        int height = selectedCells.GetLength(1);
-
-        if (width != gridWidthInCells || height != gridHeightInCells)
-            throw new InvalidOperationException("ApplySelectionMask: selectedCells dimensions do not match gridData.GridSize.");
-
-        for (int yIndex = 0; yIndex < gridHeightInCells; yIndex++)
-        {
-            for (int xIndex = 0; xIndex < gridWidthInCells; xIndex++)
-            {
-                float targetAlpha = selectedCells[xIndex, yIndex] ? paintedAlpha : unpaintedAlpha;
-                SetCellVertexAlphaImmediate(xIndex, yIndex, targetAlpha);
-            }
-        }
-
-        PushColorsToMesh();
-    }
+ 
     
     public void SetCellPainted(int xIndex, int yIndex, bool painted)
     {
-        InitializeIfNeeded();
+        CreateOverlayMeshIfNeeded();
 
         if (!IsInsideGrid(xIndex, yIndex))
             return;
@@ -170,27 +105,7 @@ public sealed class OverlayGridPainter : MonoBehaviour
         hasAnyColorChanges = true;
     }
 
-    public void SetCellsPainted(List<Vector2Int> touchedCells, bool painted)
-    {
-        InitializeIfNeeded();
-
-        if (touchedCells == null || touchedCells.Count == 0)
-            return;
-
-        float targetAlpha = painted ? paintedAlpha : unpaintedAlpha;
-
-        for (int index = 0; index < touchedCells.Count; index++)
-        {
-            Vector2Int cell = touchedCells[index];
-
-            if (!IsInsideGrid(cell.x, cell.y))
-                continue;
-
-            SetCellVertexAlphaImmediate(cell.x, cell.y, targetAlpha);
-        }
-
-        hasAnyColorChanges = true;
-    }
+  
 
     private void LateUpdate()
     {
@@ -304,6 +219,81 @@ public sealed class OverlayGridPainter : MonoBehaviour
     {
         alpha = Mathf.Clamp01(alpha);
         return (byte)Mathf.RoundToInt(alpha * 255f);
+    }
+    
+    /// <summary>
+    /// Call after changing GridData (GridSize, CellSize, OriginWorld).
+    /// This rebuilds geometry and resets colors.
+    /// </summary>
+    public void RebuildAll()
+    {
+        if (!allowFullRebuild)
+            return;
+
+        isInitialized = false;
+
+        // Reset mesh reference.
+        MeshFilter meshFilter = GetComponent<MeshFilter>();
+        if (meshFilter != null)
+            meshFilter.sharedMesh = null;
+
+        overlayMesh = null;
+        vertices = null;
+        triangles = null;
+        colors = null;
+
+        CreateOverlayMeshIfNeeded();
+    }
+
+    /// <summary>
+    /// Apply a whole selection mask to the overlay.
+    /// Useful after loading or after a big operation.
+    /// </summary>
+    public void ApplySelectionMask(bool[,] selectedCells)
+    {
+        CreateOverlayMeshIfNeeded();
+
+        if (selectedCells == null)
+            throw new ArgumentNullException(nameof(selectedCells));
+
+        int width = selectedCells.GetLength(0);
+        int height = selectedCells.GetLength(1);
+
+        if (width != gridWidthInCells || height != gridHeightInCells)
+            throw new InvalidOperationException("ApplySelectionMask: selectedCells dimensions do not match gridData.GridSize.");
+
+        for (int yIndex = 0; yIndex < gridHeightInCells; yIndex++)
+        {
+            for (int xIndex = 0; xIndex < gridWidthInCells; xIndex++)
+            {
+                float targetAlpha = selectedCells[xIndex, yIndex] ? paintedAlpha : unpaintedAlpha;
+                SetCellVertexAlphaImmediate(xIndex, yIndex, targetAlpha);
+            }
+        }
+
+        PushColorsToMesh();
+    }
+    
+    public void SetCellsPainted(List<Vector2Int> touchedCells, bool painted)
+    {
+        CreateOverlayMeshIfNeeded();
+
+        if (touchedCells == null || touchedCells.Count == 0)
+            return;
+
+        float targetAlpha = painted ? paintedAlpha : unpaintedAlpha;
+
+        for (int index = 0; index < touchedCells.Count; index++)
+        {
+            Vector2Int cell = touchedCells[index];
+
+            if (!IsInsideGrid(cell.x, cell.y))
+                continue;
+
+            SetCellVertexAlphaImmediate(cell.x, cell.y, targetAlpha);
+        }
+
+        hasAnyColorChanges = true;
     }
 }
 

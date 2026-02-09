@@ -2,8 +2,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public class UserMapData
+{
+    public int BuildingCellSize = 2;
+    public Vector2Int ProjectedGridSize = new(100, 50);
+}
+
 public class GridSystem : MonoBehaviour
 {
+    public UserMapData userMapData;
     public GridData gridData;
     public PaintData paintData;
     public ConstructionData constructionData;
@@ -12,22 +20,33 @@ public class GridSystem : MonoBehaviour
     private IGridRelatedData[] gridRelatedData;
     private IGridTool[] tools;
     
-    private GridPainter painter = new();
-    private GridSearcher searcher = new();
+    private PainterInGrid painter = new();
+    private GridProjector _projector = new();
     private GridMasker masker = new();
-    private SearcherPainter searcherPainter = new();
+    private PainterProjected _painterProjected = new();
     private GridToConstruction contstructor = new();
     
     private void Start()
     {
+        AdaptGridSizeToUserCellSize();
         SetTools(); 
         overlayGridPainter.Setup(gridData);
-        StartCoroutine(searcherPainter.PaintRoutine());
+        StartCoroutine(_painterProjected.PaintRoutine());
+    }
+
+    private void AdaptGridSizeToUserCellSize()
+    {
+        userMapData.ProjectedGridSize.x = Mathf.RoundToInt(userMapData.ProjectedGridSize.x / userMapData.BuildingCellSize);
+        userMapData.ProjectedGridSize.y = Mathf.RoundToInt(userMapData.ProjectedGridSize.y / userMapData.BuildingCellSize);
+        
+        gridData.AdaptiveGridSize =  userMapData.ProjectedGridSize;
+        gridData.CellSize = userMapData.BuildingCellSize;
+
     }
 
     private void SetTools()
     {
-        tools = new IGridTool[] { painter, searcher, masker, searcherPainter, contstructor};
+        tools = new IGridTool[] { painter, _projector, masker, _painterProjected, contstructor};
         masker.SetOverlayPainter(overlayGridPainter);
         InjectSecondaryTools();
         DistributeData();
@@ -55,8 +74,8 @@ public class GridSystem : MonoBehaviour
 
     private void InjectSecondaryTools()
     {
-        painter.SetSecondaryTools(searcher, masker);
-        searcherPainter.SetSecondaryTools(searcher, painter);
+        painter.SetSecondaryTools(_projector, masker);
+        _painterProjected.SetSecondaryTools(_projector, painter);
     }
     
     public void DistributeData()
