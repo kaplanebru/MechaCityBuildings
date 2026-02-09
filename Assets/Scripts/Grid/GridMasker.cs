@@ -25,7 +25,7 @@ public class GridMasker: IGridTool
         List<Vector2Int> completedTracker = new();
         completedTracker.AddRange(cellTracker);
         
-        cellTracker.Clear();
+        //cellTracker.Clear(); 
         return completedTracker;
     }
 
@@ -43,6 +43,42 @@ public class GridMasker: IGridTool
         else
             cellTracker.Remove(point);
     }
+
+    public void SetSecondaryTools(params IGridTool[] secondaryTools) {}
+
+
+    public void ClearSelectedCells(bool value = false)
+    {
+        for (int yIndex = 0; yIndex < gridHeightInCells; yIndex++)
+        {
+            for (int xIndex = 0; xIndex < gridWidthInCells; xIndex++)
+            {
+                selectedCells[xIndex, yIndex] = value;
+            }
+        }
+    }
+
+    public void RestoreSelectedCells(bool value = false)
+    {
+        foreach (var cell in cellTracker)
+        {
+            selectedCells[cell.x, cell.y] = value;
+            overlayPainter.SetCellPainted(cell.x, cell.y, value);
+        }
+        cellTracker.Clear();
+    }
+    
+    public void ClearOccupiedCells(bool value = false)
+    {
+        for (int yIndex = 0; yIndex < gridHeightInCells; yIndex++)
+        {
+            for (int xIndex = 0; xIndex < gridWidthInCells; xIndex++)
+            {
+                occupiedCells[xIndex, yIndex] = value;
+            }
+        }
+    }
+    
     public void SetGridRelatedData(IGridRelatedData[] gridRelatedData)
     {
         Data = (GridData)gridRelatedData[0];
@@ -60,29 +96,5 @@ public class GridMasker: IGridTool
         occupiedCells = new bool[gridWidthInCells, gridHeightInCells];
     }
 
-    public void SetSecondaryTools(params IGridTool[] secondaryTools) {}
-
-
-    public void ClearSelectedCells(bool value = false)
-    {
-        for (int yIndex = 0; yIndex < gridHeightInCells; yIndex++)
-        {
-            for (int xIndex = 0; xIndex < gridWidthInCells; xIndex++)
-            {
-                selectedCells[xIndex, yIndex] = value;
-            }
-        }
-    }
-    
-    public void ClearOccupiedCells(bool value = false)
-    {
-        for (int yIndex = 0; yIndex < gridHeightInCells; yIndex++)
-        {
-            for (int xIndex = 0; xIndex < gridWidthInCells; xIndex++)
-            {
-                occupiedCells[xIndex, yIndex] = value;
-            }
-        }
-    }
 
 }

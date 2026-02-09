@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class GridSystem : MonoBehaviour
 {
-    public GameObject dummy;
     public GridData gridData;
     public PaintData paintData;
+    public ConstructionData constructionData;
     [SerializeField] private OverlayGridPainter overlayGridPainter;
     
     private IGridRelatedData[] gridRelatedData;
@@ -18,11 +18,10 @@ public class GridSystem : MonoBehaviour
     private SearcherPainter searcherPainter = new();
     private GridToConstruction contstructor = new();
     
-    private GridOptimizer optimizer = new();
-
     private void Start()
     {
-        SetTools();
+        SetTools(); 
+        overlayGridPainter.Setup(gridData);
         StartCoroutine(searcherPainter.PaintRoutine());
     }
 
@@ -34,35 +33,25 @@ public class GridSystem : MonoBehaviour
         DistributeData();
     }
 
-    List<Vector3> trackedCellsInWorld = new();
     public void ConstructBuildingsOnCells()
     {
         var trackedCells = masker.GetTrackedCells();
-
         if (trackedCells.Count == 0)
         {
             print("No tracked cells found");
             return;
         }
         
-        trackedCellsInWorld.Clear();
-        
-        trackedCells = BoundaryFinder.GetBoundsWithInner(1, trackedCells);
-
-        foreach (var trackedCell in trackedCells)
-        {
-            Vector3 pos = contstructor.GetCellIndexToWorldPositionCenter(trackedCell.x, trackedCell.y);
-            trackedCellsInWorld.Add(pos);
-            Instantiate(dummy, pos, gridData.OriginWorldTransform.rotation);
-        }
-
-        
-        //var edgeCells = optimizer.GetEdges(trackedCellsInWorld, 1);
-        /*foreach (var edgeCell in edgeCells)
-        {
-            Instantiate(dummy, edgeCell, Quaternion.identity);
-        }*/
+        contstructor.ConstructBuildingsOnCells(trackedCells, constructionData);
     }
+
+    public void DestroyBuildingsOnCells()
+    {
+        masker.RestoreSelectedCells();
+        contstructor.DeconstructBuildingsOnCells();
+    }
+    
+    
 
     private void InjectSecondaryTools()
     {

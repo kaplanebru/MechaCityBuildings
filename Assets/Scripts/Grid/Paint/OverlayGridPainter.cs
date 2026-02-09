@@ -7,8 +7,8 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public sealed class OverlayGridPainter : MonoBehaviour
 {
-    [Header("Grid Definition")]
-    [SerializeField] private GridData gridData;
+    
+    public GridData GridData { get; private set; }
 
     [Header("Visual")]
     [Tooltip("Small vertical offset above the ground to avoid z-fighting.")]
@@ -43,33 +43,42 @@ public sealed class OverlayGridPainter : MonoBehaviour
 
     private void Awake()
     {
+        //InitializeIfNeeded();
+    }
+
+    public void Setup(GridData gridData)
+    {
         isInitialized = false; //added later
+        GridData = gridData;
         InitializeIfNeeded();
     }
+    
+    
 
     public void InitializeIfNeeded()
     {
         if (isInitialized)
             return;
 
-        if (gridData == null)
+        if (GridData == null)
             throw new InvalidOperationException("OverlayGridPainter: gridData is not assigned.");
 
-        if (gridData.CellSize <= 0f)
+        if (GridData.CellSize <= 0f)
             throw new InvalidOperationException("OverlayGridPainter: gridData.CellSize must be > 0.");
 
-        gridWidthInCells = gridData.GridSize.x;
-        gridHeightInCells = gridData.GridSize.y;
+        gridWidthInCells = GridData.GridSize.x;
+        gridHeightInCells = GridData.GridSize.y;
 
         if (gridWidthInCells <= 0 || gridHeightInCells <= 0)
             throw new InvalidOperationException("OverlayGridPainter: gridData.GridSize must be positive.");
 
         // Place overlay at grid origin in WORLD space.
         // Vertices are LOCAL.
-        transform.position = gridData.OriginWorldTransform.position;
-        transform.rotation = gridData.OriginWorldTransform.rotation;
-        var scale = gridData.OriginWorldTransform.localScale;
+        transform.position = GridData.OriginWorldTransform.position;
+        transform.rotation = GridData.OriginWorldTransform.rotation;
+        var scale = GridData.OriginWorldTransform.localScale;
         transform.localScale = new Vector3(scale.x, scale.y, scale.x);//Vector3.one;
+        //unit size ile orantılı gitmeli sanırım
 
         int cellCount = gridWidthInCells * gridHeightInCells;
 
@@ -201,7 +210,7 @@ public sealed class OverlayGridPainter : MonoBehaviour
 
     private void BuildLocalGeometry(Vector3[] verticesArray, int[] trianglesArray)
     {
-        float cellSize = gridData.CellSize;
+        float cellSize = GridData.CellSize;
 
         // LOCAL offset above ground.
         float y = overlayHeightOffset;

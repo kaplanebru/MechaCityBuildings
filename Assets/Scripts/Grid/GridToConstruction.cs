@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GridToConstruction: IGridTool
@@ -31,4 +32,45 @@ public class GridToConstruction: IGridTool
 
         return new Vector3(worldX, worldY, worldZ);
     }
+    
+   
+    List<Transform> constructedDummies = new List<Transform>();
+    public void ConstructBuildingsOnCells(List<Vector2Int> trackedCells, ConstructionData data)
+    {
+        if (trackedCells.Count == 0)
+        {
+            Debug.Log("No tracked cells found");
+            return;
+        }
+        
+        trackedCells = BoundaryFinder.GetBoundsWithInner(1, trackedCells);
+        foreach (var trackedCell in trackedCells)
+        {
+            Vector3 pos = GetCellIndexToWorldPositionCenter(trackedCell.x, trackedCell.y);
+            var dummyInstance = Object.Instantiate(data.Dummy, pos, Data.OriginWorldTransform.rotation);
+            dummyInstance.transform.SetParent(data.BuildingsRoot);
+            constructedDummies.Add(dummyInstance);
+        }
+    }
+
+    public void DeconstructBuildingsOnCells()
+    {
+        if (constructedDummies.Count == 0)
+        {
+            Debug.Log("No constructed dummies found");
+            return;
+        }
+        foreach (var dummy in constructedDummies)
+        {
+            Object.Destroy(dummy.gameObject);
+        }
+        constructedDummies.Clear();
+    }
+}
+
+[System.Serializable]
+public class ConstructionData
+{
+    public Transform BuildingsRoot;
+    public Transform Dummy;
 }
