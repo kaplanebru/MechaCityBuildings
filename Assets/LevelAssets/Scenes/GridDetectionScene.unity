@@ -754,7 +754,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   userMapData:
-    BuildingCellSize: 3
+    BuildingCellSize: 2
+    UseMapSizeForGridSize: 1
     ProjectedGridSize: {x: 100, y: 50}
   gridData:
     OriginWorldTransform: {fileID: 1162789278}
@@ -763,6 +764,7 @@ MonoBehaviour:
     BuildingsRoot: {fileID: 1242897597}
     Dummy: {fileID: 5578128815750191864, guid: f1b777e2ccd31494ea8b22f12d132a05, type: 3}
   overlayGridPainter: {fileID: 222753771}
+  mapSizeToGridSize: {fileID: 1162789279}
 --- !u!1 &1162789277
 GameObject:
   m_ObjectHideFlags: 0
@@ -772,6 +774,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1162789278}
+  - component: {fileID: 1162789279}
   m_Layer: 0
   m_Name: Map
   m_TagString: Untagged
@@ -789,12 +792,25 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1261648745}
   m_Father: {fileID: 984985643}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1162789279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1162789277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00273de2d0a694e6a85cb0d39a219760, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  plane: {fileID: 1261648745}
 --- !u!1 &1202779596
 GameObject:
   m_ObjectHideFlags: 0
@@ -1062,8 +1078,8 @@ Transform:
   m_GameObject: {fileID: 1261648741}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 50, y: 0, z: 12.5}
-  m_LocalScale: {x: 10, y: 1, z: 2.5}
+  m_LocalPosition: {x: 50, y: 0, z: 50}
+  m_LocalScale: {x: 10, y: 1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1162789278}

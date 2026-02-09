@@ -6,6 +6,7 @@ using UnityEngine;
 public class UserMapData
 {
     public int BuildingCellSize = 2;
+    public bool UseMapSizeForGridSize = true;
     public Vector2Int ProjectedGridSize = new(100, 50);
 }
 
@@ -16,6 +17,7 @@ public class GridSystem : MonoBehaviour
     public PaintData paintData;
     public ConstructionData constructionData;
     [SerializeField] private OverlayGridPainter overlayGridPainter;
+    [SerializeField] private MapSizeToGridSize mapSizeToGridSize;
     
     private IGridRelatedData[] gridRelatedData;
     private IGridTool[] tools;
@@ -36,6 +38,9 @@ public class GridSystem : MonoBehaviour
 
     private void AdaptGridSizeToUserCellSize()
     {
+        if(userMapData.UseMapSizeForGridSize)
+            userMapData.ProjectedGridSize = mapSizeToGridSize.GetToGridSizeFromMesh();
+        
         userMapData.ProjectedGridSize.x = Mathf.RoundToInt(userMapData.ProjectedGridSize.x / userMapData.BuildingCellSize);
         userMapData.ProjectedGridSize.y = Mathf.RoundToInt(userMapData.ProjectedGridSize.y / userMapData.BuildingCellSize);
         
