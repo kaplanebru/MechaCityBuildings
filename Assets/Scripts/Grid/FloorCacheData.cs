@@ -15,6 +15,7 @@ public class FloorDatabase: IGridDatabase
     public Dictionary<int, FloorData> FloorDatas = new();
     
     public FloorData GetActiveFloorData() => FloorDatas[ActiveFloorIndex];
+    public FloorData GetFloorData(int floorIndex) => FloorDatas[floorIndex];
     public void SetActiveFloor(int index) => ActiveFloorIndex = index;
 
 }

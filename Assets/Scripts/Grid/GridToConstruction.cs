@@ -63,6 +63,11 @@ public class GridToConstruction: IGridTool
         }
     }
 
+   public void DeconstructBuildingsOnGivenCells(HashSet<Vector2Int> givenCells, FloorData floorData)
+   {
+       
+   }
+
     public void DeconstructBuildingsOnCells(FloorData floorData)
     {
         if (floorData.ItemsByCell.Count == 0)

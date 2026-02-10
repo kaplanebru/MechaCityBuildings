@@ -4,38 +4,51 @@ using UnityEngine;
 
 public class FloorIntersectionMasker
 {
-    private GridMasker masker;
-    private HashSet<Vector2Int> intersections = new();
-    
     //Todo: after that call deconstruct dummies at intersections on the lower floor
-    private void DetectCellsUnderFloor(FloorData upperFloor, FloorData lowerFloor) 
+    //tODO: bir floor silinince alttaki intersectionların da recover olması lazım: keyler dursun, hidden diye liste de tutulabilir
+    public static HashSet<Vector2Int> GetIntersectionsUnderFloor(FloorData upperFloor, FloorData lowerFloor)
     {
-        //if(givenFloor <= 0) return;
-        
         var upperCells = upperFloor.ItemsByCell.Keys.ToHashSet();
         var lowerCells = lowerFloor.ItemsByCell.Keys.ToHashSet();
-        
-        FindIntersections(upperCells, lowerCells);
+
+        var intersections = FindIntersections(upperCells, lowerCells);
+        RemoveIntersectionBoundary(intersections);
+        return intersections;
+        //return GetItemsOnIntersectionPoints(intersections, lowerFloor);
     }
 
-    private void FindIntersections(HashSet<Vector2Int> upperCells, HashSet<Vector2Int> lowerCells)
+    private static HashSet<Vector2Int> FindIntersections(HashSet<Vector2Int> upperCells, HashSet<Vector2Int> lowerCells)
     {
-        intersections.Clear();
-        foreach(var upperCell in upperCells)
+        HashSet<Vector2Int> intersections = new();
+
+        foreach (var upperCell in upperCells)
         {
             if (lowerCells.Contains(upperCell))
             {
                 intersections.Add(upperCell);
             }
         }
-
-        RemoveIntersectionBoundary();
+        return intersections;
     }
 
-    private void RemoveIntersectionBoundary()
+    
+
+    private static void RemoveIntersectionBoundary(HashSet<Vector2Int> intersections)
     {
         var intersectionBounds = BoundaryFinder.GetBoundsWithInner(1, intersections);
         intersections.RemoveWhere(intersection => intersectionBounds.Contains(intersection));
     }
-
+    
+    private static HashSet<Transform> GetItemsOnIntersectionPoints(HashSet<Vector2Int> intersections, FloorData lowerFloor)
+    {
+        HashSet<Transform> buildings = new HashSet<Transform>();
+        foreach (var intersection in intersections)
+        {
+            if (lowerFloor.ItemsByCell.TryGetValue(intersection, out var value))
+            {
+                buildings.Add(value);
+            }
+        }
+        return buildings;
+    }
 }

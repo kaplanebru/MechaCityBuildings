@@ -81,6 +81,31 @@ public class GridSystem : MonoBehaviour
 
         var floorData = _floorProtocols.db.GetActiveFloorData();
         contstructor.ConstructBuildingsOnCells(floorData, registeredCells, constructionData, drawingGroundHeight);
+        
+        if (TryDeconstructInvisibleIntersections(floorData, out var intersections,out var lowerFloor))
+        {
+            contstructor.DeconstructBuildingsOnGivenCells(intersections, lowerFloor);
+        }
+    }
+    
+    private bool TryDeconstructInvisibleIntersections(FloorData activeFloorData,
+        out HashSet<Vector2Int> intersections,
+        out FloorData lowerFloor)
+    {
+        intersections = null;
+        lowerFloor = null;
+        if(activeFloorData.Index <= 0) return false;
+        
+        lowerFloor = _floorProtocols.db.GetFloorData(activeFloorData.Index-1);
+
+        if (lowerFloor == null)
+        {
+            Debug.Log("No floor with that Index:  " + activeFloorData.Index);
+            return false;
+        }
+
+        intersections = FloorIntersectionMasker.GetIntersectionsUnderFloor(activeFloorData, lowerFloor);
+        return true;
     }
 
     public void DestroyBuildingsOnCells()
