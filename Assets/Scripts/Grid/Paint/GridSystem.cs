@@ -5,46 +5,44 @@ using UnityEngine;
 [Serializable]
 public class UserMapData
 {
-    [Header("Floor Settings")]
-    public int AverageFloorHeight = 2;
-    
-    [Header("Grid Settings")]
-    public int BuildingCellSize = 2;
+    [Header("Floor Settings")] public int AverageFloorHeight = 2;
+
+    [Header("Grid Settings")] public int BuildingCellSize = 2;
     public bool UseMapSizeForGridSize = true;
     public Vector2Int ProjectedGridSize = new(100, 50);
 }
 
 public class GridSystem : MonoBehaviour
 {
-    [SerializeField] private  UserMapData userMapData;
-    [SerializeField] private  GridData gridData;
-    [SerializeField] private  PaintData paintData;
-    [SerializeField] private  ConstructionData constructionData;
-    [SerializeField] private FloorData floorData;
-    
+    [SerializeField] private UserMapData userMapData;
+    [SerializeField] private GridData gridData;
+    [SerializeField] private PaintData paintData;
+    [SerializeField] private ConstructionData constructionData;
+    [SerializeField] private FloorCacheData floorCacheData;
+
     [SerializeField] private MapSizeToGridSize mapSizeToGridSize;
     private GridProjector _projector = new();
     private GridMasker masker = new();
-    
+
     [SerializeField] private OverlayGridPainter overlayGridPainter;
     private PainterProjected _painterProjected = new();
     private PainterInGrid painter = new();
 
     private GridToConstruction contstructor = new();
-    private FloorProtocoles floorProtocoles = new();
-    
+    private FloorProtocols _floorProtocols = new();
+
     private IGridRelatedData[] gridRelatedData;
     private IGridTool[] tools;
-    private float groundHeight;
-    
+    private float drawingGroundHeight;
+
     private void Start()
     {
         AdaptGridSizeToUserCellSize();
-        
-        floorProtocoles.Setup(floorData);
-        UpdateGroundByFloor();
-        
-        SetTools(); 
+
+        _floorProtocols.Setup(floorCacheData);
+        UpdateDrawingGroundByFloor();
+
+        SetTools();
         overlayGridPainter.Setup(gridData); //todo add to tools
         StartCoroutine(_painterProjected.PaintRoutine());
     }
@@ -52,22 +50,23 @@ public class GridSystem : MonoBehaviour
 
     private void AdaptGridSizeToUserCellSize()
     {
-        if(userMapData.UseMapSizeForGridSize)
+        if (userMapData.UseMapSizeForGridSize)
             userMapData.ProjectedGridSize = mapSizeToGridSize.GetToGridSizeFromMesh();
-        
-        userMapData.ProjectedGridSize.x = Mathf.RoundToInt(userMapData.ProjectedGridSize.x / userMapData.BuildingCellSize);
-        userMapData.ProjectedGridSize.y = Mathf.RoundToInt(userMapData.ProjectedGridSize.y / userMapData.BuildingCellSize);
-        
-        gridData.AdaptiveGridSize =  userMapData.ProjectedGridSize;
-        gridData.CellSize = userMapData.BuildingCellSize;
 
+        userMapData.ProjectedGridSize.x =
+            Mathf.RoundToInt(userMapData.ProjectedGridSize.x / userMapData.BuildingCellSize);
+        userMapData.ProjectedGridSize.y =
+            Mathf.RoundToInt(userMapData.ProjectedGridSize.y / userMapData.BuildingCellSize);
+
+        gridData.AdaptiveGridSize = userMapData.ProjectedGridSize;
+        gridData.CellSize = userMapData.BuildingCellSize;
     }
 
     private void SetTools()
     {
-        tools = new IGridTool[] { painter, _projector, masker, _painterProjected, contstructor};
+        tools = new IGridTool[] { painter, _projector, masker, _painterProjected, contstructor };
         masker.SetOverlayPainter(overlayGridPainter);
-        contstructor.SetFloorProtocoles(floorProtocoles);
+        contstructor.SetFloorProtocoles(_floorProtocols.db);
         InjectSecondaryTools();
         DistributeData();
     }
@@ -80,10 +79,9 @@ public class GridSystem : MonoBehaviour
             print("No tracked cells found");
             return;
         }
-        
-        contstructor.ConstructBuildingsOnCells(trackedCells, constructionData, groundHeight);
-        masker.RestoreSelectedCells();
 
+        contstructor.ConstructBuildingsOnCells(trackedCells, constructionData, drawingGroundHeight);
+        masker.RestoreSelectedCells();
     }
 
     public void DestroyBuildingsOnCells()
@@ -91,22 +89,29 @@ public class GridSystem : MonoBehaviour
         contstructor.DeconstructBuildingsOnCells();
     }
 
-    private void UpdateGroundByFloor()
+    private void UpdateDrawingGroundByFloor()
     {
-        groundHeight = userMapData.AverageFloorHeight * floorProtocoles.WorkingFloor;
-        overlayGridPainter.SetHeight(groundHeight);
+        drawingGroundHeight = userMapData.AverageFloorHeight * _floorProtocols.db.ActiveFloorIndex;
+        overlayGridPainter.SetHeight(drawingGroundHeight);
     }
-    
+
     public void IncreaseFloor()
     {
-        floorProtocoles.IncreaseFloorSet();
-        UpdateGroundByFloor();
+        _floorProtocols.IncreaseFloorSet();
+        OnFloorUpdate();
     }
 
     public void SwitchFloor(string charCount)
     {
-       floorProtocoles.SwitchWorkingFloor(charCount.Length);
-       UpdateGroundByFloor();
+        _floorProtocols.SwitchWorkingFloor(int.Parse(charCount));
+        OnFloorUpdate();
+    }
+
+    //todo: floorDistributor bağlantı classı yap: floor implementer/publisher
+    private void OnFloorUpdate()
+    {
+        masker.UpdateCellTrackingFloor(_floorProtocols.db.ActiveFloorIndex);
+        UpdateDrawingGroundByFloor();
     }
 
     private void InjectSecondaryTools()
@@ -114,7 +119,7 @@ public class GridSystem : MonoBehaviour
         painter.SetSecondaryTools(_projector, masker);
         _painterProjected.SetSecondaryTools(_projector, painter);
     }
-    
+
     public void DistributeData()
     {
         gridRelatedData = new IGridRelatedData[] { gridData, paintData };

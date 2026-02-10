@@ -1298,8 +1298,8 @@ MonoBehaviour:
   paintData: {fileID: 11400000, guid: b36737068d2ef42d396c373a92113fae, type: 2}
   constructionData:
     Dummy: {fileID: 5578128815750191864, guid: f1b777e2ccd31494ea8b22f12d132a05, type: 3}
-  floorData:
-    FloorSet:
+  floorCacheData:
+    CachedFloorRoots:
     - {fileID: 2011864069}
     Root: {fileID: 1745433418}
   mapSizeToGridSize: {fileID: 1162789279}

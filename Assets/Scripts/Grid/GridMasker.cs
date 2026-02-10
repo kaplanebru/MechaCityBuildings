@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class GridMasker: IGridTool
+public class GridMasker : IGridTool
 {
     private bool[,] selectedCells;
     private bool[,] occupiedCells;
-    
-    private List<Vector2Int> cellTracker = new();
+
+    //private List<Vector2Int> cellTracker = new();
+    public Dictionary<int, HashSet<Vector2Int>> CellTrackByFloor { get; private set; }= new();
+    private int currentFloor = 0;
 
     private int gridWidthInCells;
     private int gridHeightInCells;
@@ -20,13 +23,24 @@ public class GridMasker: IGridTool
         this.overlayPainter = overlayPainter;
     }
 
-    public List<Vector2Int> GetTrackedCells()
-    { 
+    public void UpdateCellTrackingFloor(int floor)
+    {
+        currentFloor = floor;
+    }
+
+    public void DeleteLastTracker()  //(int floor)
+    {
+        int lastFloor = CellTrackByFloor.Count - 1;
+        CellTrackByFloor.Remove(lastFloor);
+        //cellTrackByFloor.Remove(floor);
+    }
+
+    public HashSet<Vector2Int> GetTrackedCells()
+    {
         List<Vector2Int> completedTracker = new();
-        completedTracker.AddRange(cellTracker);
-        
-        //cellTracker.Clear(); 
-        return completedTracker;
+        completedTracker.AddRange(CellTrackByFloor[currentFloor]);
+
+        return completedTracker.ToHashSet();
     }
 
     public void SetSelected(int xIndex, int yIndex, bool selected)
@@ -38,13 +52,26 @@ public class GridMasker: IGridTool
 
     private void UpdateTracker(Vector2Int point, bool selected)
     {
-        if(selected) 
-            cellTracker.Add(point);
+        if (selected)
+        {
+            if (!CellTrackByFloor.ContainsKey(currentFloor))
+                CellTrackByFloor[currentFloor] = new ();
+
+            CellTrackByFloor[currentFloor].Add(point);
+            //cellTracker.Add(point);
+        }
+
         else
-            cellTracker.Remove(point);
+        {
+            if (CellTrackByFloor.ContainsKey(currentFloor))
+                CellTrackByFloor[currentFloor].Remove(point);
+            //cellTracker.Remove(point);
+        }
     }
 
-    public void SetSecondaryTools(params IGridTool[] secondaryTools) {}
+    public void SetSecondaryTools(params IGridTool[] secondaryTools)
+    {
+    }
 
 
     public void ClearSelectedCells(bool value = false)
@@ -60,14 +87,16 @@ public class GridMasker: IGridTool
 
     public void RestoreSelectedCells(bool value = false)
     {
-        foreach (var cell in cellTracker)
+        var tracker = CellTrackByFloor[currentFloor];
+        foreach (var cell in tracker)
         {
             selectedCells[cell.x, cell.y] = value;
             overlayPainter.SetCellPainted(cell.x, cell.y, value);
         }
-        cellTracker.Clear();
+
+        tracker.Clear();
     }
-    
+
     public void ClearOccupiedCells(bool value = false)
     {
         for (int yIndex = 0; yIndex < gridHeightInCells; yIndex++)
@@ -78,23 +107,21 @@ public class GridMasker: IGridTool
             }
         }
     }
-    
+
     public void SetGridRelatedData(IGridRelatedData[] gridRelatedData)
     {
         Data = (GridData)gridRelatedData[0];
-        
+
         gridWidthInCells = Data.AdaptiveGridSize.x;
         gridHeightInCells = Data.AdaptiveGridSize.y;
-        
+
         if (gridWidthInCells <= 0)
             throw new ArgumentOutOfRangeException(nameof(gridWidthInCells));
 
         if (gridHeightInCells <= 0)
             throw new ArgumentOutOfRangeException(nameof(gridHeightInCells));
-        
+
         selectedCells = new bool[gridWidthInCells, gridHeightInCells];
         occupiedCells = new bool[gridWidthInCells, gridHeightInCells];
     }
-
-
 }

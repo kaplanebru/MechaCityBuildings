@@ -6,30 +6,30 @@ public class BoundaryFinder
 
     //TODO: Unitlerim 1 olmayabilir
 
-    private static List<Vector2Int> GetBoundary4(HashSet<Vector2Int> filled, int cellUnit)
+    private static HashSet<Vector2Int> GetBoundary4(HashSet<Vector2Int> filled, int cellUnit)
     {
-        var boundary = new List<Vector2Int>();
+        var boundary = new HashSet<Vector2Int>();
 
-        foreach (var c in filled)
+        foreach (var cell in filled)
         {
-            if (!filled.Contains(c + Vector2Int.up * cellUnit) ||
-                !filled.Contains(c + Vector2Int.down * cellUnit) ||
-                !filled.Contains(c + Vector2Int.left * cellUnit) ||
-                !filled.Contains(c + Vector2Int.right * cellUnit))
+            if (!filled.Contains(cell + Vector2Int.up * cellUnit) ||
+                !filled.Contains(cell + Vector2Int.down * cellUnit) ||
+                !filled.Contains(cell + Vector2Int.left * cellUnit) ||
+                !filled.Contains(cell + Vector2Int.right * cellUnit))
             {
-                boundary.Add(c);
+                boundary.Add(cell);
             }
         }
 
         return boundary;
     }
 
-    public static List<Vector2Int> GetBoundsWithInner(int layer, IReadOnlyCollection<Vector2Int> filled, int unit = 1)
+    public static HashSet<Vector2Int> GetBoundsWithInner(int layer, IReadOnlyCollection<Vector2Int> filled, int unit = 1)
     {
         if (layer <= 0)
             layer = 1;
         if (filled == null || filled.Count == 0)
-            return new List<Vector2Int>();
+            return new HashSet<Vector2Int>();
 
         var remaining = new HashSet<Vector2Int>(filled);
         var allBoundary = new HashSet<Vector2Int>();
@@ -50,7 +50,7 @@ public class BoundaryFinder
             }
         }
 
-        return new List<Vector2Int>(allBoundary);
+        return new HashSet<Vector2Int>(allBoundary);
     }
 
     public static List<Vector2Int> GetBoundary8(IReadOnlyCollection<Vector2Int> filled)

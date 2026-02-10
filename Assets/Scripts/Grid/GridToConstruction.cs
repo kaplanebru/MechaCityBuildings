@@ -4,7 +4,7 @@ using UnityEngine;
 public class GridToConstruction: IGridTool
 {
     public GridData Data { get; private set; }
-    private FloorProtocoles _floorProtocoles;
+    private FloorDatabase _floorDatabase;
 
     public void SetGridRelatedData(IGridRelatedData[] gridRelatedData)
     {
@@ -12,9 +12,9 @@ public class GridToConstruction: IGridTool
     }
     public void SetSecondaryTools(params IGridTool[] secondaryTools) {}
 
-    public void SetFloorProtocoles(FloorProtocoles floorProtocoles)
+    public void SetFloorProtocoles(FloorDatabase db)
     {
-        _floorProtocoles = floorProtocoles;
+        _floorDatabase = db;
     }
 
     public Vector3 GetCellIndexToWorldPositionCenter(int xIndex, int yIndex)
@@ -40,7 +40,7 @@ public class GridToConstruction: IGridTool
     
    
     List<Transform> constructedDummies = new List<Transform>();
-    public void ConstructBuildingsOnCells(List<Vector2Int> trackedCells, ConstructionData data, float groundHeight)
+    public void ConstructBuildingsOnCells(HashSet<Vector2Int> trackedCells, ConstructionData data, float groundHeight)
     {
         if (trackedCells.Count == 0)
         {
@@ -54,7 +54,7 @@ public class GridToConstruction: IGridTool
             Vector3 pos = GetCellIndexToWorldPositionCenter(trackedCell.x, trackedCell.y);
             pos.y += groundHeight;
             var dummyInstance = Object.Instantiate(data.Dummy, pos, Data.OriginWorldTransform.rotation);
-            dummyInstance.transform.SetParent(_floorProtocoles.GetWorkingFloor());
+            dummyInstance.transform.SetParent(_floorDatabase.GetActiveFloorData().Root);
             constructedDummies.Add(dummyInstance);
         }
     }
