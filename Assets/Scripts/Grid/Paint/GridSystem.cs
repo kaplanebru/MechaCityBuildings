@@ -66,27 +66,26 @@ public class GridSystem : MonoBehaviour
     {
         tools = new IGridTool[] { painter, _projector, masker, _painterProjected, contstructor };
         masker.SetOverlayPainter(overlayGridPainter);
-        contstructor.SetFloorProtocoles(_floorProtocols.db);
         InjectSecondaryTools();
         DistributeData();
     }
 
     public void ConstructBuildingsOnCells()
     {
-        var trackedCells = masker.GetTrackedCells();
-        if (trackedCells.Count == 0)
+        var registeredCells = masker.RegisterTrackedCells();
+        if (registeredCells.Count == 0)
         {
-            print("No tracked cells found");
+            print("No tracked cells found on Floor");
             return;
         }
 
-        contstructor.ConstructBuildingsOnCells(trackedCells, constructionData, drawingGroundHeight);
-        masker.RestoreSelectedCells();
+        var floorData = _floorProtocols.db.GetActiveFloorData();
+        contstructor.ConstructBuildingsOnCells(floorData, registeredCells, constructionData, drawingGroundHeight);
     }
 
     public void DestroyBuildingsOnCells()
     {
-        contstructor.DeconstructBuildingsOnCells();
+        contstructor.DeconstructBuildingsOnCells(_floorProtocols.db.GetActiveFloorData());
     }
 
     private void UpdateDrawingGroundByFloor()
@@ -110,7 +109,6 @@ public class GridSystem : MonoBehaviour
     //todo: floorDistributor bağlantı classı yap: floor implementer/publisher
     private void OnFloorUpdate()
     {
-        masker.UpdateCellTrackingFloor(_floorProtocols.db.ActiveFloorIndex);
         UpdateDrawingGroundByFloor();
     }
 

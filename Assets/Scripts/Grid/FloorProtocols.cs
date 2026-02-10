@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class FloorProtocols
 {
-    public FloorDatabase db;
+    public FloorDatabase db = new FloorDatabase();
     private FloorCacheData cacheData;
-    
     
     public void Setup(FloorCacheData data)
     {
@@ -47,9 +46,10 @@ public class FloorProtocols
         if(db.FloorDatas.Count <= 1) return;
 
         var activeFloor = db.GetActiveFloorData();
+            //todo: check henüz null olabilir itemlar cell dolu olsa bile
         if(activeFloor.ItemsByCell.Count == 0) return;
 
-        var items = activeFloor.ItemsByCell.Values.ToList();
+        var items = activeFloor.ItemsByCell.Values.ToHashSet();
         foreach (var item in items)
         {
             Object.Destroy(item.gameObject);

@@ -8,7 +8,8 @@ public class FloorCacheData
     public Transform Root;
 }
 
-public class FloorDatabase
+public interface IGridDatabase{}
+public class FloorDatabase: IGridDatabase
 {
     public int ActiveFloorIndex { get; private set; }= 0;
     public Dictionary<int, FloorData> FloorDatas = new();

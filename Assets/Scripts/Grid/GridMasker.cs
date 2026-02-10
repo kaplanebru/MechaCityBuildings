@@ -7,10 +7,9 @@ public class GridMasker : IGridTool
 {
     private bool[,] selectedCells;
     private bool[,] occupiedCells;
-
-    //private List<Vector2Int> cellTracker = new();
-    public Dictionary<int, HashSet<Vector2Int>> CellTrackByFloor { get; private set; }= new();
-    private int currentFloor = 0;
+    
+    private HashSet<Vector2Int> tempCellTracker = new();
+    private FloorDatabase floorDb;
 
     private int gridWidthInCells;
     private int gridHeightInCells;
@@ -23,24 +22,24 @@ public class GridMasker : IGridTool
         this.overlayPainter = overlayPainter;
     }
 
-    public void UpdateCellTrackingFloor(int floor)
+    public void SetGridRelatedDatabase(params IGridDatabase[] gridDb)
     {
-        currentFloor = floor;
+        floorDb = gridDb[0] as FloorDatabase;
     }
 
-    public void DeleteLastTracker()  //(int floor)
+    public HashSet<Vector2Int> RegisterTrackedCells()
     {
-        int lastFloor = CellTrackByFloor.Count - 1;
-        CellTrackByFloor.Remove(lastFloor);
-        //cellTrackByFloor.Remove(floor);
-    }
+        /*var floorData = floorDb.GetActiveFloorData();
+        foreach (var cell in tempCellTracker)
+        {
+            floorData.ItemsByCell.TryAdd(cell, null);
+        }*/
+        
+        HashSet<Vector2Int> competedTrack = new HashSet<Vector2Int>();
+        competedTrack.UnionWith(tempCellTracker);
+        ResetSelectedCells();
 
-    public HashSet<Vector2Int> GetTrackedCells()
-    {
-        List<Vector2Int> completedTracker = new();
-        completedTracker.AddRange(CellTrackByFloor[currentFloor]);
-
-        return completedTracker.ToHashSet();
+        return competedTrack;
     }
 
     public void SetSelected(int xIndex, int yIndex, bool selected)
@@ -54,19 +53,24 @@ public class GridMasker : IGridTool
     {
         if (selected)
         {
-            if (!CellTrackByFloor.ContainsKey(currentFloor))
-                CellTrackByFloor[currentFloor] = new ();
-
-            CellTrackByFloor[currentFloor].Add(point);
-            //cellTracker.Add(point);
+            tempCellTracker.Add(point);
         }
-
         else
         {
-            if (CellTrackByFloor.ContainsKey(currentFloor))
-                CellTrackByFloor[currentFloor].Remove(point);
-            //cellTracker.Remove(point);
+           if(!tempCellTracker.Contains(point))
+               tempCellTracker.Remove(point);
         }
+    }
+    
+    private void ResetSelectedCells(bool value = false)
+    {
+        foreach (var cell in tempCellTracker)
+        {
+            selectedCells[cell.x, cell.y] = value;
+            overlayPainter.SetCellPainted(cell.x, cell.y, value);
+        }
+
+        tempCellTracker.Clear();
     }
 
     public void SetSecondaryTools(params IGridTool[] secondaryTools)
@@ -85,17 +89,7 @@ public class GridMasker : IGridTool
         }
     }
 
-    public void RestoreSelectedCells(bool value = false)
-    {
-        var tracker = CellTrackByFloor[currentFloor];
-        foreach (var cell in tracker)
-        {
-            selectedCells[cell.x, cell.y] = value;
-            overlayPainter.SetCellPainted(cell.x, cell.y, value);
-        }
-
-        tracker.Clear();
-    }
+   
 
     public void ClearOccupiedCells(bool value = false)
     {

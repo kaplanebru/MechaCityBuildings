@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FloorIntersectionMasker
@@ -7,14 +8,12 @@ public class FloorIntersectionMasker
     private HashSet<Vector2Int> intersections = new();
     
     //Todo: after that call deconstruct dummies at intersections on the lower floor
-    private void DetectCellsUnderFloor(int givenFloor) 
+    private void DetectCellsUnderFloor(FloorData upperFloor, FloorData lowerFloor) 
     {
-        if(givenFloor <= 0) return;
-        if(!masker.CellTrackByFloor.ContainsKey(givenFloor)) return;
-        if(!masker.CellTrackByFloor.ContainsKey(givenFloor-1)) return;
-
-        var upperCells = masker.CellTrackByFloor[givenFloor];
-        var lowerCells = masker.CellTrackByFloor[givenFloor-1];
+        //if(givenFloor <= 0) return;
+        
+        var upperCells = upperFloor.ItemsByCell.Keys.ToHashSet();
+        var lowerCells = lowerFloor.ItemsByCell.Keys.ToHashSet();
         
         FindIntersections(upperCells, lowerCells);
     }

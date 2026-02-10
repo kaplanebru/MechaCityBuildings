@@ -1,10 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GridToConstruction: IGridTool
 {
     public GridData Data { get; private set; }
-    private FloorDatabase _floorDatabase;
 
     public void SetGridRelatedData(IGridRelatedData[] gridRelatedData)
     {
@@ -12,10 +12,7 @@ public class GridToConstruction: IGridTool
     }
     public void SetSecondaryTools(params IGridTool[] secondaryTools) {}
 
-    public void SetFloorProtocoles(FloorDatabase db)
-    {
-        _floorDatabase = db;
-    }
+   
 
     public Vector3 GetCellIndexToWorldPositionCenter(int xIndex, int yIndex)
     {
@@ -39,38 +36,45 @@ public class GridToConstruction: IGridTool
     }
     
    
-    List<Transform> constructedDummies = new List<Transform>();
-    public void ConstructBuildingsOnCells(HashSet<Vector2Int> trackedCells, ConstructionData data, float groundHeight)
+    public void ConstructBuildingsOnCells(FloorData floorData, HashSet<Vector2Int> registeredCells, ConstructionData data, float groundHeight)
     {
-        if (trackedCells.Count == 0)
+        if (registeredCells.Count == 0)
         {
             Debug.Log("No tracked cells found");
             return;
         }
         
-        trackedCells = BoundaryFinder.GetBoundsWithInner(1, trackedCells);
-        foreach (var trackedCell in trackedCells)
+        //registeredCells = BoundaryFinder.GetBoundsWithInner(1, trackedCells);
+        
+        Transform root = floorData.Root;
+
+        foreach (var cell in registeredCells)
         {
-            Vector3 pos = GetCellIndexToWorldPositionCenter(trackedCell.x, trackedCell.y);
+            Vector3 pos = GetCellIndexToWorldPositionCenter(cell.x, cell.y);
             pos.y += groundHeight;
-            var dummyInstance = Object.Instantiate(data.Dummy, pos, Data.OriginWorldTransform.rotation);
-            dummyInstance.transform.SetParent(_floorDatabase.GetActiveFloorData().Root);
-            constructedDummies.Add(dummyInstance);
+            
+            var dummyInstance = Object.Instantiate(
+                data.Dummy,
+                pos,
+                Data.OriginWorldTransform.rotation,
+                root);
+            
+            floorData.ItemsByCell.TryAdd(cell, dummyInstance);
         }
     }
 
-    public void DeconstructBuildingsOnCells()
+    public void DeconstructBuildingsOnCells(FloorData floorData)
     {
-        if (constructedDummies.Count == 0)
+        if (floorData.ItemsByCell.Count == 0)
         {
             Debug.Log("No constructed dummies found");
             return;
         }
-        foreach (var dummy in constructedDummies)
+        foreach (var dummy in floorData.ItemsByCell.Values)
         {
             Object.Destroy(dummy.gameObject);
         }
-        constructedDummies.Clear();
+        floorData.ItemsByCell.Clear();
     }
 }
 
