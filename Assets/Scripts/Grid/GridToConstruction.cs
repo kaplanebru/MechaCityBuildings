@@ -63,9 +63,12 @@ public class GridToConstruction: IGridTool
         }
     }
 
-   public void DeconstructBuildingsOnGivenCells(HashSet<Vector2Int> givenCells, FloorData floorData)
+   public void DeconstructBuildings(List<Transform> buildings)
    {
-       
+       for (int i = buildings.Count - 1; i >= 0; i--)
+       {
+           Object.Destroy(buildings[i]);
+       }
    }
 
     public void DeconstructBuildingsOnCells(FloorData floorData)

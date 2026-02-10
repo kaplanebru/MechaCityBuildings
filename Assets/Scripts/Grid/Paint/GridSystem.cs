@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [Serializable]
@@ -82,29 +83,27 @@ public class GridSystem : MonoBehaviour
         var floorData = _floorProtocols.db.GetActiveFloorData();
         contstructor.ConstructBuildingsOnCells(floorData, registeredCells, constructionData, drawingGroundHeight);
         
-        if (TryDeconstructInvisibleIntersections(floorData, out var intersections,out var lowerFloor))
+        if (TryDeconstructInvisibleIntersections(floorData, out var intersectingBuildings))
         {
-            contstructor.DeconstructBuildingsOnGivenCells(intersections, lowerFloor);
+            contstructor.DeconstructBuildings(intersectingBuildings.ToList());
         }
     }
     
-    private bool TryDeconstructInvisibleIntersections(FloorData activeFloorData,
-        out HashSet<Vector2Int> intersections,
-        out FloorData lowerFloor)
+    private bool TryDeconstructInvisibleIntersections(
+        FloorData activeFloorData,
+        out HashSet<Transform> intersectingBuildings)
     {
-        intersections = null;
-        lowerFloor = null;
+        intersectingBuildings = null;
         if(activeFloorData.Index <= 0) return false;
         
-        lowerFloor = _floorProtocols.db.GetFloorData(activeFloorData.Index-1);
-
+        var lowerFloor = _floorProtocols.db.GetFloorData(activeFloorData.Index-1);
         if (lowerFloor == null)
         {
             Debug.Log("No floor with that Index:  " + activeFloorData.Index);
             return false;
         }
 
-        intersections = FloorIntersectionMasker.GetIntersectionsUnderFloor(activeFloorData, lowerFloor);
+        intersectingBuildings = FloorIntersectionMasker.GetIntersectionsUnderFloor(activeFloorData, lowerFloor);
         return true;
     }
 
