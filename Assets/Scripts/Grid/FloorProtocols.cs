@@ -53,36 +53,28 @@ public class FloorProtocols
         foreach (var item in items)
         {
             Object.Destroy(item.gameObject);
+            //Undo.DestroyObjectImmediate(activeRoot);
         }
         activeFloor.ItemsByCell.Clear();
-        
-        /*var root = cachedFloorRoots[ActiveFloorIndex];
-        if (root.childCount == 0) return;
-
-        for (int i = root.childCount - 1; i >= 0; i--)
-        {
-            var child = root.GetChild(i).gameObject;
-            Object.Destroy(child);
-            //Undo.DestroyObjectImmediate(child);
-        }*/
     }
 
-    public void DeleteLastFloor()
+    public bool TryDeleteLastFloor(out FloorData newActiveFloor)
     {
-        if (db.FloorDatas.Count == 1) return;
+        newActiveFloor = null;
+        if (db.FloorDatas.Count <= 1) return false;
 
         var activeFloor = db.GetActiveFloorData();
         
         ClearActiveFloor();
         var activeRoot = activeFloor.Root;
         Object.Destroy(activeRoot.gameObject);
-        //todo: bunu destroy edince aslında altındakiler de destroyed olur mu?
-        //Undo.DestroyObjectImmediate(activeRoot);
 
         db.FloorDatas.Remove(activeFloor.Index);
+        db.SetActiveFloor(db.FloorDatas.Last().Value.Index);
         
-        if(db.ActiveFloorIndex == db.FloorDatas.Count - 1)
-            db.SetActiveFloor(0);
+        newActiveFloor = db.GetActiveFloorData();
+        //TODO: contructordan bunu çağırma
+        return true;
     }
     
 }

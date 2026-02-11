@@ -1,24 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[Serializable]
-public class UserMapData
-{
-    [Header("Floor Settings")] public int AverageFloorHeight = 2;
-
-    [Header("Grid Settings")] public int BuildingCellSize = 2;
-    public bool UseMapSizeForGridSize = true;
-    public Vector2Int ProjectedGridSize = new(100, 50);
-}
 
 public class GridSystem : MonoBehaviour
 {
-    [SerializeField] private UserMapData userMapData;
+    [SerializeField] private UserPreferences userPreferences;
     [SerializeField] private GridData gridData;
     [SerializeField] private PaintData paintData;
-    [SerializeField] private ConstructionData constructionData;
     [SerializeField] private FloorCacheData floorCacheData;
 
     [SerializeField] private MapSizeToGridSize mapSizeToGridSize;
@@ -34,7 +23,11 @@ public class GridSystem : MonoBehaviour
 
     private IGridRelatedData[] gridRelatedData;
     private IGridTool[] tools;
-    private float drawingGroundHeight;
+
+    private void Awake()
+    {
+        Configurations.SetData(userPreferences);
+    }
 
     private void Start()
     {
@@ -51,16 +44,16 @@ public class GridSystem : MonoBehaviour
 
     private void AdaptGridSizeToUserCellSize()
     {
-        if (userMapData.UseMapSizeForGridSize)
-            userMapData.ProjectedGridSize = mapSizeToGridSize.GetToGridSizeFromMesh();
+        if (userPreferences.UseMapSizeForGridSize)
+            userPreferences.ProjectedGridSize = mapSizeToGridSize.GetToGridSizeFromMesh();
 
-        userMapData.ProjectedGridSize.x =
-            Mathf.RoundToInt(userMapData.ProjectedGridSize.x / userMapData.BuildingCellSize);
-        userMapData.ProjectedGridSize.y =
-            Mathf.RoundToInt(userMapData.ProjectedGridSize.y / userMapData.BuildingCellSize);
+        userPreferences.ProjectedGridSize.x =
+            Mathf.RoundToInt(userPreferences.ProjectedGridSize.x / userPreferences.BuildingCellSize);
+        userPreferences.ProjectedGridSize.y =
+            Mathf.RoundToInt(userPreferences.ProjectedGridSize.y / userPreferences.BuildingCellSize);
 
-        gridData.AdaptiveGridSize = userMapData.ProjectedGridSize;
-        gridData.CellSize = userMapData.BuildingCellSize;
+        gridData.AdaptiveGridSize = userPreferences.ProjectedGridSize;
+        gridData.CellSize = userPreferences.BuildingCellSize;
     }
 
     private void SetTools()
@@ -81,7 +74,7 @@ public class GridSystem : MonoBehaviour
         }
 
         var floorData = _floorProtocols.db.GetActiveFloorData();
-        contstructor.ConstructBuildingsOnCells(floorData, registeredCells, constructionData, drawingGroundHeight);
+        contstructor.ConstructBuildingsOnCells(floorData, registeredCells);
         
         if (TryDeconstructInvisibleIntersections(floorData, out var intersectingBuildings))
         {
@@ -89,22 +82,16 @@ public class GridSystem : MonoBehaviour
         }
     }
     
-    private bool TryDeconstructInvisibleIntersections(
-        FloorData activeFloorData,
+    private bool TryDeconstructInvisibleIntersections(FloorData activeFloorData,
         out HashSet<Transform> intersectingBuildings)
     {
         intersectingBuildings = null;
-        if(activeFloorData.Index <= 0) return false;
-        
-        var lowerFloor = _floorProtocols.db.GetFloorData(activeFloorData.Index-1);
-        if (lowerFloor == null)
+        if(_floorProtocols.db.TryGetLowerFloorData(activeFloorData.Index, out var lowerFloorData))
         {
-            Debug.Log("No floor with that Index:  " + activeFloorData.Index);
-            return false;
+            intersectingBuildings = FloorIntersectionMasker.GetIntersectionsUnderFloor(activeFloorData, lowerFloorData);
+            return true;
         }
-
-        intersectingBuildings = FloorIntersectionMasker.GetIntersectionsUnderFloor(activeFloorData, lowerFloor);
-        return true;
+        return false;
     }
 
     public void DestroyBuildingsOnCells()
@@ -114,8 +101,8 @@ public class GridSystem : MonoBehaviour
 
     private void UpdateDrawingGroundByFloor()
     {
-        drawingGroundHeight = userMapData.AverageFloorHeight * _floorProtocols.db.ActiveFloorIndex;
-        overlayGridPainter.SetHeight(drawingGroundHeight);
+        float currentGroundHeight = userPreferences.AverageFloorHeight * _floorProtocols.db.ActiveFloorIndex;
+        overlayGridPainter.SetHeight(currentGroundHeight);
     }
 
     public void IncreaseFloor()
@@ -124,13 +111,21 @@ public class GridSystem : MonoBehaviour
         OnFloorUpdate();
     }
 
+    public void DeleteLastFloor()
+    {
+        if (_floorProtocols.TryDeleteLastFloor(out var newActiveFloor))
+        {
+            contstructor.RestoreBuildingsOnFloor(newActiveFloor);
+            OnFloorUpdate();
+        }
+    }
+
     public void SwitchFloor(string charCount)
     {
         _floorProtocols.SwitchWorkingFloor(int.Parse(charCount));
         OnFloorUpdate();
     }
 
-    //todo: floorDistributor bağlantı classı yap: floor implementer/publisher
     private void OnFloorUpdate()
     {
         UpdateDrawingGroundByFloor();

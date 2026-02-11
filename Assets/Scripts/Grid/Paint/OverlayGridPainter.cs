@@ -51,6 +51,7 @@ public sealed class OverlayGridPainter : MonoBehaviour
     public void SetHeight(float height)
     {
         _height = overlayHeightOffset + height;
+        transform.position = new Vector3(transform.position.x, height, transform.position.z);
     }
     
     public void CreateOverlayMeshIfNeeded()

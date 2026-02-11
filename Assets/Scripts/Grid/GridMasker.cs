@@ -7,9 +7,8 @@ public class GridMasker : IGridTool
 {
     private bool[,] selectedCells;
     private bool[,] occupiedCells;
-    
+
     private HashSet<Vector2Int> tempCellTracker = new();
-    private FloorDatabase floorDb;
 
     private int gridWidthInCells;
     private int gridHeightInCells;
@@ -22,19 +21,8 @@ public class GridMasker : IGridTool
         this.overlayPainter = overlayPainter;
     }
 
-    public void SetGridRelatedDatabase(params IGridDatabase[] gridDb)
-    {
-        floorDb = gridDb[0] as FloorDatabase;
-    }
-
     public HashSet<Vector2Int> RegisterTrackedCells()
     {
-        /*var floorData = floorDb.GetActiveFloorData();
-        foreach (var cell in tempCellTracker)
-        {
-            floorData.ItemsByCell.TryAdd(cell, null);
-        }*/
-        
         HashSet<Vector2Int> competedTrack = new HashSet<Vector2Int>();
         competedTrack.UnionWith(tempCellTracker);
         ResetSelectedCells();
@@ -57,11 +45,10 @@ public class GridMasker : IGridTool
         }
         else
         {
-           if(!tempCellTracker.Contains(point))
-               tempCellTracker.Remove(point);
+            tempCellTracker.Remove(point);
         }
     }
-    
+
     private void ResetSelectedCells(bool value = false)
     {
         foreach (var cell in tempCellTracker)
@@ -89,7 +76,6 @@ public class GridMasker : IGridTool
         }
     }
 
-   
 
     public void ClearOccupiedCells(bool value = false)
     {
