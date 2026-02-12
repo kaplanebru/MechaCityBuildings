@@ -4,22 +4,35 @@ public class CamShifter : MonoBehaviour
 {
     [SerializeField] private Transform[] camTransforms;
     [SerializeField] private Camera cam;
-    private int currentCamTransform = 0;
-    
+    private int currentCamIndex = 0;
+    private float startHeightTopdownCam;
+
+    public void Initialize()
+    {
+        startHeightTopdownCam = camTransforms[0].position.y;
+    }
+
     public void OnShiftCamButtonClicked()
     {
-        ShiftPos();
+        ShiftCamSetting();
         ApplyTransform();
     }
 
-    private void ShiftPos()
+    public void AlignRelativeHeightByFloor(float heightOffset)
     {
-        currentCamTransform = (currentCamTransform + 1) % camTransforms.Length;
+        var pos = camTransforms[0].position;
+        pos.y = startHeightTopdownCam + heightOffset;
+        camTransforms[0].position = pos;
+    }
+
+    private void ShiftCamSetting()
+    {
+        currentCamIndex = (currentCamIndex + 1) % camTransforms.Length;
     }
 
     private void ApplyTransform()
     {
-        cam.transform.position = camTransforms[currentCamTransform].position;
-        cam.transform.rotation = camTransforms[currentCamTransform].rotation;
+        cam.transform.position = camTransforms[currentCamIndex].position;
+        cam.transform.rotation = camTransforms[currentCamIndex].rotation;
     }
 }

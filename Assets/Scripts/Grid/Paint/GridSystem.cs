@@ -9,6 +9,7 @@ public class GridSystem : MonoBehaviour
     [SerializeField] private GridData gridData;
     [SerializeField] private PaintData paintData;
     [SerializeField] private FloorCacheData floorCacheData;
+    [SerializeField] private CamShifter camShifter;
 
     [SerializeField] private MapSizeToGridSize mapSizeToGridSize;
     private GridProjector _projector = new();
@@ -34,7 +35,9 @@ public class GridSystem : MonoBehaviour
         AdaptGridSizeToUserCellSize();
 
         _floorProtocols.Setup(floorCacheData);
-        UpdateDrawingGroundByFloor();
+        
+        camShifter.Initialize();
+        OnFloorUpdate();
 
         SetTools();
         overlayGridPainter.Setup(gridData); //todo add to tools
@@ -75,34 +78,29 @@ public class GridSystem : MonoBehaviour
 
         var floorData = _floorProtocols.db.GetActiveFloorData();
         contstructor.ConstructBuildingsOnCells(floorData, registeredCells);
-        
+
         if (TryDeconstructInvisibleIntersections(floorData, out var intersectingBuildings))
         {
             contstructor.DeconstructBuildings(intersectingBuildings.ToList());
         }
     }
-    
+
     private bool TryDeconstructInvisibleIntersections(FloorData activeFloorData,
         out HashSet<Transform> intersectingBuildings)
     {
         intersectingBuildings = null;
-        if(_floorProtocols.db.TryGetLowerFloorData(activeFloorData.Index, out var lowerFloorData))
+        if (_floorProtocols.db.TryGetLowerFloorData(activeFloorData.Index, out var lowerFloorData))
         {
             intersectingBuildings = FloorIntersectionMasker.GetIntersectionsUnderFloor(activeFloorData, lowerFloorData);
             return true;
         }
+
         return false;
     }
 
     public void DestroyBuildingsOnCells()
     {
         contstructor.DeconstructBuildingsOnCells(_floorProtocols.db.GetActiveFloorData());
-    }
-
-    private void UpdateDrawingGroundByFloor()
-    {
-        float currentGroundHeight = userPreferences.AverageFloorHeight * _floorProtocols.db.ActiveFloorIndex;
-        overlayGridPainter.SetHeight(currentGroundHeight);
     }
 
     public void IncreaseFloor()
@@ -128,7 +126,9 @@ public class GridSystem : MonoBehaviour
 
     private void OnFloorUpdate()
     {
-        UpdateDrawingGroundByFloor();
+        float floorRelativeHeight = userPreferences.AverageFloorHeight * _floorProtocols.db.ActiveFloorIndex;
+        overlayGridPainter.SetHeight(floorRelativeHeight);
+        camShifter.AlignRelativeHeightByFloor(floorRelativeHeight);
     }
 
     private void InjectSecondaryTools()
