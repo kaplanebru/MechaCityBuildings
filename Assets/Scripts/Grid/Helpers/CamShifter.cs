@@ -36,7 +36,9 @@ public class CamShifter : MonoBehaviour
     {
         var pos = camTransforms[0].position;
         pos.y = startHeightTopdownCam + floorData.FloorGroundHeight;
+        
         camTransforms[0].position = pos;
+        ApplyTransform();
     }
 
     private void ShiftCamSetting()

@@ -10,10 +10,16 @@ public class FloorDatabase : IGridRelatedData
     public FloorData GetActiveFloorData() => FloorDatas[ActiveFloorIndex];
     
     public event Action<FloorData> OnActiveFloorUpdate;
+    public event Action<FloorData> OnDeleteLastFloor;
     public void SetActiveFloor(int index)
     {
         ActiveFloorIndex = index;
         OnActiveFloorUpdate?.Invoke(FloorDatas[ActiveFloorIndex]);
+    }
+
+    public void InvokeDeleteLastFloor(FloorData newActiveFloor)
+    {
+        OnDeleteLastFloor?.Invoke(newActiveFloor);
     }
 
     public bool TryGetFloorData(int floorIndex) => FloorDatas.TryGetValue(floorIndex, out FloorData data);

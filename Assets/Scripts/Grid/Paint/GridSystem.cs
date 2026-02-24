@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -38,8 +39,15 @@ public class GridSystem : MonoBehaviour
     {
         AdaptGridSizeToUserCellSize();
         SetTools();
+        SubscribeTools();
         StartCoroutine(_painterProjected.PaintRoutine());
     }
+
+    private void OnDisable()
+    {
+        UnsubscribeTools();
+    }
+
     private void AdaptGridSizeToUserCellSize()
     {
         if (userPreferences.UseMapSizeForGridSize)
@@ -81,6 +89,22 @@ public class GridSystem : MonoBehaviour
         foreach (var tool in tools)
         {
             tool.SetGridRelatedData(gridRelatedData);
+        }
+    }
+
+    private void SubscribeTools()
+    {
+        foreach (var tool in tools)
+        {
+            tool.Subscribe();
+        }
+    }
+
+    private void UnsubscribeTools()
+    {
+        foreach (var tool in tools)
+        {
+            tool.Unsubscribe();
         }
     }
     

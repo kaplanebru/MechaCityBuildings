@@ -42,13 +42,11 @@ public sealed class OverlayGridPainter : MonoBehaviour
 
     private bool isInitialized;
 
-    private void OnEnable()
-    {
-        floorDb.OnActiveFloorUpdate += SetPainterHeight;
-    }
+    
     private void OnDisable()
     {
-        floorDb.OnActiveFloorUpdate -= SetPainterHeight;
+        if(floorDb != null)
+            floorDb.OnActiveFloorUpdate -= SetPainterHeight;
     }
     private void SetPainterHeight(FloorData floorData)
     {
@@ -61,6 +59,8 @@ public sealed class OverlayGridPainter : MonoBehaviour
         isInitialized = false; //added later
         this.gridData = gridData;
         floorDb = floorDatabase;
+        floorDb.OnActiveFloorUpdate += SetPainterHeight;
+
         CreateOverlayMeshIfNeeded();
     }
     

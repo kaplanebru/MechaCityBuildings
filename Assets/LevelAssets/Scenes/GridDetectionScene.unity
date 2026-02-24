@@ -1814,8 +1814,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 984985644}
-        m_TargetAssemblyTypeName: GridSystem, Assembly-CSharp
+      - m_Target: {fileID: 1745433419}
+        m_TargetAssemblyTypeName: FloorManagement, Assembly-CSharp
         m_MethodName: DeleteLastFloor
         m_Mode: 1
         m_Arguments:
@@ -2390,8 +2390,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 984985644}
-        m_TargetAssemblyTypeName: GridSystem, Assembly-CSharp
+      - m_Target: {fileID: 1745433419}
+        m_TargetAssemblyTypeName: FloorManagement, Assembly-CSharp
         m_MethodName: IncreaseFloor
         m_Mode: 1
         m_Arguments:

@@ -6,11 +6,24 @@ public class GridToConstruction: IGridTool
 {
     public GridData GridData { get; private set; }
     private FloorDatabase floorDb;
+    private FloorManagement floorManagement;
+
+    public void Subscribe()
+    {
+        floorDb.OnDeleteLastFloor += RestoreBuildingsOnFloor;
+
+    }
+
+    public void Unsubscribe()
+    {
+        floorDb.OnDeleteLastFloor -= RestoreBuildingsOnFloor;
+    }
 
     public void SetGridRelatedData(Dictionary<GridDataType, IGridRelatedData> gridRelatedData)
     {
         GridData = gridRelatedData[GridDataType.GridData] as GridData;
         floorDb = gridRelatedData[GridDataType.FloorDatabase] as FloorDatabase;
+
     }
     public void SetSecondaryTools(params IGridTool[] secondaryTools) {}
     

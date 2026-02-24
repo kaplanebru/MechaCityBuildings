@@ -24,25 +24,16 @@ public class FloorManagement: MonoBehaviour
         db.SetActiveFloor(0);
     }
     
-    public void SwitchWorkingFloor(int floorIndex)
-    {
-        if (floorIndex >= db.FloorDatas.Count)
-        {
-            Debug.LogError("Floor index out of bounds");
-            return;
-        }
-        
-        db.SetActiveFloor(floorIndex);
-    }
-
+  
     public void IncreaseFloor()
     {
-        db.SetActiveFloor(db.ActiveFloorIndex+1);
-        
+        int newFloorIndex = db.ActiveFloorIndex + 1;
         var newFloor = new GameObject("Floor " + db.FloorDatas.Count).transform;
         newFloor.SetParent(cacheData.Root);
         
-        db.FloorDatas.Add(db.ActiveFloorIndex, new FloorData(db.ActiveFloorIndex, newFloor));
+        db.FloorDatas.Add(newFloorIndex, new FloorData(newFloorIndex, newFloor));
+        db.SetActiveFloor(newFloorIndex);
+
     }
 
     public void ClearActiveFloor()
@@ -64,8 +55,7 @@ public class FloorManagement: MonoBehaviour
     {
         if (TryDeleteLastFloor(out var newActiveFloor))
         {
-            //todo: send event: contstructor.RestoreBuildingsOnFloor(newActiveFloor);
-            //OnFloorUpdate();
+            db.InvokeDeleteLastFloor(newActiveFloor);
         }
     }
 
@@ -85,8 +75,19 @@ public class FloorManagement: MonoBehaviour
         db.SetActiveFloor(db.FloorDatas.Last().Value.Index);
         
         newActiveFloor = db.GetActiveFloorData();
-        //TODO: contructordan bunu çağırma
         return true;
     }
+    
+    public void SwitchWorkingFloor(int floorIndex)
+    {
+        if (floorIndex >= db.FloorDatas.Count)
+        {
+            Debug.LogError("Floor index out of bounds");
+            return;
+        }
+        
+        db.SetActiveFloor(floorIndex);
+    }
+
     
 }

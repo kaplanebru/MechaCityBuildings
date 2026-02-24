@@ -15,6 +15,9 @@ public interface IGridTool
     public void SetGridRelatedData(Dictionary<GridDataType, IGridRelatedData> gridRelatedData);
     
     public void SetSecondaryTools(params IGridTool[] secondaryTools);
+
+    public void Subscribe() {}
+    public void Unsubscribe() {}
 }
 
 public interface IGridRelatedData {}
