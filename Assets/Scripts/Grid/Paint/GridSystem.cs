@@ -2,14 +2,19 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum GridDataType
+{
+    GridData,
+    PaintData,
+    FloorDatabase
+}
 
 public class GridSystem : MonoBehaviour
 {
     [SerializeField] private UserPreferences userPreferences;
     [SerializeField] private GridData gridData;
     [SerializeField] private PaintData paintData;
-    [SerializeField] private FloorCacheData floorCacheData;
-    [SerializeField] private CamShifter camShifter;
+    [SerializeField] private FloorManagement floorManagement;
 
     [SerializeField] private MapSizeToGridSize mapSizeToGridSize;
     private GridProjector _projector = new();
@@ -20,9 +25,8 @@ public class GridSystem : MonoBehaviour
     private PainterInGrid painter = new();
 
     private GridToConstruction contstructor = new();
-    private FloorProtocols _floorProtocols = new();
 
-    private IGridRelatedData[] gridRelatedData;
+    private Dictionary<GridDataType, IGridRelatedData> gridRelatedData = new();
     private IGridTool[] tools;
 
     private void Awake()
@@ -33,18 +37,9 @@ public class GridSystem : MonoBehaviour
     private void Start()
     {
         AdaptGridSizeToUserCellSize();
-
-        _floorProtocols.Setup(floorCacheData);
-        
-        camShifter.Initialize();
-        OnFloorUpdate();
-
         SetTools();
-        overlayGridPainter.Setup(gridData); //todo add to tools
         StartCoroutine(_painterProjected.PaintRoutine());
     }
-
-
     private void AdaptGridSizeToUserCellSize()
     {
         if (userPreferences.UseMapSizeForGridSize)
@@ -62,73 +57,11 @@ public class GridSystem : MonoBehaviour
     private void SetTools()
     {
         tools = new IGridTool[] { painter, _projector, masker, _painterProjected, contstructor };
+        overlayGridPainter.Setup(gridData, floorManagement.db); //todo add to tools
+
         masker.SetOverlayPainter(overlayGridPainter);
         InjectSecondaryTools();
         DistributeData();
-    }
-
-    public void ConstructBuildingsOnCells()
-    {
-        var registeredCells = masker.RegisterTrackedCells();
-        if (registeredCells.Count == 0)
-        {
-            print("No tracked cells found on Floor");
-            return;
-        }
-
-        var floorData = _floorProtocols.db.GetActiveFloorData();
-        contstructor.ConstructBuildingsOnCells(floorData, registeredCells);
-
-        if (TryDeconstructInvisibleIntersections(floorData, out var intersectingBuildings))
-        {
-            contstructor.DeconstructBuildings(intersectingBuildings.ToList());
-        }
-    }
-
-    private bool TryDeconstructInvisibleIntersections(FloorData activeFloorData,
-        out HashSet<Transform> intersectingBuildings)
-    {
-        intersectingBuildings = null;
-        if (_floorProtocols.db.TryGetLowerFloorData(activeFloorData.Index, out var lowerFloorData))
-        {
-            intersectingBuildings = FloorIntersectionMasker.GetIntersectionsUnderFloor(activeFloorData, lowerFloorData);
-            return true;
-        }
-
-        return false;
-    }
-
-    public void DestroyBuildingsOnCells()
-    {
-        contstructor.DeconstructBuildingsOnCells(_floorProtocols.db.GetActiveFloorData());
-    }
-
-    public void IncreaseFloor()
-    {
-        _floorProtocols.IncreaseFloorSet();
-        OnFloorUpdate();
-    }
-
-    public void DeleteLastFloor()
-    {
-        if (_floorProtocols.TryDeleteLastFloor(out var newActiveFloor))
-        {
-            contstructor.RestoreBuildingsOnFloor(newActiveFloor);
-            OnFloorUpdate();
-        }
-    }
-
-    public void SwitchFloor(string charCount)
-    {
-        _floorProtocols.SwitchWorkingFloor(int.Parse(charCount));
-        OnFloorUpdate();
-    }
-
-    private void OnFloorUpdate()
-    {
-        float floorRelativeHeight = userPreferences.AverageFloorHeight * _floorProtocols.db.ActiveFloorIndex;
-        overlayGridPainter.SetHeight(floorRelativeHeight);
-        camShifter.AlignRelativeHeightByFloor(floorRelativeHeight);
     }
 
     private void InjectSecondaryTools()
@@ -139,11 +72,26 @@ public class GridSystem : MonoBehaviour
 
     public void DistributeData()
     {
-        gridRelatedData = new IGridRelatedData[] { gridData, paintData };
+       // gridRelatedData = new IGridRelatedData[] { gridData, paintData, floorManagement.db};
+        gridRelatedData.Clear();
+        gridRelatedData.Add(GridDataType.GridData, gridData);
+        gridRelatedData.Add(GridDataType.PaintData, paintData);
+        gridRelatedData.Add(GridDataType.FloorDatabase, floorManagement.db);
 
         foreach (var tool in tools)
         {
             tool.SetGridRelatedData(gridRelatedData);
         }
+    }
+    
+    public void ConstructBuildingsOnCells()
+    {
+        var registeredCells = masker.RegisterTrackedCells();
+        contstructor.Construct(registeredCells);
+    }
+
+    public void DestroyBuildingsOnCells()
+    {
+        contstructor.DeconstructBuildingsOnCells();
     }
 }

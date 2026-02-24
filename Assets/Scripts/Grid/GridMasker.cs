@@ -59,6 +59,7 @@ public class GridMasker : IGridTool
 
         tempCellTracker.Clear();
     }
+    
 
     public void SetSecondaryTools(params IGridTool[] secondaryTools)
     {
@@ -88,9 +89,9 @@ public class GridMasker : IGridTool
         }
     }
 
-    public void SetGridRelatedData(IGridRelatedData[] gridRelatedData)
+    public void SetGridRelatedData(Dictionary<GridDataType, IGridRelatedData> gridRelatedData)
     {
-        Data = (GridData)gridRelatedData[0];
+        Data = gridRelatedData[GridDataType.GridData] as GridData;//(GridData)gridRelatedData[0];
 
         gridWidthInCells = Data.AdaptiveGridSize.x;
         gridHeightInCells = Data.AdaptiveGridSize.y;

@@ -1,12 +1,26 @@
+using System;
 using UnityEngine;
 
 public class CamShifter : MonoBehaviour
 {
     [SerializeField] private Transform[] camTransforms;
     [SerializeField] private Camera cam;
+    [SerializeField] private FloorManagement floorManagement;
+
     private int currentCamIndex = 0;
     private float startHeightTopdownCam;
 
+    private void OnEnable()
+    {
+        Initialize();
+        floorManagement.db.OnActiveFloorUpdate += AlignHeightByFloor;
+    }
+
+    private void OnDisable()
+    {
+        floorManagement.db.OnActiveFloorUpdate -= AlignHeightByFloor;
+    }
+    
     public void Initialize()
     {
         startHeightTopdownCam = camTransforms[0].position.y;
@@ -17,11 +31,11 @@ public class CamShifter : MonoBehaviour
         ShiftCamSetting();
         ApplyTransform();
     }
-
-    public void AlignRelativeHeightByFloor(float heightOffset)
+    
+    private void AlignHeightByFloor(FloorData floorData)
     {
         var pos = camTransforms[0].position;
-        pos.y = startHeightTopdownCam + heightOffset;
+        pos.y = startHeightTopdownCam + floorData.FloorGroundHeight;
         camTransforms[0].position = pos;
     }
 

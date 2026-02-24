@@ -1,13 +1,21 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FloorDatabase : IGridDatabase
+public class FloorDatabase : IGridRelatedData
 {
     public int ActiveFloorIndex { get; private set; } = 0;
     public Dictionary<int, FloorData> FloorDatas = new();
 
     public FloorData GetActiveFloorData() => FloorDatas[ActiveFloorIndex];
-    public void SetActiveFloor(int index) => ActiveFloorIndex = index;
+    
+    public event Action<FloorData> OnActiveFloorUpdate;
+    public void SetActiveFloor(int index)
+    {
+        ActiveFloorIndex = index;
+        OnActiveFloorUpdate?.Invoke(FloorDatas[ActiveFloorIndex]);
+    }
+
     public bool TryGetFloorData(int floorIndex) => FloorDatas.TryGetValue(floorIndex, out FloorData data);
     public bool TryGetLowerFloorData(int upperFloorIndex, out FloorData lowerFloorData)
     {

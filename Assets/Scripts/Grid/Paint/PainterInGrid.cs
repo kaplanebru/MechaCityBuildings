@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PainterInGrid : IGridTool
@@ -7,9 +8,9 @@ public class PainterInGrid : IGridTool
     private GridProjector _projector;
     private GridMasker _masker;
 
-    public void SetGridRelatedData(IGridRelatedData[] gridRelatedData)
+    public void SetGridRelatedData(Dictionary<GridDataType, IGridRelatedData> gridRelatedData)
     {
-        _paintData = gridRelatedData[1] as PaintData;
+        _paintData = gridRelatedData[GridDataType.PaintData] as PaintData;
     }
 
     public void SetSecondaryTools(params IGridTool[] secondaryTools)

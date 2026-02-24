@@ -7,8 +7,9 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public sealed class OverlayGridPainter : MonoBehaviour
 {
-    
-    public GridData GridData { get; private set; }
+
+    private GridData gridData;
+    private FloorDatabase floorDb;
 
     [Header("Visual")]
     [Tooltip("Small vertical offset above the ground to avoid z-fighting.")]
@@ -41,17 +42,26 @@ public sealed class OverlayGridPainter : MonoBehaviour
 
     private bool isInitialized;
 
-    public void Setup(GridData gridData)
+    private void OnEnable()
+    {
+        floorDb.OnActiveFloorUpdate += SetPainterHeight;
+    }
+    private void OnDisable()
+    {
+        floorDb.OnActiveFloorUpdate -= SetPainterHeight;
+    }
+    private void SetPainterHeight(FloorData floorData)
+    {
+        _height = overlayHeightOffset + floorData.FloorGroundHeight;
+        transform.position = new Vector3(transform.position.x, floorData.FloorGroundHeight, transform.position.z);
+    }
+    
+    public void Setup(GridData gridData, FloorDatabase floorDatabase)
     {
         isInitialized = false; //added later
-        GridData = gridData;
+        this.gridData = gridData;
+        floorDb = floorDatabase;
         CreateOverlayMeshIfNeeded();
-    }
-
-    public void SetHeight(float height)
-    {
-        _height = overlayHeightOffset + height;
-        transform.position = new Vector3(transform.position.x, height, transform.position.z);
     }
     
     public void CreateOverlayMeshIfNeeded()
@@ -59,17 +69,17 @@ public sealed class OverlayGridPainter : MonoBehaviour
         if (isInitialized)
             return;
         
-        gridWidthInCells = GridData.AdaptiveGridSize.x;
-        gridHeightInCells = GridData.AdaptiveGridSize.y;
+        gridWidthInCells = gridData.AdaptiveGridSize.x;
+        gridHeightInCells = gridData.AdaptiveGridSize.y;
 
         if (gridWidthInCells <= 0 || gridHeightInCells <= 0)
             throw new InvalidOperationException("OverlayGridPainter: gridData.GridSize must be positive.");
 
         // Place overlay at grid origin in WORLD space.
         // Vertices are LOCAL.
-        transform.position = GridData.OriginWorldTransform.position;
-        transform.rotation = GridData.OriginWorldTransform.rotation;
-        var scale = GridData.OriginWorldTransform.localScale;
+        transform.position = gridData.OriginWorldTransform.position;
+        transform.rotation = gridData.OriginWorldTransform.rotation;
+        var scale = gridData.OriginWorldTransform.localScale;
         transform.localScale = new Vector3(scale.x, scale.y, scale.x);//Vector3.one;
         //unit size ile orantılı gitmeli sanırım
 
@@ -132,7 +142,7 @@ public sealed class OverlayGridPainter : MonoBehaviour
 
     private void BuildLocalGeometry(Vector3[] verticesArray, int[] trianglesArray)
     {
-        float cellSize = GridData.CellSize;
+        float cellSize = gridData.CellSize;
 
         // LOCAL offset above ground.
         float y = _height;//overlayHeightOffset;

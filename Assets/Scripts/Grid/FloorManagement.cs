@@ -1,36 +1,41 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class FloorProtocols
+public class FloorManagement: MonoBehaviour
 {
     public FloorDatabase db = new FloorDatabase();
-    private FloorCacheData cacheData;
-    
-    public void Setup(FloorCacheData data)
+    [SerializeField] private FloorCacheData cacheData;
+
+    private void OnEnable()
     {
-        cacheData = data;
-        
+        Setup();
+    }
+
+    public void Setup()
+    {
         db.FloorDatas.Clear();
         for (var i = 0; i < cacheData.CachedFloorRoots.Count; i++)
         {
             db.FloorDatas.Add(i, new FloorData(i, cacheData.CachedFloorRoots[i]));
         }
+        
+        db.SetActiveFloor(0);
     }
     
-    public FloorData SwitchWorkingFloor(int floorIndex)
+    public void SwitchWorkingFloor(int floorIndex)
     {
         if (floorIndex >= db.FloorDatas.Count)
         {
             Debug.LogError("Floor index out of bounds");
-            return null;
+            return;
         }
         
         db.SetActiveFloor(floorIndex);
-        return db.GetActiveFloorData();
     }
 
-    public FloorData IncreaseFloorSet()
+    public void IncreaseFloor()
     {
         db.SetActiveFloor(db.ActiveFloorIndex+1);
         
@@ -38,7 +43,6 @@ public class FloorProtocols
         newFloor.SetParent(cacheData.Root);
         
         db.FloorDatas.Add(db.ActiveFloorIndex, new FloorData(db.ActiveFloorIndex, newFloor));
-        return db.GetActiveFloorData();
     }
 
     public void ClearActiveFloor()
@@ -46,19 +50,27 @@ public class FloorProtocols
         if(db.FloorDatas.Count <= 1) return;
 
         var activeFloor = db.GetActiveFloorData();
-            //todo: check henüz null olabilir itemlar cell dolu olsa bile
         if(activeFloor.ItemsByCell.Count == 0) return;
 
         var items = activeFloor.ItemsByCell.Values.ToHashSet();
         foreach (var item in items)
         {
-            Object.Destroy(item.gameObject);
+            Destroy(item.gameObject);
             //Undo.DestroyObjectImmediate(activeRoot);
         }
         activeFloor.ItemsByCell.Clear();
     }
+    public void DeleteLastFloor()
+    {
+        if (TryDeleteLastFloor(out var newActiveFloor))
+        {
+            //todo: send event: contstructor.RestoreBuildingsOnFloor(newActiveFloor);
+            //OnFloorUpdate();
+        }
+    }
 
-    public bool TryDeleteLastFloor(out FloorData newActiveFloor)
+
+    private bool TryDeleteLastFloor(out FloorData newActiveFloor)
     {
         newActiveFloor = null;
         if (db.FloorDatas.Count <= 1) return false;
@@ -67,7 +79,7 @@ public class FloorProtocols
         
         ClearActiveFloor();
         var activeRoot = activeFloor.Root;
-        Object.Destroy(activeRoot.gameObject);
+        Destroy(activeRoot.gameObject);
 
         db.FloorDatas.Remove(activeFloor.Index);
         db.SetActiveFloor(db.FloorDatas.Last().Value.Index);

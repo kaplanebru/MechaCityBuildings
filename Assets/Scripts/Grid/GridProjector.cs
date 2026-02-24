@@ -1,12 +1,13 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GridProjector: IGridTool
 {
     public GridData Data { get; private set; }
 
-    public void SetGridRelatedData(IGridRelatedData[] gridRelatedData)
+    public void SetGridRelatedData(Dictionary<GridDataType, IGridRelatedData> gridRelatedData)
     {
-        Data = gridRelatedData[0] as GridData;
+        Data = gridRelatedData[GridDataType.GridData] as GridData;
     }
 
     public void SetSecondaryTools(params IGridTool[] secondaryTools) {}

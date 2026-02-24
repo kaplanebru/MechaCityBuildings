@@ -4,21 +4,23 @@ using UnityEngine;
 
 public class GridToConstruction: IGridTool
 {
-    public GridData Data { get; private set; }
+    public GridData GridData { get; private set; }
+    private FloorDatabase floorDb;
 
-    public void SetGridRelatedData(IGridRelatedData[] gridRelatedData)
+    public void SetGridRelatedData(Dictionary<GridDataType, IGridRelatedData> gridRelatedData)
     {
-        Data = gridRelatedData[0] as GridData;
+        GridData = gridRelatedData[GridDataType.GridData] as GridData;
+        floorDb = gridRelatedData[GridDataType.FloorDatabase] as FloorDatabase;
     }
     public void SetSecondaryTools(params IGridTool[] secondaryTools) {}
     
     public Vector3 GetCellIndexToWorldPositionCenter(int xIndex, int yIndex)
     {
-        float worldX = Data.OriginWorldTransform.position.x + (xIndex + 0.5f) * Data.CellSize;
-        float worldZ = Data.OriginWorldTransform.position.z + (yIndex + 0.5f) * Data.CellSize;
+        float worldX = GridData.OriginWorldTransform.position.x + (xIndex + 0.5f) * GridData.CellSize;
+        float worldZ = GridData.OriginWorldTransform.position.z + (yIndex + 0.5f) * GridData.CellSize;
 
 
-        float worldY = Data.OriginWorldTransform.position.y;
+        float worldY = GridData.OriginWorldTransform.position.y;
 
         return new Vector3(worldX, worldY, worldZ);
     }
@@ -26,13 +28,41 @@ public class GridToConstruction: IGridTool
    
     public Vector3 CellIndexToWorldPositionCorner(int xIndex, int yIndex)
     {
-        float worldX = Data.OriginWorldTransform.position.x + xIndex * Data.CellSize;
-        float worldZ = Data.OriginWorldTransform.position.z + yIndex * Data.CellSize;
-        float worldY = Data.OriginWorldTransform.position.y;
+        float worldX = GridData.OriginWorldTransform.position.x + xIndex * GridData.CellSize;
+        float worldZ = GridData.OriginWorldTransform.position.z + yIndex * GridData.CellSize;
+        float worldY = GridData.OriginWorldTransform.position.y;
 
         return new Vector3(worldX, worldY, worldZ);
     }
     
+    public void Construct(HashSet<Vector2Int> registeredCells)
+    {
+        if (registeredCells.Count == 0)
+        {
+            Debug.Log("No tracked cells found on Floor");
+            return;
+        }
+
+        var floorData = floorDb.GetActiveFloorData();
+        ConstructBuildingsOnCells(floorData, registeredCells);
+
+        if (TryDeconstructInvisibleIntersections(floorData, out var intersectingBuildings))
+        {
+            DeconstructBuildings(intersectingBuildings.ToList());
+        }
+    }
+    
+    private bool TryDeconstructInvisibleIntersections(FloorData activeFloorData, out HashSet<Transform> intersectingBuildings)
+    {
+        intersectingBuildings = null;
+        if (floorDb.TryGetLowerFloorData(activeFloorData.Index, out var lowerFloorData))
+        {
+            intersectingBuildings = FloorIntersectionMasker.GetIntersectionsUnderFloor(activeFloorData, lowerFloorData);
+            return true;
+        }
+
+        return false;
+    }
    
     public void ConstructBuildingsOnCells(FloorData floorData, HashSet<Vector2Int> registeredCells)
     {
@@ -41,9 +71,6 @@ public class GridToConstruction: IGridTool
             Debug.Log("No tracked cells found");
             return;
         }
-        
-        //registeredCells = BoundaryFinder.GetBoundsWithInner(1, trackedCells);
-        
         foreach (var cell in registeredCells)
         {
             var dummyInstance = ConstructItem(cell, floorData);
@@ -59,7 +86,7 @@ public class GridToConstruction: IGridTool
         var dummyInstance = Object.Instantiate(
             Configurations.UserPreferences.Dummy,
             pos,
-            Data.OriginWorldTransform.rotation,
+            GridData.OriginWorldTransform.rotation,
             floorData.Root);
         
         return dummyInstance;
@@ -73,8 +100,9 @@ public class GridToConstruction: IGridTool
        }
    }
 
-    public void DeconstructBuildingsOnCells(FloorData floorData)
+    public void DeconstructBuildingsOnCells()
     {
+        var floorData = floorDb.GetActiveFloorData();
         if (floorData.ItemsByCell.Count == 0)
         {
             Debug.Log("No constructed dummies found");

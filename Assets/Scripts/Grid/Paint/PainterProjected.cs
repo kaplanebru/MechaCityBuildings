@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -10,9 +11,9 @@ public sealed class PainterProjected : IGridTool
     private PainterInGrid _painterInGrid;
     private Camera cam;
 
-    public void SetGridRelatedData(IGridRelatedData[] gridRelatedData)
+    public void SetGridRelatedData(Dictionary<GridDataType, IGridRelatedData> gridRelatedData)
     {
-        _paintData = gridRelatedData[1] as PaintData;
+        _paintData = gridRelatedData[GridDataType.PaintData] as PaintData;
         cam = Camera.main;
     }
 
