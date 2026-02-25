@@ -36,7 +36,7 @@ public class FloorManagement: MonoBehaviour
 
     }
 
-    public void ClearActiveFloor()
+    private void ClearActiveFloor()
     {
         if(db.FloorDatas.Count <= 1) return;
 
@@ -78,7 +78,7 @@ public class FloorManagement: MonoBehaviour
         return true;
     }
     
-    public void SwitchWorkingFloor(int floorIndex)
+    public void SwitchActiveFloor(int floorIndex)
     {
         if (floorIndex >= db.FloorDatas.Count)
         {

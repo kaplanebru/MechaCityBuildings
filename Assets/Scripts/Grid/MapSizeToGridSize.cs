@@ -4,7 +4,7 @@ public class MapSizeToGridSize : MonoBehaviour
 {
    [SerializeField] private Transform plane;
    [SerializeField] private Transform cityBuilder; //to prevent bugs
-   public Vector2Int GetToGridSizeFromMesh()
+   public Vector2Int GetGridSizeFromMesh()
    {
       Vector2Int size = new()
       {

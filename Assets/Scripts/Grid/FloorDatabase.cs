@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class FloorDatabase : IGridRelatedData
 {
@@ -33,17 +32,3 @@ public class FloorDatabase : IGridRelatedData
     }
 }
 public interface IGridDatabase {}
-
-public class FloorData
-{
-    public int Index;
-    public Transform Root;
-    public Dictionary<Vector2Int, Transform> ItemsByCell = new();
-    public float FloorGroundHeight => Index * Configurations.UserPreferences.AverageFloorHeight;
-
-    public FloorData(int index, Transform root)
-    {
-        Index = index;
-        Root = root;
-    }
-}

@@ -29,14 +29,12 @@ public class GridSystem : MonoBehaviour
 
     private Dictionary<GridDataType, IGridRelatedData> gridRelatedData = new();
     private IGridTool[] tools;
+    
 
-    private void Awake()
+    public void Initialize()
     {
         Configurations.SetData(userPreferences);
-    }
-
-    private void Start()
-    {
+        
         AdaptGridSizeToUserCellSize();
         SetTools();
         SubscribeTools();
@@ -51,7 +49,7 @@ public class GridSystem : MonoBehaviour
     private void AdaptGridSizeToUserCellSize()
     {
         if (userPreferences.UseMapSizeForGridSize)
-            userPreferences.ProjectedGridSize = mapSizeToGridSize.GetToGridSizeFromMesh();
+            userPreferences.ProjectedGridSize = mapSizeToGridSize.GetGridSizeFromMesh();
 
         userPreferences.ProjectedGridSize.x =
             Mathf.RoundToInt(userPreferences.ProjectedGridSize.x / userPreferences.BuildingCellSize);
@@ -78,7 +76,7 @@ public class GridSystem : MonoBehaviour
         _painterProjected.SetSecondaryTools(_projector, painter);
     }
 
-    public void DistributeData()
+    private void DistributeData()
     {
        // gridRelatedData = new IGridRelatedData[] { gridData, paintData, floorManagement.db};
         gridRelatedData.Clear();

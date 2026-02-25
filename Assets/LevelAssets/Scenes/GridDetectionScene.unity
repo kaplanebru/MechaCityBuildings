@@ -1039,7 +1039,8 @@ MonoBehaviour:
   - {fileID: 1091717116}
   - {fileID: 67510962}
   cam: {fileID: 1297339182}
-  floorManagement: {fileID: 1745433419}
+  floorManagement: {fileID: 0}
+  floorChangeOffset: 5
 --- !u!4 &665855083
 Transform:
   m_ObjectHideFlags: 0
@@ -1066,6 +1067,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 984985643}
+  - component: {fileID: 984985645}
   - component: {fileID: 984985644}
   m_Layer: 0
   m_Name: CityBuilder
@@ -1113,9 +1115,25 @@ MonoBehaviour:
   gridData:
     OriginWorldTransform: {fileID: 1162789278}
   paintData: {fileID: 11400000, guid: b36737068d2ef42d396c373a92113fae, type: 2}
-  floorManagement: {fileID: 1745433419}
+  floorManagement: {fileID: 984985645}
   mapSizeToGridSize: {fileID: 1162789279}
   overlayGridPainter: {fileID: 222753771}
+--- !u!114 &984985645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984985642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f279c861ac74d2c9ed5e89a2ec0442, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cacheData:
+    CachedFloorRoots:
+    - {fileID: 2011864069}
+    Root: {fileID: 1745433418}
 --- !u!1 &1091717115
 GameObject:
   m_ObjectHideFlags: 0
@@ -1814,7 +1832,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1745433419}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: FloorManagement, Assembly-CSharp
         m_MethodName: DeleteLastFloor
         m_Mode: 1
@@ -1979,7 +1997,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1745433418}
-  - component: {fileID: 1745433419}
   m_Layer: 0
   m_Name: FloorsRoot
   m_TagString: Untagged
@@ -2003,22 +2020,6 @@ Transform:
   - {fileID: 2011864069}
   m_Father: {fileID: 984985643}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1745433419
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1745433417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9f279c861ac74d2c9ed5e89a2ec0442, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cacheData:
-    CachedFloorRoots:
-    - {fileID: 2011864069}
-    Root: {fileID: 1745433418}
 --- !u!1 &1757049276
 GameObject:
   m_ObjectHideFlags: 0
@@ -2390,7 +2391,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1745433419}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: FloorManagement, Assembly-CSharp
         m_MethodName: IncreaseFloor
         m_Mode: 1

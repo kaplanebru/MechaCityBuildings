@@ -60,12 +60,25 @@ public class GridMasker : IGridTool
         tempCellTracker.Clear();
     }
     
-
-    public void SetSecondaryTools(params IGridTool[] secondaryTools)
+    public void SetSecondaryTools(params IGridTool[] secondaryTools) {}
+    
+    public void SetGridRelatedData(Dictionary<GridDataType, IGridRelatedData> gridRelatedData)
     {
+        Data = gridRelatedData[GridDataType.GridData] as GridData;//(GridData)gridRelatedData[0];
+
+        gridWidthInCells = Data.AdaptiveGridSize.x;
+        gridHeightInCells = Data.AdaptiveGridSize.y;
+
+        if (gridWidthInCells <= 0)
+            throw new ArgumentOutOfRangeException(nameof(gridWidthInCells));
+
+        if (gridHeightInCells <= 0)
+            throw new ArgumentOutOfRangeException(nameof(gridHeightInCells));
+
+        selectedCells = new bool[gridWidthInCells, gridHeightInCells];
+        occupiedCells = new bool[gridWidthInCells, gridHeightInCells];
     }
-
-
+    
     public void ClearSelectedCells(bool value = false)
     {
         for (int yIndex = 0; yIndex < gridHeightInCells; yIndex++)
@@ -87,22 +100,5 @@ public class GridMasker : IGridTool
                 occupiedCells[xIndex, yIndex] = value;
             }
         }
-    }
-
-    public void SetGridRelatedData(Dictionary<GridDataType, IGridRelatedData> gridRelatedData)
-    {
-        Data = gridRelatedData[GridDataType.GridData] as GridData;//(GridData)gridRelatedData[0];
-
-        gridWidthInCells = Data.AdaptiveGridSize.x;
-        gridHeightInCells = Data.AdaptiveGridSize.y;
-
-        if (gridWidthInCells <= 0)
-            throw new ArgumentOutOfRangeException(nameof(gridWidthInCells));
-
-        if (gridHeightInCells <= 0)
-            throw new ArgumentOutOfRangeException(nameof(gridHeightInCells));
-
-        selectedCells = new bool[gridWidthInCells, gridHeightInCells];
-        occupiedCells = new bool[gridWidthInCells, gridHeightInCells];
     }
 }
