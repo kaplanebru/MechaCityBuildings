@@ -28,7 +28,7 @@ public class GridSystemEditor: Editor
         if (GUILayout.Button("Construct Buildings On Cells"))
         {
             CacheTarget();
-            gridSystem.ConstructBuildingsOnCells();
+            //gridSystem.ConstructBuildingsOnCells();
         }
     }
     

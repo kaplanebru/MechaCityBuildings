@@ -5,12 +5,8 @@ using UnityEngine;
 //TODO: Aslında grid size ve plane aynı olmalı. ya da grid 1 birimi değişir. ama plane ile eşleşse iyi olur
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-public sealed class OverlayGridPainter : MonoBehaviour
+public sealed class OverlayPainter : MonoBehaviour
 {
-
-    private GridData gridData;
-    private FloorDatabase floorDb;
-
     [Header("Visual")]
     [Tooltip("Small vertical offset above the ground to avoid z-fighting.")]
     [SerializeField] private float overlayHeightOffset = 0.01f;
@@ -40,31 +36,15 @@ public sealed class OverlayGridPainter : MonoBehaviour
 
     private bool hasAnyColorChanges;
 
-    private bool isInitialized;
-
+    public bool isInitialized;
     
-    private void OnDisable()
-    {
-        if(floorDb != null)
-            floorDb.OnActiveFloorUpdate -= SetPainterHeight;
-    }
-    private void SetPainterHeight(FloorData floorData)
+    public void SetPainterHeight(FloorData floorData)
     {
         _height = overlayHeightOffset + floorData.FloorGroundHeight;
         transform.position = new Vector3(transform.position.x, floorData.FloorGroundHeight, transform.position.z);
     }
     
-    public void Setup(GridData gridData, FloorDatabase floorDatabase)
-    {
-        isInitialized = false; //added later
-        this.gridData = gridData;
-        floorDb = floorDatabase;
-        floorDb.OnActiveFloorUpdate += SetPainterHeight;
-
-        CreateOverlayMeshIfNeeded();
-    }
-    
-    public void CreateOverlayMeshIfNeeded()
+    public void CreateOverlayMeshIfNeeded(GridData gridData)
     {
         if (isInitialized)
             return;
@@ -89,7 +69,7 @@ public sealed class OverlayGridPainter : MonoBehaviour
         triangles = new int[cellCount * 6];
         colors = new Color32[cellCount * 4];
 
-        BuildLocalGeometry(vertices, triangles);
+        BuildLocalGeometry(vertices, triangles, gridData);
         FillAllCellAlphas(unpaintedAlpha);
 
         overlayMesh = new Mesh();
@@ -110,9 +90,9 @@ public sealed class OverlayGridPainter : MonoBehaviour
 
  
     
-    public void SetCellPainted(int xIndex, int yIndex, bool painted)
+    public void SetCellPainted(int xIndex, int yIndex, bool painted, GridData gridData)
     {
-        CreateOverlayMeshIfNeeded();
+        CreateOverlayMeshIfNeeded(gridData);
 
         if (!IsInsideGrid(xIndex, yIndex))
             return;
@@ -140,7 +120,7 @@ public sealed class OverlayGridPainter : MonoBehaviour
     // Geometry
     // ========================================================================
 
-    private void BuildLocalGeometry(Vector3[] verticesArray, int[] trianglesArray)
+    private void BuildLocalGeometry(Vector3[] verticesArray, int[] trianglesArray, GridData gridData)
     {
         float cellSize = gridData.CellSize;
 
@@ -242,7 +222,7 @@ public sealed class OverlayGridPainter : MonoBehaviour
     /// Call after changing GridData (GridSize, CellSize, OriginWorld).
     /// This rebuilds geometry and resets colors.
     /// </summary>
-    public void RebuildAll()
+    public void RebuildAll(GridData gridData)
     {
         if (!allowFullRebuild)
             return;
@@ -259,16 +239,16 @@ public sealed class OverlayGridPainter : MonoBehaviour
         triangles = null;
         colors = null;
 
-        CreateOverlayMeshIfNeeded();
+        CreateOverlayMeshIfNeeded(gridData);
     }
 
     /// <summary>
     /// Apply a whole selection mask to the overlay.
     /// Useful after loading or after a big operation.
     /// </summary>
-    public void ApplySelectionMask(bool[,] selectedCells)
+    public void ApplySelectionMask(bool[,] selectedCells,GridData gridData)
     {
-        CreateOverlayMeshIfNeeded();
+        CreateOverlayMeshIfNeeded(gridData);
 
         if (selectedCells == null)
             throw new ArgumentNullException(nameof(selectedCells));
@@ -291,9 +271,9 @@ public sealed class OverlayGridPainter : MonoBehaviour
         PushColorsToMesh();
     }
     
-    public void SetCellsPainted(List<Vector2Int> touchedCells, bool painted)
+    public void SetCellsPainted(List<Vector2Int> touchedCells, bool painted, GridData gridData)
     {
-        CreateOverlayMeshIfNeeded();
+        CreateOverlayMeshIfNeeded(gridData);
 
         if (touchedCells == null || touchedCells.Count == 0)
             return;

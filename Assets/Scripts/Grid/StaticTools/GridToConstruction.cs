@@ -2,13 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GridToConstruction: IGridTool
+public static class GridToConstruction
 {
-    public GridData GridData { get; private set; }
-    private FloorDatabase floorDb;
-    private FloorManagement floorManagement;
+    //private FloorDatabase floorDb;
+    //private FloorManagement floorManagement;
 
-    public void Subscribe()
+   /* public void Subscribe()
     {
         floorDb.OnDeleteLastFloor += RestoreBuildingsOnFloor;
 
@@ -17,38 +16,30 @@ public class GridToConstruction: IGridTool
     public void Unsubscribe()
     {
         floorDb.OnDeleteLastFloor -= RestoreBuildingsOnFloor;
-    }
-
-    public void SetGridRelatedData(Dictionary<GridDataType, IGridRelatedData> gridRelatedData)
-    {
-        GridData = gridRelatedData[GridDataType.GridData] as GridData;
-        floorDb = gridRelatedData[GridDataType.FloorDatabase] as FloorDatabase;
-
-    }
-    public void SetSecondaryTools(params IGridTool[] secondaryTools) {}
+    }*/
     
-    public Vector3 GetCellIndexToWorldPositionCenter(int xIndex, int yIndex)
+    public static Vector3 GetCellIndexToWorldPositionCenter(int xIndex, int yIndex, GridData gridData)
     {
-        float worldX = GridData.OriginWorldTransform.position.x + (xIndex + 0.5f) * GridData.CellSize;
-        float worldZ = GridData.OriginWorldTransform.position.z + (yIndex + 0.5f) * GridData.CellSize;
+        float worldX = gridData.OriginWorldTransform.position.x + (xIndex + 0.5f) * gridData.CellSize;
+        float worldZ = gridData.OriginWorldTransform.position.z + (yIndex + 0.5f) * gridData.CellSize;
 
 
-        float worldY = GridData.OriginWorldTransform.position.y;
+        float worldY = gridData.OriginWorldTransform.position.y;
 
         return new Vector3(worldX, worldY, worldZ);
     }
 
    
-    public Vector3 CellIndexToWorldPositionCorner(int xIndex, int yIndex)
+    public static Vector3 CellIndexToWorldPositionCorner(int xIndex, int yIndex, GridData gridData)
     {
-        float worldX = GridData.OriginWorldTransform.position.x + xIndex * GridData.CellSize;
-        float worldZ = GridData.OriginWorldTransform.position.z + yIndex * GridData.CellSize;
-        float worldY = GridData.OriginWorldTransform.position.y;
+        float worldX = gridData.OriginWorldTransform.position.x + xIndex * gridData.CellSize;
+        float worldZ = gridData.OriginWorldTransform.position.z + yIndex * gridData.CellSize;
+        float worldY = gridData.OriginWorldTransform.position.y;
 
         return new Vector3(worldX, worldY, worldZ);
     }
     
-    public void Construct(HashSet<Vector2Int> registeredCells)
+    public static void Construct(HashSet<Vector2Int> registeredCells, GridData gridData, FloorDatabase floorDb)
     {
         if (registeredCells.Count == 0)
         {
@@ -57,15 +48,18 @@ public class GridToConstruction: IGridTool
         }
 
         var floorData = floorDb.GetActiveFloorData();
-        ConstructBuildingsOnCells(floorData, registeredCells);
+        ConstructBuildingsOnCells(floorData, registeredCells, gridData);
 
-        if (TryDeconstructInvisibleIntersections(floorData, out var intersectingBuildings))
+        if (TryDeconstructInvisibleIntersections(floorData, floorDb, out var intersectingBuildings))
         {
             DeconstructBuildings(intersectingBuildings.ToList());
         }
     }
     
-    private bool TryDeconstructInvisibleIntersections(FloorData activeFloorData, out HashSet<Transform> intersectingBuildings)
+    private static bool TryDeconstructInvisibleIntersections(
+        FloorData activeFloorData, 
+        FloorDatabase floorDb,
+        out HashSet<Transform> intersectingBuildings)
     {
         intersectingBuildings = null;
         if (floorDb.TryGetLowerFloorData(activeFloorData.Index, out var lowerFloorData))
@@ -77,7 +71,7 @@ public class GridToConstruction: IGridTool
         return false;
     }
    
-    public void ConstructBuildingsOnCells(FloorData floorData, HashSet<Vector2Int> registeredCells)
+    public static void ConstructBuildingsOnCells(FloorData floorData, HashSet<Vector2Int> registeredCells, GridData gridData)
     {
         if (registeredCells.Count == 0)
         {
@@ -86,26 +80,26 @@ public class GridToConstruction: IGridTool
         }
         foreach (var cell in registeredCells)
         {
-            var dummyInstance = ConstructItem(cell, floorData);
+            var dummyInstance = ConstructItem(cell, floorData, gridData);
             floorData.ItemsByCell.TryAdd(cell, dummyInstance);
         }
     }
 
-    private Transform ConstructItem(Vector2Int cell, FloorData floorData)
+    private static Transform ConstructItem(Vector2Int cell, FloorData floorData, GridData gridData)
     {
-        Vector3 pos = GetCellIndexToWorldPositionCenter(cell.x, cell.y);
+        Vector3 pos = GetCellIndexToWorldPositionCenter(cell.x, cell.y, gridData);
         pos.y += floorData.FloorGroundHeight;
             
         var dummyInstance = Object.Instantiate(
             Configurations.UserPreferences.Dummy,
             pos,
-            GridData.OriginWorldTransform.rotation,
+            gridData.OriginWorldTransform.rotation,
             floorData.Root);
         
         return dummyInstance;
     }
 
-   public void DeconstructBuildings(List<Transform> buildings)
+   public static void DeconstructBuildings(List<Transform> buildings)
    {
        for (int i = buildings.Count - 1; i >= 0; i--)
        {
@@ -113,7 +107,7 @@ public class GridToConstruction: IGridTool
        }
    }
 
-    public void DeconstructBuildingsOnCells()
+    public static void DeconstructBuildingsOnCells(FloorDatabase floorDb)
     {
         var floorData = floorDb.GetActiveFloorData();
         if (floorData.ItemsByCell.Count == 0)
@@ -128,14 +122,14 @@ public class GridToConstruction: IGridTool
         floorData.ItemsByCell.Clear();
     }
 
-    public void RestoreBuildingsOnFloor(FloorData floorData)
+    public static void RestoreBuildingsOnFloor(FloorData floorData,GridData gridData)
     {
         HashSet<Vector2Int> keys = floorData.ItemsByCell.Keys.ToHashSet();
         foreach (var key in keys)
         {
             if (floorData.ItemsByCell[key] != null) continue;
             
-            floorData.ItemsByCell[key] = ConstructItem(key, floorData);
+            floorData.ItemsByCell[key] = ConstructItem(key, floorData, gridData);
         }
     }
 }
