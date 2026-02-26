@@ -587,6 +587,7 @@ MonoBehaviour:
   paintedAlpha: 0.65
   unpaintedAlpha: 0
   allowFullRebuild: 1
+  isInitialized: 0
 --- !u!23 &222753772
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1113,11 +1114,10 @@ MonoBehaviour:
     ProjectedGridSize: {x: 100, y: 50}
     Dummy: {fileID: 5578128815750191864, guid: f1b777e2ccd31494ea8b22f12d132a05, type: 3}
   gridData:
-    OriginWorldTransform: {fileID: 1162789278}
-  paintData: {fileID: 11400000, guid: b36737068d2ef42d396c373a92113fae, type: 2}
-  floorManagement: {fileID: 984985645}
+    OriginWorldTransform: {fileID: 984985643}
+    CellSize: 0
+    AdaptiveGridSize: {x: 0, y: 0}
   mapSizeToGridSize: {fileID: 1162789279}
-  overlayGridPainter: {fileID: 222753771}
 --- !u!114 &984985645
 MonoBehaviour:
   m_ObjectHideFlags: 0

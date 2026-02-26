@@ -6,8 +6,8 @@ using UnityEngine;
 public class GridData: IGridRelatedData
 {
     public Transform OriginWorldTransform;
-    public float CellSize { get; set; }        
-    public Vector2Int AdaptiveGridSize { get; set; }             
+    [HideInInspector] public float CellSize;
+    [HideInInspector] public Vector2Int AdaptiveGridSize;
 }
 
 

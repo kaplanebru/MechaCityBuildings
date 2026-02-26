@@ -8,7 +8,6 @@ public class GridSystem : MonoBehaviour
 {
     [SerializeField] private UserPreferences userPreferences;
     [SerializeField] private GridData gridData;
-    [SerializeField] private PaintData paintData;
     [SerializeField] private MapSizeToGridSize mapSizeToGridSize;
     
     public void Initialize()

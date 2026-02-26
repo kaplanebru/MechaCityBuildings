@@ -4,9 +4,13 @@ using UnityEngine;
 //relation class between overlay painter and paint detector
 public class Painter : MonoBehaviour
 {
-    [SerializeField] private OverlayPainter overlayPainter;
-    [SerializeField] private GridData gridData;
+    [SerializeField] private UserPreferences userPreferences;
+    [SerializeField] private GridData gridData; //todo: map'e göre adapt edildiği için SO yapmak saçma
     [SerializeField] private PaintData paintData;
+    [SerializeField] private OverlayPainter overlayPainter;
+
+    
+
     
     //todo: Grid'i başlattıktan sonra burayı çalıştır
     private void CreateOverlayMeshIfNeeded()
