@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public class GridData: IGridRelatedData
+[CreateAssetMenu(fileName = "New Grid Data", menuName = "CityBuilder/Grid Data")]
+public class GridData: ScriptableObject, IGridRelatedData
 {
-    public Transform OriginWorldTransform;
+    [HideInInspector] public Transform OriginWorldTransform;
     [HideInInspector] public float CellSize;
     [HideInInspector] public Vector2Int AdaptiveGridSize;
 }

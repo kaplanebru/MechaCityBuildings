@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 
@@ -9,15 +6,19 @@ public class GridSystem : MonoBehaviour
     [SerializeField] private UserPreferences userPreferences;
     [SerializeField] private GridData gridData;
     [SerializeField] private MapSizeToGridSize mapSizeToGridSize;
-    
-    public void Initialize()
+    [SerializeField] private OverlayPainter overlayPainter;
+
+    public void Recalculate()
     {
-        Configurations.SetData(userPreferences);
         AdaptGridSizeToUserCellSize();
+        overlayPainter.CreateOverlayMeshIfNeeded(gridData); //todo: cache
     }
-    
+
     private void AdaptGridSizeToUserCellSize()
     {
+        if (Configurations.UserPreferences == null) //reload can be tracked from here
+            Configurations.SetData(userPreferences);
+
         if (userPreferences.UseMapSizeForGridSize)
             userPreferences.ProjectedGridSize = mapSizeToGridSize.GetGridSizeFromMesh();
 
@@ -28,7 +29,6 @@ public class GridSystem : MonoBehaviour
 
         gridData.AdaptiveGridSize = userPreferences.ProjectedGridSize;
         gridData.CellSize = userPreferences.BuildingCellSize;
+        gridData.OriginWorldTransform = userPreferences.OriginWorldTransform;
     }
-
-   
 }

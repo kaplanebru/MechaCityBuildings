@@ -502,7 +502,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 984985644}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: GridSystem, Assembly-CSharp
         m_MethodName: ConstructBuildingsOnCells
         m_Mode: 1
@@ -656,6 +656,87 @@ Transform:
   m_Children: []
   m_Father: {fileID: 984985643}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &517000084
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 517000086}
+  - component: {fileID: 517000088}
+  - component: {fileID: 517000087}
+  - component: {fileID: 517000085}
+  m_Layer: 0
+  m_Name: Components
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &517000085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 517000084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f279c861ac74d2c9ed5e89a2ec0442, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cacheData:
+    CachedFloorRoots:
+    - {fileID: 2011864069}
+    Root: {fileID: 1745433418}
+--- !u!4 &517000086
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 517000084}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 984985643}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &517000087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 517000084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb2233a1a179e488db464512d5674d2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overlayPainter: {fileID: 222753771}
+  floorManagement: {fileID: 517000085}
+  gridData: {fileID: 11400000, guid: 23a790364246843269259e749143f668, type: 2}
+  paintData: {fileID: 11400000, guid: b36737068d2ef42d396c373a92113fae, type: 2}
+--- !u!114 &517000088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 517000084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5feb1dfd5248c465eb0506baf0f4dd94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridData: {fileID: 11400000, guid: 23a790364246843269259e749143f668, type: 2}
+  paintData: {fileID: 11400000, guid: b36737068d2ef42d396c373a92113fae, type: 2}
+  overlayPainter: {fileID: 222753771}
 --- !u!1 &602808991
 GameObject:
   m_ObjectHideFlags: 0
@@ -1069,7 +1150,7 @@ GameObject:
   m_Component:
   - component: {fileID: 984985643}
   - component: {fileID: 984985645}
-  - component: {fileID: 984985644}
+  - component: {fileID: 984985646}
   m_Layer: 0
   m_Name: CityBuilder
   m_TagString: Untagged
@@ -1091,11 +1172,29 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1162789278}
-  - {fileID: 222753774}
   - {fileID: 1745433418}
+  - {fileID: 222753774}
+  - {fileID: 517000086}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &984985644
+--- !u!114 &984985645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984985642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 079906cceba2341acb439345c9509742, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  units:
+    painter: {fileID: 517000088}
+    builder: {fileID: 517000087}
+    gridSystem: {fileID: 0}
+    floorManagement: {fileID: 517000085}
+--- !u!114 &984985646
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1108,32 +1207,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   userPreferences:
-    AverageFloorHeight: 4
+    AverageBuildingHeight: 2
     BuildingCellSize: 2
+    OriginWorldTransform: {fileID: 1162789278}
+    Dummy: {fileID: 5578128815750191864, guid: f1b777e2ccd31494ea8b22f12d132a05, type: 3}
     UseMapSizeForGridSize: 1
     ProjectedGridSize: {x: 100, y: 50}
-    Dummy: {fileID: 5578128815750191864, guid: f1b777e2ccd31494ea8b22f12d132a05, type: 3}
-  gridData:
-    OriginWorldTransform: {fileID: 984985643}
-    CellSize: 0
-    AdaptiveGridSize: {x: 0, y: 0}
+  gridData: {fileID: 11400000, guid: 23a790364246843269259e749143f668, type: 2}
   mapSizeToGridSize: {fileID: 1162789279}
---- !u!114 &984985645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 984985642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9f279c861ac74d2c9ed5e89a2ec0442, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cacheData:
-    CachedFloorRoots:
-    - {fileID: 2011864069}
-    Root: {fileID: 1745433418}
+  overlayPainter: {fileID: 222753771}
 --- !u!1 &1091717115
 GameObject:
   m_ObjectHideFlags: 0
@@ -1431,7 +1513,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 984985644}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: GridSystem, Assembly-CSharp
         m_MethodName: DestroyBuildingsOnCells
         m_Mode: 1

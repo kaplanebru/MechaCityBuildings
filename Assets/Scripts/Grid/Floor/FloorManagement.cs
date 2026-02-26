@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class FloorManagement: MonoBehaviour
+public class FloorManagement: MonoBehaviour //can be made native or static
 {
     public FloorDatabase db = new FloorDatabase();
     [SerializeField] private FloorCacheData cacheData;
