@@ -11,5 +11,6 @@ public class CityBuilderUnits
 }
 public class CityBuilder : MonoBehaviour
 {
+    public bool OnPaintingState = false;
     public CityBuilderUnits units;
 }

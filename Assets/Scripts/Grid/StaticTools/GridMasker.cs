@@ -10,7 +10,7 @@ public static class GridMasker
 
     private static HashSet<Vector2Int> tempCellTracker = new();
     
-    public static void SetGridWithinCells(GridData gridData)
+    public static void SetGridWithinCells(GridData gridData) // todo: On all grid update
     {
         var gridWidthInCells = gridData.AdaptiveGridSize.x;
         var gridHeightInCells = gridData.AdaptiveGridSize.y;
@@ -27,11 +27,11 @@ public static class GridMasker
 
     public static HashSet<Vector2Int> RegisterTrackedCells()
     {
-        HashSet<Vector2Int> competedTrack = new HashSet<Vector2Int>();
-        competedTrack.UnionWith(tempCellTracker);
-        ResetSelectedCells();
-
-        return competedTrack;
+        HashSet<Vector2Int> completedCells = new HashSet<Vector2Int>();
+        completedCells.UnionWith(tempCellTracker);
+        //tempCellTracker.Clear(); already gets cleaned by update tracker
+        
+        return completedCells;
     }
 
     public static void SetSelected(int xIndex, int yIndex, bool selected)
@@ -52,15 +52,13 @@ public static class GridMasker
         }
     }
 
-    private static void ResetSelectedCells(bool value = false)
+    public static void ResetSelectedCells(OverlayPainter overlayPainter, GridData gridData, bool value = false)
     {
         foreach (var cell in tempCellTracker)
         {
-            selectedCells[cell.x, cell.y] = value;
-            //todo: overlayPainter.SetCellPainted(cell.x, cell.y, value);
+            SetSelected(cell.x, cell.y, value);
+            overlayPainter.SetCellPainted(cell.x, cell.y, value, gridData);
         }
-
-        tempCellTracker.Clear();
     }
     
     

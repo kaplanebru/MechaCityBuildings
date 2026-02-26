@@ -38,7 +38,7 @@ public class ReplacerBaseEditor : Editor
 
     private void CacheTarget()
     {
-        if (t != null)
+        if (t == null)
             t = target as ReplacerBase;
     }
 

@@ -9,14 +9,7 @@ public class Painter : MonoBehaviour
     [SerializeField] private OverlayPainter overlayPainter;
 
 
-//todo: Grid'i başlattıktan sonra burayı çalıştır
-    public void CreateOverlayMeshIfNeeded()
-    {
-        overlayPainter.isInitialized = false; //todo:her wire'da baştan kurmamalı ama valuelar değiştiyse baştan kurmalı
-        overlayPainter.CreateOverlayMeshIfNeeded(gridData);
-    }
-
-    public void StartPainting() //todo: to call with editor update that triggered by Start Painting Button
+    public void ExecutePainting() //todo: to call with editor update that triggered by Start Painting Button
     {
         if (PaintDetector.TryDetectAvailableCell(gridData, paintData, out SelectedCellData selectedCellData))
         {

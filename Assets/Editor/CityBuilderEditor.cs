@@ -7,6 +7,30 @@ public class CityBuilderEditor : Editor
     //User pref buraya eklenebilir
     protected CityBuilder t;
     private int floorIndex;
+    
+    private void OnEnable()
+    {
+        CacheTarget();
+        SceneView.duringSceneGui += OnSceneGUI;
+    }
+
+    private void OnDisable()
+    {
+        CacheTarget();
+        SceneView.duringSceneGui -= OnSceneGUI;
+    }
+
+    private void OnSceneGUI(SceneView sceneView)
+    {
+        Event e = Event.current;
+
+        if (e.type == EventType.MouseMove)
+        {
+            if(t.OnPaintingState)
+                t.units.painter.ExecutePainting();
+            sceneView.Repaint();
+        }
+    }
 
     public override void OnInspectorGUI()
     {
@@ -27,15 +51,17 @@ public class CityBuilderEditor : Editor
             {
                 CacheTarget();
                 t.units.gridSystem.Recalculate(); //TODO: if needed
-                t.units.painter.StartPainting();
+                t.OnPaintingState = true;
             }
 
             //TODO: add null check: if no painting - return
             if (GUILayout.Button("Construct Buildings On Paint"))
             {
                 CacheTarget();
-                //TODO: stop painting
+                t.OnPaintingState = false;
                 t.units.builder.ConstructBuildingsOnCells();
+                GridMasker.ResetSelectedCells(t.units.gridSystem.overlayPainter, t.units.gridSystem.gridData);
+
             }
         }
 
@@ -75,7 +101,7 @@ public class CityBuilderEditor : Editor
 
     private void CacheTarget()
     {
-        if (t != null)
+        if (t == null)
             t = target as CityBuilder;
     }
 }

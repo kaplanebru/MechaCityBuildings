@@ -7,22 +7,19 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public sealed class OverlayPainter : MonoBehaviour
 {
-    [Header("Visual")]
-    [Tooltip("Small vertical offset above the ground to avoid z-fighting.")]
-    [SerializeField] private float overlayHeightOffset = 0.01f;
+    [Header("Visual")] [Tooltip("Small vertical offset above the ground to avoid z-fighting.")] [SerializeField]
+    private float overlayHeightOffset = 0.01f;
 
-    [Tooltip("Alpha for painted cells. 0 = invisible, 1 = fully visible.")]
-    [Range(0f, 1f)]
-    [SerializeField] private float paintedAlpha = 0.65f;
+    [Tooltip("Alpha for painted cells. 0 = invisible, 1 = fully visible.")] [Range(0f, 1f)] [SerializeField]
+    private float paintedAlpha = 0.65f;
 
-    [Tooltip("Alpha for unpainted cells. Set to 0 for invisible.")]
-    [Range(0f, 1f)]
-    [SerializeField] private float unpaintedAlpha = 0f;
+    [Tooltip("Alpha for unpainted cells. Set to 0 for invisible.")] [Range(0f, 1f)] [SerializeField]
+    private float unpaintedAlpha = 0f;
 
-    [Header("Optional")]
-    [Tooltip("If true, rebuilds the whole mesh when you call RebuildAll().")]
-    [SerializeField] private bool allowFullRebuild = true;
+    [Header("Optional")] [Tooltip("If true, rebuilds the whole mesh when you call RebuildAll().")] [SerializeField]
+    private bool allowFullRebuild = true;
 
+    [SerializeField] MeshFilter meshFilter;
     // Mesh + arrays.
     private Mesh overlayMesh;
     private Vector3[] vertices;
@@ -36,19 +33,37 @@ public sealed class OverlayPainter : MonoBehaviour
 
     private bool hasAnyColorChanges;
 
-    public bool isInitialized;
-    
+
+    public void RecoverIfNecessary(GridData gridData)
+    {
+        if (meshFilter == null)
+        {
+            if (overlayMesh != null)
+            {
+                meshFilter.sharedMesh = overlayMesh;
+            }
+            else
+            {
+                RebuildAll(gridData);
+            }
+        }
+        else
+        {
+            if (overlayMesh == null)
+            {
+                overlayMesh = meshFilter.sharedMesh;
+            }
+        }
+    }
+
     public void SetPainterHeight(FloorData floorData)
     {
         _height = overlayHeightOffset + floorData.FloorGroundHeight;
         transform.position = new Vector3(transform.position.x, floorData.FloorGroundHeight, transform.position.z);
     }
-    
+
     public void CreateOverlayMeshIfNeeded(GridData gridData)
     {
-        if (isInitialized)
-            return;
-        
         gridWidthInCells = gridData.AdaptiveGridSize.x;
         gridHeightInCells = gridData.AdaptiveGridSize.y;
 
@@ -60,7 +75,7 @@ public sealed class OverlayPainter : MonoBehaviour
         transform.position = gridData.OriginWorldTransform.position;
         transform.rotation = gridData.OriginWorldTransform.rotation;
         var scale = gridData.OriginWorldTransform.localScale;
-        transform.localScale = new Vector3(scale.x, scale.y, scale.x);//Vector3.one;
+        transform.localScale = new Vector3(scale.x, scale.y, scale.x); //Vector3.one;
         //unit size ile orantılı gitmeli sanırım
 
         int cellCount = gridWidthInCells * gridHeightInCells;
@@ -83,16 +98,13 @@ public sealed class OverlayPainter : MonoBehaviour
         overlayMesh.colors32 = colors;
         overlayMesh.RecalculateBounds();
 
-        GetComponent<MeshFilter>().sharedMesh = overlayMesh;
-
-        isInitialized = true;
+        meshFilter.sharedMesh = overlayMesh;
     }
 
- 
-    
+
     public void SetCellPainted(int xIndex, int yIndex, bool painted, GridData gridData)
     {
-        CreateOverlayMeshIfNeeded(gridData);
+        RecoverIfNecessary(gridData);
 
         if (!IsInsideGrid(xIndex, yIndex))
             return;
@@ -101,20 +113,7 @@ public sealed class OverlayPainter : MonoBehaviour
 
         hasAnyColorChanges = true;
     }
-
-  
-
-    private void LateUpdate()
-    {
-        if (!isInitialized)
-            return;
-
-        if (!hasAnyColorChanges)
-            return;
-
-        PushColorsToMesh();
-        hasAnyColorChanges = false;
-    }
+    
 
     // ========================================================================
     // Geometry
@@ -125,7 +124,7 @@ public sealed class OverlayPainter : MonoBehaviour
         float cellSize = gridData.CellSize;
 
         // LOCAL offset above ground.
-        float y = _height;//overlayHeightOffset;
+        float y = _height; //overlayHeightOffset;
 
         int vertexBaseIndex = 0;
         int triangleBaseIndex = 0;
@@ -217,7 +216,7 @@ public sealed class OverlayPainter : MonoBehaviour
         alpha = Mathf.Clamp01(alpha);
         return (byte)Mathf.RoundToInt(alpha * 255f);
     }
-    
+
     /// <summary>
     /// Call after changing GridData (GridSize, CellSize, OriginWorld).
     /// This rebuilds geometry and resets colors.
@@ -227,10 +226,9 @@ public sealed class OverlayPainter : MonoBehaviour
         if (!allowFullRebuild)
             return;
 
-        isInitialized = false;
 
         // Reset mesh reference.
-        MeshFilter meshFilter = GetComponent<MeshFilter>();
+        //MeshFilter meshFilter = GetComponent<MeshFilter>();
         if (meshFilter != null)
             meshFilter.sharedMesh = null;
 
@@ -246,7 +244,7 @@ public sealed class OverlayPainter : MonoBehaviour
     /// Apply a whole selection mask to the overlay.
     /// Useful after loading or after a big operation.
     /// </summary>
-    public void ApplySelectionMask(bool[,] selectedCells,GridData gridData)
+    public void ApplySelectionMask(bool[,] selectedCells, GridData gridData)
     {
         CreateOverlayMeshIfNeeded(gridData);
 
@@ -257,7 +255,8 @@ public sealed class OverlayPainter : MonoBehaviour
         int height = selectedCells.GetLength(1);
 
         if (width != gridWidthInCells || height != gridHeightInCells)
-            throw new InvalidOperationException("ApplySelectionMask: selectedCells dimensions do not match gridData.GridSize.");
+            throw new InvalidOperationException(
+                "ApplySelectionMask: selectedCells dimensions do not match gridData.GridSize.");
 
         for (int yIndex = 0; yIndex < gridHeightInCells; yIndex++)
         {
@@ -270,7 +269,7 @@ public sealed class OverlayPainter : MonoBehaviour
 
         PushColorsToMesh();
     }
-    
+
     public void SetCellsPainted(List<Vector2Int> touchedCells, bool painted, GridData gridData)
     {
         CreateOverlayMeshIfNeeded(gridData);
@@ -293,4 +292,3 @@ public sealed class OverlayPainter : MonoBehaviour
         hasAnyColorChanges = true;
     }
 }
-

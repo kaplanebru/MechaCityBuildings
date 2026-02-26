@@ -4,14 +4,18 @@ using UnityEngine;
 public class GridSystem : MonoBehaviour
 {
     [SerializeField] private UserPreferences userPreferences;
-    [SerializeField] private GridData gridData;
+    public GridData gridData;
     [SerializeField] private MapSizeToGridSize mapSizeToGridSize;
-    [SerializeField] private OverlayPainter overlayPainter;
+    public OverlayPainter overlayPainter;
 
     public void Recalculate()
     {
         AdaptGridSizeToUserCellSize();
         overlayPainter.CreateOverlayMeshIfNeeded(gridData); //todo: cache
+        GridMasker.SetGridWithinCells(gridData); 
+        //todo: hard reset if needed: yani normal reset gibi gidip tek tek bulup silmeyecek,
+        //loop ile her celli dolaşıp silecek hem masktan hem overlayden
+        
     }
 
     private void AdaptGridSizeToUserCellSize()

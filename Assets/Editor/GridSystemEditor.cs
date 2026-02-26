@@ -19,7 +19,7 @@ public class GridSystemEditor: Editor
     }
     private void CacheTarget()
     {
-        if (t != null)
+        if (t == null)
             t = target as GridSystem;
     }
 }

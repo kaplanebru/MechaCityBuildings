@@ -25,6 +25,7 @@ public class Builder : MonoBehaviour
     {
         var registeredCells = GridMasker.RegisterTrackedCells();
         GridToConstruction.Construct(registeredCells, gridData, floorManagement.db);
+        
     }
 
     public void DestroyBuildingsOnCells()
