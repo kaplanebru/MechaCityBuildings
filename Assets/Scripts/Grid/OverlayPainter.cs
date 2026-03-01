@@ -34,17 +34,19 @@ public sealed class OverlayPainter : MonoBehaviour
     private bool hasAnyColorChanges;
 
 
-    public void RecoverIfNecessary(GridData gridData)
+    public void RecoverMeshIfNecessary(GridData gridData)
     {
-        if (meshFilter == null)
+        if (meshFilter.sharedMesh == null)
         {
             if (overlayMesh != null)
             {
                 meshFilter.sharedMesh = overlayMesh;
+                Debug.Log("1: OverlayPainter assigned to shared mesh on meshFilter");
             }
             else
             {
                 RebuildAll(gridData);
+                Debug.Log("2: OverlayPainter rebuilding shared mesh on meshFilter");
             }
         }
         else
@@ -52,6 +54,7 @@ public sealed class OverlayPainter : MonoBehaviour
             if (overlayMesh == null)
             {
                 overlayMesh = meshFilter.sharedMesh;
+                Debug.Log("3: shared mesh assigned to overlayMesh");
             }
         }
     }
@@ -62,7 +65,7 @@ public sealed class OverlayPainter : MonoBehaviour
         transform.position = new Vector3(transform.position.x, floorData.FloorGroundHeight, transform.position.z);
     }
 
-    public void CreateOverlayMeshIfNeeded(GridData gridData)
+    public void CreateOverlayMesh(GridData gridData)
     {
         gridWidthInCells = gridData.AdaptiveGridSize.x;
         gridHeightInCells = gridData.AdaptiveGridSize.y;
@@ -104,13 +107,13 @@ public sealed class OverlayPainter : MonoBehaviour
 
     public void SetCellPainted(int xIndex, int yIndex, bool painted, GridData gridData)
     {
-        RecoverIfNecessary(gridData);
+        RecoverMeshIfNecessary(gridData);
 
         if (!IsInsideGrid(xIndex, yIndex))
             return;
         float targetAlpha = painted ? paintedAlpha : unpaintedAlpha;
         SetCellVertexAlphaImmediate(xIndex, yIndex, targetAlpha);
-
+        
         hasAnyColorChanges = true;
     }
     
@@ -189,6 +192,8 @@ public sealed class OverlayPainter : MonoBehaviour
         colors[vertexBaseIndex + 1].a = alphaByte;
         colors[vertexBaseIndex + 2].a = alphaByte;
         colors[vertexBaseIndex + 3].a = alphaByte;
+        
+        PushColorsToMesh();//added later
     }
 
     private void PushColorsToMesh()
@@ -237,7 +242,7 @@ public sealed class OverlayPainter : MonoBehaviour
         triangles = null;
         colors = null;
 
-        CreateOverlayMeshIfNeeded(gridData);
+        CreateOverlayMesh(gridData);
     }
 
     /// <summary>
@@ -246,7 +251,7 @@ public sealed class OverlayPainter : MonoBehaviour
     /// </summary>
     public void ApplySelectionMask(bool[,] selectedCells, GridData gridData)
     {
-        CreateOverlayMeshIfNeeded(gridData);
+        CreateOverlayMesh(gridData);
 
         if (selectedCells == null)
             throw new ArgumentNullException(nameof(selectedCells));
@@ -272,7 +277,7 @@ public sealed class OverlayPainter : MonoBehaviour
 
     public void SetCellsPainted(List<Vector2Int> touchedCells, bool painted, GridData gridData)
     {
-        CreateOverlayMeshIfNeeded(gridData);
+        CreateOverlayMesh(gridData);
 
         if (touchedCells == null || touchedCells.Count == 0)
             return;

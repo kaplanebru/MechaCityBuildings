@@ -9,12 +9,23 @@ public class Painter : MonoBehaviour
     [SerializeField] private OverlayPainter overlayPainter;
 
 
-    public void ExecutePainting() //todo: to call with editor update that triggered by Start Painting Button
+    public void ExecutePainting(Event e) //todo: to call with editor update that triggered by Start Painting Button
     {
-        if (PaintDetector.TryDetectAvailableCell(gridData, paintData, out SelectedCellData selectedCellData))
+        
+        if (PaintDetector.TryDetectAvailableCell_Editor(gridData, paintData, e, out var selectedCellData))
         {
             GridBrusher.BrushSelectedCells(selectedCellData, overlayPainter, gridData, paintData);
+
         }
+        /*if (PaintDetector.TryDetectAvailableCell(gridData, paintData, out SelectedCellData selectedCellData))
+        {
+            GridBrusher.BrushSelectedCells(selectedCellData, overlayPainter, gridData, paintData);
+        }*/
+    }
+
+    public void RestorePaintedAreas()
+    {
+        //GridMasker.
     }
     
 }

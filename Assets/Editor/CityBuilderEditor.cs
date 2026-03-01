@@ -22,14 +22,20 @@ public class CityBuilderEditor : Editor
 
     private void OnSceneGUI(SceneView sceneView)
     {
-        Event e = Event.current;
+        var e = Event.current;
 
-        if (e.type == EventType.MouseMove)
-        {
-            if(t.OnPaintingState)
-                t.units.painter.ExecutePainting();
-            sceneView.Repaint();
-        }
+        if (!t.OnPaintingState) return;
+
+        // ✅ sadece Layout'ta kontrolü kap
+        if (e.type == EventType.Layout)
+            PaintDetector.CaptureSceneViewControl();
+
+        // ✅ Event'i parametre olarak geçir
+        t.units.painter.ExecutePainting(e);
+
+        // Debug için (opsiyonel)
+        if (e.type == EventType.MouseDown || e.type == EventType.MouseDrag)
+            SceneView.RepaintAll();
     }
 
     public override void OnInspectorGUI()
@@ -40,7 +46,6 @@ public class CityBuilderEditor : Editor
         {
             CacheTarget();
             t.units.gridSystem.Recalculate();
-
         }
 
         EditorGUILayout.Space(8);
@@ -51,6 +56,7 @@ public class CityBuilderEditor : Editor
             {
                 CacheTarget();
                 t.units.gridSystem.Recalculate(); //TODO: if needed
+                t.units.floorManagement.Setup(); //temp
                 t.OnPaintingState = true;
             }
 
@@ -104,4 +110,5 @@ public class CityBuilderEditor : Editor
         if (t == null)
             t = target as CityBuilder;
     }
+    
 }

@@ -8,14 +8,10 @@ public class FloorManagement: MonoBehaviour //can be made native or static
     public FloorDatabase db = new FloorDatabase();
     [SerializeField] private FloorCacheData cacheData;
 
-    private void OnEnable()
-    {
-        Setup();
-    }
-
     public void Setup()
     {
         db.FloorDatas.Clear();
+        Debug.Log("cached floors " + cacheData.CachedFloorRoots.Count);
         for (var i = 0; i < cacheData.CachedFloorRoots.Count; i++)
         {
             db.FloorDatas.Add(i, new FloorData(i, cacheData.CachedFloorRoots[i]));
@@ -46,7 +42,7 @@ public class FloorManagement: MonoBehaviour //can be made native or static
         var items = activeFloor.ItemsByCell.Values.ToHashSet();
         foreach (var item in items)
         {
-            Destroy(item.gameObject);
+            DestroyImmediate(item.gameObject);
             //Undo.DestroyObjectImmediate(activeRoot);
         }
         activeFloor.ItemsByCell.Clear();

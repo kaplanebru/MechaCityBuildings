@@ -11,11 +11,12 @@ public class GridSystem : MonoBehaviour
     public void Recalculate()
     {
         AdaptGridSizeToUserCellSize();
-        overlayPainter.CreateOverlayMeshIfNeeded(gridData); //todo: cache
-        GridMasker.SetGridWithinCells(gridData); 
+        overlayPainter.RecoverMeshIfNecessary(gridData);
+        //overlayPainter.CreateOverlayMesh(gridData);
+        //todo ya trackedler silinsin, ya da recover edilsin,masker ve overlayde
+        GridMasker.SetGridWithinCells(gridData);
         //todo: hard reset if needed: yani normal reset gibi gidip tek tek bulup silmeyecek,
         //loop ile her celli dolaşıp silecek hem masktan hem overlayden
-        
     }
 
     private void AdaptGridSizeToUserCellSize()

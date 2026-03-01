@@ -35,7 +35,7 @@ public static class GridBrusher
                     continue;
 
 
-                GridMasker.SetSelected(xIndex, yIndex, selectedCellData.IsPainting);
+                GridMasker.SetSelected(xIndex, yIndex, selectedCellData.IsPainting, gridData);
                 overlayPainter.SetCellPainted(xIndex, yIndex, selectedCellData.IsPainting, gridData);
             }
         }

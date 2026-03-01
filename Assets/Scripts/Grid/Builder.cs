@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class Builder : MonoBehaviour
@@ -23,7 +24,7 @@ public class Builder : MonoBehaviour
     
     public void ConstructBuildingsOnCells()
     {
-        var registeredCells = GridMasker.RegisterTrackedCells();
+        var registeredCells = gridData.cellRecorderCache.ToHashSet();//GridMasker.RegisterTrackedCells();
         GridToConstruction.Construct(registeredCells, gridData, floorManagement.db);
         
     }

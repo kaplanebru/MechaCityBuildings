@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public static class GridMasker 
+
+public static class GridMasker
 {
     private static bool[,] selectedCells;
-    private static bool[,] occupiedCells;
 
-    private static HashSet<Vector2Int> tempCellTracker = new();
-    
     public static void SetGridWithinCells(GridData gridData) // todo: On all grid update
     {
         var gridWidthInCells = gridData.AdaptiveGridSize.x;
@@ -22,46 +21,48 @@ public static class GridMasker
             throw new ArgumentOutOfRangeException(nameof(gridHeightInCells));
 
         selectedCells = new bool[gridWidthInCells, gridHeightInCells];
-        occupiedCells = new bool[gridWidthInCells, gridHeightInCells];
+        RestoreSelectedCells(gridData);
     }
 
-    public static HashSet<Vector2Int> RegisterTrackedCells()
-    {
-        HashSet<Vector2Int> completedCells = new HashSet<Vector2Int>();
-        completedCells.UnionWith(tempCellTracker);
-        //tempCellTracker.Clear(); already gets cleaned by update tracker
-        
-        return completedCells;
-    }
-
-    public static void SetSelected(int xIndex, int yIndex, bool selected)
+    public static void SetSelected(int xIndex, int yIndex, bool selected, GridData gridData)
     {
         selectedCells[xIndex, yIndex] = selected;
-        UpdateTracker(new Vector2Int(xIndex, yIndex), selected);
+        UpdateTracker(new Vector2Int(xIndex, yIndex), selected, gridData);
     }
 
-    private static void UpdateTracker(Vector2Int point, bool selected)
+    private static void UpdateTracker(Vector2Int cell, bool selected, GridData gridData)
     {
         if (selected)
         {
-            tempCellTracker.Add(point);
+            gridData.AddToCellRecordCache(cell);
         }
         else
         {
-            tempCellTracker.Remove(point);
+            gridData.RemoveFromCellRecordCache(cell);
         }
     }
 
     public static void ResetSelectedCells(OverlayPainter overlayPainter, GridData gridData, bool value = false)
     {
-        foreach (var cell in tempCellTracker)
+        HashSet<Vector2Int> recorderOutcome = new();
+        recorderOutcome.AddRange(gridData.cellRecorderCache);
+
+        foreach (var cell in recorderOutcome)
         {
-            SetSelected(cell.x, cell.y, value);
+            SetSelected(cell.x, cell.y, value, gridData);
             overlayPainter.SetCellPainted(cell.x, cell.y, value, gridData);
         }
     }
+
+    public static void RestoreSelectedCells(GridData gridData)
+    {
+        foreach (var cell in gridData.cellRecorderCache)
+        {
+            selectedCells[cell.x, cell.y] = true;
+        }
+    }
     
-    
+
     /*public void ClearSelectedCells(bool value = false)
     {
         for (int yIndex = 0; yIndex < gridHeightInCells; yIndex++)
