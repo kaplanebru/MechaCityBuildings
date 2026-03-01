@@ -42,6 +42,13 @@ public class CityBuilderEditor : Editor
     {
         EditorGUILayout.Space(8);
 
+        if (GUILayout.Button("Debug"))
+        {
+            t.units.floorManagement.DebugFM();
+        }
+        
+        EditorGUILayout.Space(8);
+
         if (GUILayout.Button("Recalculate Grid (If Needed)"))
         {
             CacheTarget();
@@ -56,7 +63,7 @@ public class CityBuilderEditor : Editor
             {
                 CacheTarget();
                 t.units.gridSystem.Recalculate(); //TODO: if needed
-                t.units.floorManagement.Setup(); //temp
+                t.units.floorManagement.HardRestore(); //temp
                 t.OnPaintingState = true;
             }
 
@@ -84,6 +91,12 @@ public class CityBuilderEditor : Editor
             {
                 CacheTarget();
                 t.units.floorManagement.DeleteLastFloor();
+            }
+
+            if (GUILayout.Button("Clear Active Floor"))
+            {
+                CacheTarget();
+                t.units.floorManagement.ClearActiveFloor();
             }
         }
         

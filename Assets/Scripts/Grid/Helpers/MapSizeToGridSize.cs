@@ -18,7 +18,7 @@ public class MapSizeToGridSize : MonoBehaviour
                                * 10)
       };
 
-      print(size);
+      //print(size);
       return size;
    }
 }

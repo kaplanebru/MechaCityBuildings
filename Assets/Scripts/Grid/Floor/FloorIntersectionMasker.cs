@@ -8,8 +8,8 @@ public class FloorIntersectionMasker
     //tODO: bir floor silinince alttaki intersectionların da recover olması lazım: keyler dursun, hidden diye liste de tutulabilir
     public static HashSet<Transform> GetIntersectionsUnderFloor(FloorData upperFloor, FloorData lowerFloor)
     {
-        var upperCells = upperFloor.ItemsByCell.Keys.ToHashSet();
-        var lowerCells = lowerFloor.ItemsByCell.Keys.ToHashSet();
+        var upperCells = upperFloor.GetTotalItemsByCell().Keys.ToHashSet();
+        var lowerCells = lowerFloor.GetTotalItemsByCell().Keys.ToHashSet();
 
         var intersections = FindIntersections(upperCells, lowerCells);
         RemoveIntersectionBoundary(intersections);
@@ -43,7 +43,7 @@ public class FloorIntersectionMasker
         HashSet<Transform> buildings = new HashSet<Transform>();
         foreach (var intersection in intersections)
         {
-            if (lowerFloor.ItemsByCell.TryGetValue(intersection, out var value))
+            if (lowerFloor.GetTotalItemsByCell().TryGetValue(intersection, out var value))
             {
                 buildings.Add(value);
             }

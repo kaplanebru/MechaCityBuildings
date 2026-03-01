@@ -81,7 +81,7 @@ public static class GridToConstruction
         foreach (var cell in registeredCells)
         {
             var dummyInstance = ConstructItem(cell, floorData, gridData);
-            floorData.ItemsByCell.TryAdd(cell, dummyInstance);
+            floorData.AddItemToCell(cell, dummyInstance);
         }
     }
 
@@ -110,26 +110,26 @@ public static class GridToConstruction
     public static void DeconstructBuildingsOnCells(FloorDatabase floorDb)
     {
         var floorData = floorDb.GetActiveFloorData();
-        if (floorData.ItemsByCell.Count == 0)
+        if (floorData.GetTotalItemsByCell().Count == 0)
         {
             Debug.Log("No constructed dummies found");
             return;
         }
-        foreach (var dummy in floorData.ItemsByCell.Values)
+        foreach (var dummy in floorData.GetTotalItemsByCell().Values)
         {
             Object.Destroy(dummy.gameObject);
         }
-        floorData.ItemsByCell.Clear();
+        floorData.ClearCells();
     }
 
     public static void RestoreBuildingsOnFloor(FloorData floorData,GridData gridData)
     {
-        HashSet<Vector2Int> keys = floorData.ItemsByCell.Keys.ToHashSet();
+        HashSet<Vector2Int> keys = floorData.GetTotalItemsByCell().Keys.ToHashSet();
         foreach (var key in keys)
         {
-            if (floorData.ItemsByCell[key] != null) continue;
+            if (floorData.HasItemOnCell(key)) continue;
             
-            floorData.ItemsByCell[key] = ConstructItem(key, floorData, gridData);
+            floorData.SetItemOnCell(key, ConstructItem(key, floorData, gridData));
         }
     }
 }
