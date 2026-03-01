@@ -53,7 +53,7 @@ public static class PaintDetector
 
         selectedCellData = new SelectedCellData(selectedCellCenterIndex, isPainting);
 
-        //Debug.Log(selectedCellData.CellCenterIndex + " " + selectedCellData.IsPainting);
+        Debug.Log(selectedCellData.CellCenterIndex + " " + selectedCellData.IsPainting);
         // Prevent Scene selection / manipulation tools from also consuming the click.
         e.Use();
 

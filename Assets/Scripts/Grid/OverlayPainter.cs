@@ -20,6 +20,7 @@ public sealed class OverlayPainter : MonoBehaviour
     private bool allowFullRebuild = true;
 
     [SerializeField] MeshFilter meshFilter;
+
     // Mesh + arrays.
     private Mesh overlayMesh;
     private Vector3[] vertices;
@@ -36,6 +37,7 @@ public sealed class OverlayPainter : MonoBehaviour
 
     public void RecoverMeshIfNecessary(GridData gridData)
     {
+
         if (meshFilter.sharedMesh == null)
         {
             if (overlayMesh != null)
@@ -54,7 +56,15 @@ public sealed class OverlayPainter : MonoBehaviour
             if (overlayMesh == null)
             {
                 overlayMesh = meshFilter.sharedMesh;
+                gridWidthInCells = gridData.AdaptiveGridSize.x;
+                gridHeightInCells = gridData.AdaptiveGridSize.y;
+
+                vertices = overlayMesh.vertices;
+                triangles = overlayMesh.triangles;
+                colors = overlayMesh.colors32;
+
                 Debug.Log("3: shared mesh assigned to overlayMesh");
+                
             }
         }
     }
@@ -113,10 +123,10 @@ public sealed class OverlayPainter : MonoBehaviour
             return;
         float targetAlpha = painted ? paintedAlpha : unpaintedAlpha;
         SetCellVertexAlphaImmediate(xIndex, yIndex, targetAlpha);
-        
+
         hasAnyColorChanges = true;
     }
-    
+
 
     // ========================================================================
     // Geometry
@@ -192,8 +202,8 @@ public sealed class OverlayPainter : MonoBehaviour
         colors[vertexBaseIndex + 1].a = alphaByte;
         colors[vertexBaseIndex + 2].a = alphaByte;
         colors[vertexBaseIndex + 3].a = alphaByte;
-        
-        PushColorsToMesh();//added later
+
+         PushColorsToMesh();//added later
     }
 
     private void PushColorsToMesh()

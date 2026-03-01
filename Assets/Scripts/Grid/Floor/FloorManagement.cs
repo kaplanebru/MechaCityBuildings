@@ -30,83 +30,87 @@ public class FloorManagement : MonoBehaviour //can be made native or static
 
     public void HardRestore()
     {
-        if (floorsRoot.childCount == 0)
+        if (floorsRoot.GetComponentsInChildren<Transform>().Length == 0)
+        {
             db.FloorDatasCache.Clear();
-        
+        }
+
         if (db.FloorDatasCache.Count == 0)
             CreateFloor(0);
     }
-    
-    private void CreateFloor(int floorIndex)
+
+
+private void CreateFloor(int floorIndex)
+{
+    var newFloor = new GameObject("Floor " + db.GetFloorCount()).transform;
+    newFloor.SetParent(floorsRoot);
+
+    db.AddFloorData(floorIndex, new FloorData(floorIndex, newFloor));
+    db.SetActiveFloor(floorIndex);
+}
+
+public void IncreaseFloor()
+{
+    RestoreCacheIfNeeded();
+    CreateFloor(db.ActiveFloorIndex + 1);
+}
+
+public void ClearActiveFloor()
+{
+    //if(db.FloorDatas.Count <= 1) return;
+
+    RestoreCacheIfNeeded();
+    var activeFloor = db.GetActiveFloorData();
+    if (activeFloor.GetTotalItemsByCell().Count == 0) return;
+
+    var items = activeFloor.GetTotalItemsByCell().Values.ToHashSet();
+    foreach (var item in items)
     {
-        var newFloor = new GameObject("Floor " + db.GetFloorCount()).transform;
-        newFloor.SetParent(floorsRoot);
-
-        db.AddFloorData(floorIndex, new FloorData(floorIndex, newFloor));
-        db.SetActiveFloor(floorIndex);
-    }
-    public void IncreaseFloor()
-    {
-        RestoreCacheIfNeeded();
-        CreateFloor(db.ActiveFloorIndex + 1);
-    }
-
-    public void ClearActiveFloor()
-    {
-        //if(db.FloorDatas.Count <= 1) return;
-
-        RestoreCacheIfNeeded();
-        var activeFloor = db.GetActiveFloorData();
-        if (activeFloor.GetTotalItemsByCell().Count == 0) return;
-
-        var items = activeFloor.GetTotalItemsByCell().Values.ToHashSet();
-        foreach (var item in items)
-        {
-            DestroyImmediate(item.gameObject);
-            //Undo.DestroyObjectImmediate(activeRoot);
-        }
-
-        activeFloor.GetTotalItemsByCell().Clear();
-    }
-
-    public void DeleteLastFloor()
-    {
-        RestoreCacheIfNeeded();
-        if (TryDeleteLastFloor(out var newActiveFloor))
-        {
-            db.InvokeDeleteLastFloor(newActiveFloor);
-        }
+        DestroyImmediate(item.gameObject);
+        //Undo.DestroyObjectImmediate(activeRoot);
     }
 
+    activeFloor.GetTotalItemsByCell().Clear();
+}
 
-    private bool TryDeleteLastFloor(out FloorData newActiveFloor)
+public void DeleteLastFloor()
+{
+    RestoreCacheIfNeeded();
+    if (TryDeleteLastFloor(out var newActiveFloor))
     {
-        RestoreCacheIfNeeded();
-        newActiveFloor = null;
-        if (db.GetFloorCount() <= 1) return false;
+        db.InvokeDeleteLastFloor(newActiveFloor);
+    }
+}
 
-        var activeFloor = db.GetActiveFloorData();
 
-        ClearActiveFloor();
-        var activeRoot = activeFloor.Root;
-        Destroy(activeRoot.gameObject);
+private bool TryDeleteLastFloor(out FloorData newActiveFloor)
+{
+    RestoreCacheIfNeeded();
+    newActiveFloor = null;
+    if (db.GetFloorCount() <= 1) return false;
 
-        db.RemoveFloorData(activeFloor);
-        db.SetActiveFloor(db.GetFloorCount()-1); //db.FloorDatas.Last().Value.Index
+    var activeFloor = db.GetActiveFloorData();
 
-        newActiveFloor = db.GetActiveFloorData();
-        return true;
+    ClearActiveFloor();
+    var activeRoot = activeFloor.Root;
+    Destroy(activeRoot.gameObject);
+
+    db.RemoveFloorData(activeFloor);
+    db.SetActiveFloor(db.GetFloorCount() - 1); //db.FloorDatas.Last().Value.Index
+
+    newActiveFloor = db.GetActiveFloorData();
+    return true;
+}
+
+public void SwitchActiveFloor(int floorIndex)
+{
+    RestoreCacheIfNeeded();
+    if (floorIndex >= db.GetFloorCount())
+    {
+        Debug.LogError("Floor index out of bounds");
+        return;
     }
 
-    public void SwitchActiveFloor(int floorIndex)
-    {
-        RestoreCacheIfNeeded();
-        if (floorIndex >= db.GetFloorCount())
-        {
-            Debug.LogError("Floor index out of bounds");
-            return;
-        }
-
-        db.SetActiveFloor(floorIndex);
-    }
+    db.SetActiveFloor(floorIndex);
+}
 }
