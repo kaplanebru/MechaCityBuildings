@@ -10,7 +10,10 @@ public class FloorManagement : MonoBehaviour //can be made native or static
 
     public void DebugFM()
     {
-        RestoreCacheIfNeeded();
+        db.FloorDatasCache.Clear();
+        db.FloorDatas.Clear();
+        HardRestore();
+        db.RestoreCacheIfNeeded();
         print("floor amount: " + db.GetFloorCount());
         print("current floor: " + db.ActiveFloorIndex);
     }
@@ -18,14 +21,7 @@ public class FloorManagement : MonoBehaviour //can be made native or static
     private void RestoreCacheIfNeeded()
     {
         HardRestore();
-
-        if (db.GetFloorCount() == 0)
-        {
-            foreach (var cachedFloorData in db.FloorDatasCache)
-            {
-                db.RestoreFloorData(cachedFloorData);
-            }
-        }
+        db.RestoreCacheIfNeeded();
     }
 
     public void HardRestore()

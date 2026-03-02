@@ -59,7 +59,7 @@ public static class GridToConstruction
     private static bool TryDeconstructInvisibleIntersections(
         FloorData activeFloorData, 
         FloorDatabase floorDb,
-        out HashSet<Transform> intersectingBuildings)
+        out HashSet<CellItem> intersectingBuildings)
     {
         intersectingBuildings = null;
         if (floorDb.TryGetLowerFloorData(activeFloorData.Index, out var lowerFloorData))
@@ -85,7 +85,7 @@ public static class GridToConstruction
         }
     }
 
-    private static Transform ConstructItem(Vector2Int cell, FloorData floorData, GridData gridData)
+    private static CellItem ConstructItem(Vector2Int cell, FloorData floorData, GridData gridData)
     {
         Vector3 pos = GetCellIndexToWorldPositionCenter(cell.x, cell.y, gridData);
         pos.y += floorData.FloorGroundHeight;
@@ -99,7 +99,7 @@ public static class GridToConstruction
         return dummyInstance;
     }
 
-   public static void DeconstructBuildings(List<Transform> buildings)
+   public static void DeconstructBuildings(List<CellItem> buildings)
    {
        for (int i = buildings.Count - 1; i >= 0; i--)
        {

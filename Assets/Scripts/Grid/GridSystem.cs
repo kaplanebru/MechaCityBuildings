@@ -21,8 +21,7 @@ public class GridSystem : MonoBehaviour
 
     private void AdaptGridSizeToUserCellSize()
     {
-        if (Configurations.UserPreferences == null) //reload can be tracked from here
-            Configurations.SetData(userPreferences);
+        RestoreConfigurations();
 
         if (userPreferences.UseMapSizeForGridSize)
             userPreferences.ProjectedGridSize = mapSizeToGridSize.GetGridSizeFromMesh();
@@ -35,5 +34,11 @@ public class GridSystem : MonoBehaviour
         gridData.AdaptiveGridSize = userPreferences.ProjectedGridSize;
         gridData.CellSize = userPreferences.BuildingCellSize;
         gridData.OriginWorldTransform = userPreferences.OriginWorldTransform;
+    }
+
+    public void RestoreConfigurations()
+    {
+        if (Configurations.UserPreferences == null) //reload can be tracked from here
+            Configurations.SetData(userPreferences);
     }
 }

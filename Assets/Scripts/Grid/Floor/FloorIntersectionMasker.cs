@@ -6,7 +6,7 @@ public class FloorIntersectionMasker
 {
     //Todo: after that call deconstruct dummies at intersections on the lower floor
     //tODO: bir floor silinince alttaki intersectionların da recover olması lazım: keyler dursun, hidden diye liste de tutulabilir
-    public static HashSet<Transform> GetIntersectionsUnderFloor(FloorData upperFloor, FloorData lowerFloor)
+    public static HashSet<CellItem> GetIntersectionsUnderFloor(FloorData upperFloor, FloorData lowerFloor)
     {
         var upperCells = upperFloor.GetTotalItemsByCell().Keys.ToHashSet();
         var lowerCells = lowerFloor.GetTotalItemsByCell().Keys.ToHashSet();
@@ -38,9 +38,9 @@ public class FloorIntersectionMasker
         intersections.RemoveWhere(intersection => intersectionBounds.Contains(intersection));
     }
     
-    private static HashSet<Transform> GetItemsOnIntersectionPoints(HashSet<Vector2Int> intersections, FloorData lowerFloor)
+    private static HashSet<CellItem> GetItemsOnIntersectionPoints(HashSet<Vector2Int> intersections, FloorData lowerFloor)
     {
-        HashSet<Transform> buildings = new HashSet<Transform>();
+        HashSet<CellItem> buildings = new HashSet<CellItem>();
         foreach (var intersection in intersections)
         {
             if (lowerFloor.GetTotalItemsByCell().TryGetValue(intersection, out var value))

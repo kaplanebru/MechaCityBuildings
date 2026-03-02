@@ -23,9 +23,15 @@ public static class GridMasker
         selectedCells = new bool[gridWidthInCells, gridHeightInCells];
         RestoreSelectedCells(gridData);
     }
-
+    
     public static void SetSelected(int xIndex, int yIndex, bool selected, GridData gridData)
     {
+        if (selectedCells == null)
+        {
+            SetGridWithinCells(gridData);
+            Debug.Log("No selected cells set");
+        }
+        
         selectedCells[xIndex, yIndex] = selected;
         UpdateTracker(new Vector2Int(xIndex, yIndex), selected, gridData);
     }

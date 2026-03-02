@@ -17,10 +17,6 @@ public class Painter : MonoBehaviour
             GridBrusher.BrushSelectedCells(selectedCellData, overlayPainter, gridData, paintData);
 
         }
-        /*if (PaintDetector.TryDetectAvailableCell(gridData, paintData, out SelectedCellData selectedCellData))
-        {
-            GridBrusher.BrushSelectedCells(selectedCellData, overlayPainter, gridData, paintData);
-        }*/
     }
 
     public void RestorePaintedAreas()

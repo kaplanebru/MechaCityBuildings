@@ -11,7 +11,7 @@ public class UserPreferences
     public Transform OriginWorldTransform;
     
     [Header("Dummy")] 
-    public Transform Dummy;
+    public CellItem Dummy;
     
     [HideInInspector]public bool UseMapSizeForGridSize = true;
     [HideInInspector]public Vector2Int ProjectedGridSize = new(100, 50);
