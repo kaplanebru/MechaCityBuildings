@@ -24,7 +24,7 @@ public class CityBuilderEditor : Editor
     {
         var e = Event.current;
 
-        if (!t.OnPaintingState) return;
+        if (t.UserState != UserStates.Drawing) return;
 
         // ✅ sadece Layout'ta kontrolü kap
         if (e.type == EventType.Layout)
@@ -64,14 +64,14 @@ public class CityBuilderEditor : Editor
                 CacheTarget();
                 t.units.gridSystem.Recalculate(); //TODO: if needed
                 t.units.floorManagement.HardRestore(); //temp
-                t.OnPaintingState = true;
+                t.UserState = UserStates.Drawing;
             }
 
             //TODO: add null check: if no painting - return
             if (GUILayout.Button("Construct Buildings On Paint"))
             {
                 CacheTarget();
-                t.OnPaintingState = false;
+                t.UserState = UserStates.Construction;
                 t.units.builder.ConstructBuildingsOnCells();
                 GridMasker.ResetSelectedCells(t.units.gridSystem.overlayPainter, t.units.gridSystem.gridData);
 

@@ -11,6 +11,14 @@ public class CityBuilderUnits
 }
 public class CityBuilder : MonoBehaviour
 {
-    public bool OnPaintingState = false;
+    public UserStates UserState = UserStates.Empty;
     public CityBuilderUnits units;
+}
+
+public enum UserStates
+{
+    Empty,
+    Drawing,
+    Construction,
+    Randomizing
 }
