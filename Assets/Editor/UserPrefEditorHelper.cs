@@ -41,7 +41,7 @@ public static class UserPrefEditorHelper
     public static void SetFloorPreferencesFields(FloorDatabase floorDB,
         Action cacheCallback)
     {
-        if (floorDB == null)
+        /*if (floorDB == null)
         {
             Debug.LogError("floor database is null");
             return;
@@ -74,7 +74,7 @@ public static class UserPrefEditorHelper
             "Dummy",
             floorDB.Dummy,
             typeof(CellItem),
-            false);
+            false);*/
     }
 
     /* private static UserPreferences LoadOrCreatePreferences() //TODO: later

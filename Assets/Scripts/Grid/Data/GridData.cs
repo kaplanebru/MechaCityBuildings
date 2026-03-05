@@ -6,23 +6,11 @@ using UnityEngine;
 public class GridData: ScriptableObject, IGridRelatedData
 {
     public int BuildingCellSize = 2;
-
+    public int AverageBuildingHeight = 2;
     
     [HideInInspector] public Transform OriginWorldTransform;
     [HideInInspector] public Vector2Int AdaptiveGridSize;
-    [HideInInspector] public List<Vector2Int> CellRecorderCache = new(); //kaydedilmesi lazım
 
-    public void AddToCellRecordCache(Vector2Int cell)
-    {
-        if(!CellRecorderCache.Contains(cell))
-            CellRecorderCache.Add(cell);
-    }
-
-    public void RemoveFromCellRecordCache(Vector2Int cell)
-    {
-        if(CellRecorderCache.Contains(cell))
-            CellRecorderCache.Remove(cell);
-    }
 }
 
 

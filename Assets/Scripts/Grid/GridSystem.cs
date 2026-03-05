@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -7,21 +8,25 @@ public class GridSystem : MonoBehaviour
     [SerializeField] private MapSizeToGridSize mapSizeToGridSize;
     public OverlayPainter overlayPainter;
     public Transform originWorldTransform;
+    
+    [HideInInspector] public List<Vector2Int> cellRecorderCache = new(); //kaydedilmesi lazım
+
+    
 
     //todo: hard reset if needed: yani normal reset gibi gidip tek tek bulup silmeyecek,
     //loop ile her celli dolaşıp silecek hem masktan hem overlayden
     public void RecalculateGrid()
     {
         AdaptGridByMeshAndCellSize(); //if map changes or cell size changes
-        GridMasker.SetGridWithinCells(gridData);
+        GridMasker.SetGridWithinCells(gridData, cellRecorderCache);
 
-        overlayPainter.RecoverMeshIfNecessary(gridData); //overlayPainter.CreateOverlayMesh(gridData);
+        overlayPainter.RecoverMeshIfNecessary(gridData);
     }
 
-    public void RewireGrid()
+    public void ReloadGrid()
     {
         gridData.OriginWorldTransform = originWorldTransform;
-        GridMasker.SetGridWithinCells(gridData);
+        GridMasker.SetGridWithinCells(gridData, cellRecorderCache);
 
         overlayPainter.CreateOverlayMesh(gridData);
     }

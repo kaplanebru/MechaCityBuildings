@@ -54,7 +54,7 @@ public class CityBuilderEditor : Editor
             if (GUILayout.Button("Start Painting On Floor"))
             {
                 CacheTargetIfNeeded();
-                t.units.gridSystem.RewireGrid(); //TODO: if needed
+                t.units.gridSystem.ReloadGrid(); //TODO: if needed
                 t.units.floorManagement.HardRestore(); //temp
                 userState = UserStates.Drawing;
             }
@@ -64,7 +64,7 @@ public class CityBuilderEditor : Editor
             {
                 CacheTargetIfNeeded();
                 userState = UserStates.Construction;
-                t.units.builder.ConstructBuildingsOnCells();
+                t.units.builder.ConstructBuildingsOnCells(t.units.gridSystem.cellRecorderCache);
                 GridMasker.ResetSelectedCells(t.units.gridSystem.overlayPainter, t.units.gridSystem.gridData);
 
             }

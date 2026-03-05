@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -20,11 +21,11 @@ public class Builder : MonoBehaviour
             floorManagement.db.OnActiveFloorUpdate -= SetOverlayMeshHeight;
     }
     
-    private void SetOverlayMeshHeight(FloorData floorData) => overlayPainter.SetOverlayMeshHeight(floorData);
+    private void SetOverlayMeshHeight(FloorData floorData) => overlayPainter.SetOverlayMeshHeight(floorData, gridData.AverageBuildingHeight);
     
-    public void ConstructBuildingsOnCells()
+    public void ConstructBuildingsOnCells(List<Vector2Int> cellRecorderCache)
     {
-        var registeredCells = gridData.CellRecorderCache.ToHashSet();//GridMasker.RegisterTrackedCells();
+        var registeredCells = cellRecorderCache.ToHashSet();//GridMasker.RegisterTrackedCells();
         GridToConstruction.Construct(registeredCells, gridData, floorManagement.db);
         
     }

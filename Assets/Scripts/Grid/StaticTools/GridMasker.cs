@@ -8,8 +8,9 @@ using UnityEngine;
 public static class GridMasker
 {
     private static bool[,] selectedCells;
+    private static List<Vector2Int> cellRecorderCache = new();
 
-    public static void SetGridWithinCells(GridData gridData) // todo: On all grid update
+    public static void SetGridWithinCells(GridData gridData, List<Vector2Int> cellRecorder) // todo: On all grid update
     {
         var gridWidthInCells = gridData.AdaptiveGridSize.x;
         var gridHeightInCells = gridData.AdaptiveGridSize.y;
@@ -20,49 +21,58 @@ public static class GridMasker
         if (gridHeightInCells <= 0)
             throw new ArgumentOutOfRangeException(nameof(gridHeightInCells));
 
+        cellRecorderCache = cellRecorder;
         selectedCells = new bool[gridWidthInCells, gridHeightInCells];
         RestoreSelectedCells(gridData);
     }
     
-    public static void SetSelected(int xIndex, int yIndex, bool selected, GridData gridData)
+    public static void SetSelected(int xIndex, int yIndex, bool selected)
     {
         if (selectedCells == null)
         {
-            SetGridWithinCells(gridData);
+            //SetGridWithinCells(gridData);
             Debug.Log("No selected cells set");
         }
         
         selectedCells[xIndex, yIndex] = selected;
-        UpdateTracker(new Vector2Int(xIndex, yIndex), selected, gridData);
+        UpdateTracker(new Vector2Int(xIndex, yIndex), selected);
     }
 
-    private static void UpdateTracker(Vector2Int cell, bool selected, GridData gridData)
+    private static void UpdateTracker(Vector2Int cell, bool selected)
     {
         if (selected)
         {
-            gridData.AddToCellRecordCache(cell);
+            if (!cellRecorderCache.Contains(cell))
+            {
+                cellRecorderCache.Add(cell);
+                //todo: set dirty if needed
+            }
         }
         else
         {
-            gridData.RemoveFromCellRecordCache(cell);
+            if (cellRecorderCache.Contains(cell))
+            {
+                cellRecorderCache.Remove(cell);
+                //todo: set dirty if needed
+            }
         }
     }
 
     public static void ResetSelectedCells(OverlayPainter overlayPainter, GridData gridData, bool value = false)
     {
         HashSet<Vector2Int> recorderOutcome = new();
-        recorderOutcome.AddRange(gridData.CellRecorderCache);
+        recorderOutcome.AddRange(cellRecorderCache);
 
         foreach (var cell in recorderOutcome)
         {
-            SetSelected(cell.x, cell.y, value, gridData);
+            SetSelected(cell.x, cell.y, value);
             overlayPainter.SetCellPainted(cell.x, cell.y, value, gridData);
         }
     }
 
     public static void RestoreSelectedCells(GridData gridData)
     {
-        foreach (var cell in gridData.CellRecorderCache)
+        foreach (var cell in cellRecorderCache)
         {
             selectedCells[cell.x, cell.y] = true;
         }

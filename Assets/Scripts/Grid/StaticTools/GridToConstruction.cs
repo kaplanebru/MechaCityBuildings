@@ -48,7 +48,7 @@ public static class GridToConstruction
         }
 
         var floorData = floorDb.GetActiveFloorData();
-        ConstructBuildingsOnCells(floorData, registeredCells, gridData, floorDb.Dummy, floorDb.AverageBuildingHeight);
+        ConstructBuildingsOnCells(floorData, registeredCells, gridData, floorDb.Dummy);
 
         if (TryDeconstructInvisibleIntersections(floorData, floorDb, out var intersectingBuildings))
         {
@@ -71,7 +71,7 @@ public static class GridToConstruction
         return false;
     }
    
-    public static void ConstructBuildingsOnCells(FloorData floorData, HashSet<Vector2Int> registeredCells, GridData gridData, CellItem cellItem, int averageBuildingHeight)
+    public static void ConstructBuildingsOnCells(FloorData floorData, HashSet<Vector2Int> registeredCells, GridData gridData, CellItem cellItem)
     {
         if (registeredCells.Count == 0)
         {
@@ -80,15 +80,15 @@ public static class GridToConstruction
         }
         foreach (var cell in registeredCells)
         {
-            var dummyInstance = ConstructItem(cell, cellItem, floorData, gridData, averageBuildingHeight);
+            var dummyInstance = ConstructItem(cell, cellItem, floorData, gridData);
             floorData.AddItemToCell(cell, dummyInstance);
         }
     }
 
-    private static CellItem ConstructItem(Vector2Int cell, CellItem cellItem, FloorData floorData, GridData gridData, int averageBuildingHeight)
+    private static CellItem ConstructItem(Vector2Int cell, CellItem cellItem, FloorData floorData, GridData gridData)
     {
         Vector3 pos = GetCellIndexToWorldPositionCenter(cell.x, cell.y, gridData);
-        pos.y += floorData.FloorGroundHeight(averageBuildingHeight);
+        pos.y += floorData.FloorGroundHeight(gridData.AverageBuildingHeight);
             
         var dummyInstance = Object.Instantiate(
             cellItem,

@@ -20,7 +20,6 @@ public sealed class OverlayPainter : MonoBehaviour
     private bool allowFullRebuild = true;
 
     [SerializeField] MeshFilter meshFilter;
-    [SerializeField] FloorDatabase floorDatabase;
 
     // Mesh + arrays.
     private Mesh overlayMesh;
@@ -70,10 +69,10 @@ public sealed class OverlayPainter : MonoBehaviour
         }
     }
 
-    public void SetOverlayMeshHeight(FloorData floorData)
+    public void SetOverlayMeshHeight(FloorData floorData, int averageBuildingHeight)
     {
-        _height = overlayHeightOffset + floorData.FloorGroundHeight(floorDatabase.AverageBuildingHeight);
-        transform.position = new Vector3(transform.position.x, floorData.FloorGroundHeight(floorDatabase.AverageBuildingHeight), transform.position.z);
+        _height = overlayHeightOffset + floorData.FloorGroundHeight(averageBuildingHeight);
+        transform.position = new Vector3(transform.position.x, floorData.FloorGroundHeight(averageBuildingHeight), transform.position.z);
     }
 
     public void CreateOverlayMesh(GridData gridData)

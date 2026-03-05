@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "FloorDatabase", menuName = "CityBuilder/FloorDatabase")]
-public class FloorDatabase : ScriptableObject, IGridRelatedData
+public class FloorDatabase : IGridRelatedData
 {
-    public int AverageBuildingHeight = 2;
     public CellItem Dummy;
     public int ActiveFloorIndex { get; private set; } = 0;
     public Dictionary<int, FloorData> FloorDatas = new();
@@ -45,30 +43,14 @@ public class FloorDatabase : ScriptableObject, IGridRelatedData
         OnDeleteLastFloor?.Invoke(newActiveFloor);
     }
 
-    public void AddFloorData(int index, FloorData floorData)
-    {
-#if UNITY_EDITOR        
-        Undo.RecordObject(this, "Add Floor");
-        FloorDatas.Add(index, floorData);
-        FloorDatasCache.Add(floorData);
-        EditorUtility.SetDirty(this);
-#endif
-    }
+  
 
-    public void RestoreFloorData(FloorData floorData)
+    private void RestoreFloorData(FloorData floorData)
     {
         FloorDatas.Add(floorData.Index, floorData);
     }
 
-    public void RemoveFloorData(FloorData floorData)
-    {
-#if UNITY_EDITOR
-        Undo.RecordObject(this, "Remove Floor");
-        FloorDatas.Remove(floorData.Index);
-        FloorDatasCache.Remove(floorData);
-        EditorUtility.SetDirty(this);
-#endif
-    }
+   
     public bool TryGetFloorData(int floorIndex) => FloorDatas.TryGetValue(floorIndex, out FloorData data);
     public bool TryGetLowerFloorData(int upperFloorIndex, out FloorData lowerFloorData)
     {

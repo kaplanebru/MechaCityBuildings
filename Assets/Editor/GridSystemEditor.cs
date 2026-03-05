@@ -14,7 +14,7 @@ public class GridSystemEditor: Editor
         if (GUILayout.Button("Apply Changes"))
         {
             CacheTarget();
-            t.RewireGrid();
+            t.ReloadGrid();
         }
     }
     private void CacheTarget()
