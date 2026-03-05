@@ -5,22 +5,23 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Grid Data", menuName = "CityBuilder/Grid Data")]
 public class GridData: ScriptableObject, IGridRelatedData
 {
-    [HideInInspector] public Transform OriginWorldTransform;
-    [HideInInspector] public float CellSize;
-    [HideInInspector] public Vector2Int AdaptiveGridSize;
+    public int BuildingCellSize = 2;
+
     
-    [HideInInspector] public List<Vector2Int> cellRecorderCache = new();
+    [HideInInspector] public Transform OriginWorldTransform;
+    [HideInInspector] public Vector2Int AdaptiveGridSize;
+    [HideInInspector] public List<Vector2Int> CellRecorderCache = new(); //kaydedilmesi lazım
 
     public void AddToCellRecordCache(Vector2Int cell)
     {
-        if(!cellRecorderCache.Contains(cell))
-            cellRecorderCache.Add(cell);
+        if(!CellRecorderCache.Contains(cell))
+            CellRecorderCache.Add(cell);
     }
 
     public void RemoveFromCellRecordCache(Vector2Int cell)
     {
-        if(cellRecorderCache.Contains(cell))
-            cellRecorderCache.Remove(cell);
+        if(CellRecorderCache.Contains(cell))
+            CellRecorderCache.Remove(cell);
     }
 }
 

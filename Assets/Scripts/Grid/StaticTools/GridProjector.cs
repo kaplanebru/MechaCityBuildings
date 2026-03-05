@@ -21,8 +21,8 @@ public static class GridProjector
     {
         Vector3 localPosition = worldPosition - gridData.OriginWorldTransform.position;
 
-        int xIndex = Mathf.FloorToInt(localPosition.x / gridData.CellSize);
-        int yIndex = Mathf.FloorToInt(localPosition.z / gridData.CellSize);
+        int xIndex = Mathf.FloorToInt(localPosition.x / gridData.BuildingCellSize);
+        int yIndex = Mathf.FloorToInt(localPosition.z / gridData.BuildingCellSize);
 
         return new Vector2Int(xIndex, yIndex);
     }

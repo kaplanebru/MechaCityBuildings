@@ -3,42 +3,40 @@ using UnityEngine;
 
 public class GridSystem : MonoBehaviour
 {
-    [SerializeField] private UserPreferences userPreferences;
     public GridData gridData;
     [SerializeField] private MapSizeToGridSize mapSizeToGridSize;
     public OverlayPainter overlayPainter;
+    public Transform originWorldTransform;
 
-    public void Recalculate()
+    //todo: hard reset if needed: yani normal reset gibi gidip tek tek bulup silmeyecek,
+    //loop ile her celli dolaşıp silecek hem masktan hem overlayden
+    public void RecalculateGrid()
     {
-        AdaptGridSizeToUserCellSize();
-        //overlayPainter.RecoverMeshIfNecessary(gridData);
-        overlayPainter.CreateOverlayMesh(gridData);
-        //todo ya trackedler silinsin, ya da recover edilsin,masker ve overlayde
+        AdaptGridByMeshAndCellSize(); //if map changes or cell size changes
         GridMasker.SetGridWithinCells(gridData);
-        //todo: hard reset if needed: yani normal reset gibi gidip tek tek bulup silmeyecek,
-        //loop ile her celli dolaşıp silecek hem masktan hem overlayden
+
+        overlayPainter.RecoverMeshIfNecessary(gridData); //overlayPainter.CreateOverlayMesh(gridData);
     }
 
-    private void AdaptGridSizeToUserCellSize()
+    public void RewireGrid()
     {
-        RestoreConfigurations();
+        gridData.OriginWorldTransform = originWorldTransform;
+        GridMasker.SetGridWithinCells(gridData);
 
-        if (userPreferences.UseMapSizeForGridSize)
-            userPreferences.ProjectedGridSize = mapSizeToGridSize.GetGridSizeFromMesh();
-
-        userPreferences.ProjectedGridSize.x =
-            Mathf.RoundToInt(userPreferences.ProjectedGridSize.x / userPreferences.BuildingCellSize);
-        userPreferences.ProjectedGridSize.y =
-            Mathf.RoundToInt(userPreferences.ProjectedGridSize.y / userPreferences.BuildingCellSize);
-
-        gridData.AdaptiveGridSize = userPreferences.ProjectedGridSize;
-        gridData.CellSize = userPreferences.BuildingCellSize;
-        gridData.OriginWorldTransform = userPreferences.OriginWorldTransform;
+        overlayPainter.CreateOverlayMesh(gridData);
     }
 
-    public void RestoreConfigurations()
+    private void AdaptGridByMeshAndCellSize()
     {
-        if (Configurations.UserPreferences == null) //reload can be tracked from here
-            Configurations.SetData(userPreferences);
+        gridData.AdaptiveGridSize = mapSizeToGridSize.GetGridSizeFromMesh();
+
+        gridData.AdaptiveGridSize.x =
+            Mathf.RoundToInt(gridData.AdaptiveGridSize.x / gridData.BuildingCellSize);
+        gridData.AdaptiveGridSize.y =
+            Mathf.RoundToInt(gridData.AdaptiveGridSize.y / gridData.BuildingCellSize);
+
+        
+        //todo: user pref değil de grid dataya işlenmeli direkt.
+        //çünkü başka bir gridbuilderınkiler bunlara yazılır!!!!
     }
 }

@@ -6,9 +6,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "FloorDatabase", menuName = "CityBuilder/FloorDatabase")]
 public class FloorDatabase : ScriptableObject, IGridRelatedData
 {
+    public int AverageBuildingHeight = 2;
+    public CellItem Dummy;
     public int ActiveFloorIndex { get; private set; } = 0;
     public Dictionary<int, FloorData> FloorDatas = new();
-    
     public List<FloorData> FloorDatasCache = new();
 
     public void RestoreCacheIfNeeded()

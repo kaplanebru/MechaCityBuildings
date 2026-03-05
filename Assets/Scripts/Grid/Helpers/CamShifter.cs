@@ -7,6 +7,7 @@ public class CamShifter : MonoBehaviour
     [SerializeField] private Camera cam;
     [SerializeField] private FloorManagement floorManagement;
     [SerializeField] private int floorChangeOffset = 5;
+    [SerializeField] private FloorDatabase floorDatabase;
 
     private int currentCamIndex = 0;
     private float startHeightTopdownCam;
@@ -36,7 +37,7 @@ public class CamShifter : MonoBehaviour
     private void AlignHeightByFloor(FloorData floorData)
     {
         var pos = camTransforms[0].position;
-        pos.y = startHeightTopdownCam + floorData.FloorGroundHeight + floorChangeOffset;
+        pos.y = startHeightTopdownCam + floorData.FloorGroundHeight(floorDatabase.AverageBuildingHeight) + floorChangeOffset;
         
         camTransforms[0].position = pos;
         ApplyTransform();

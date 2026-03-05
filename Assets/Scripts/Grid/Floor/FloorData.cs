@@ -8,12 +8,13 @@ public class FloorData
     public int Index;
     public Transform Root;
     public List<Vector2Int> FloorCells;
+    public int AverageBuildingHeight = 2;
     private Dictionary<Vector2Int, CellItem> ItemsByCell;
-    public float FloorGroundHeight => Index * Configurations.UserPreferences.AverageBuildingHeight;
+    public float FloorGroundHeight(int averageBuildingHeight) => Index * averageBuildingHeight;
 
     public CellItem GetItemByCell(Vector2Int cell) => ItemsByCell[cell];
 
-    public FloorData(int index, Transform root)
+    public FloorData(int index, Transform root, int averageBuildingHeight)
     {
         //set dirty, also floorcells
         Index = index;

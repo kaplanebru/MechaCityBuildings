@@ -41,7 +41,7 @@ private void CreateFloor(int floorIndex)
     var newFloor = new GameObject("Floor " + db.GetFloorCount()).transform;
     newFloor.SetParent(floorsRoot);
 
-    db.AddFloorData(floorIndex, new FloorData(floorIndex, newFloor));
+    db.AddFloorData(floorIndex, new FloorData(floorIndex, newFloor, db.AverageBuildingHeight));
     db.SetActiveFloor(floorIndex);
 }
 

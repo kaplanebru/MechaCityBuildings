@@ -11,7 +11,6 @@ public class CityBuilderUnits
 }
 public class CityBuilder : MonoBehaviour
 {
-    public UserStates UserState = UserStates.Empty;
     public CityBuilderUnits units;
 }
 

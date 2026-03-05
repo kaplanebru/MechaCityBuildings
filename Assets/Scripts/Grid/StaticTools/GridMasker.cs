@@ -51,7 +51,7 @@ public static class GridMasker
     public static void ResetSelectedCells(OverlayPainter overlayPainter, GridData gridData, bool value = false)
     {
         HashSet<Vector2Int> recorderOutcome = new();
-        recorderOutcome.AddRange(gridData.cellRecorderCache);
+        recorderOutcome.AddRange(gridData.CellRecorderCache);
 
         foreach (var cell in recorderOutcome)
         {
@@ -62,7 +62,7 @@ public static class GridMasker
 
     public static void RestoreSelectedCells(GridData gridData)
     {
-        foreach (var cell in gridData.cellRecorderCache)
+        foreach (var cell in gridData.CellRecorderCache)
         {
             selectedCells[cell.x, cell.y] = true;
         }

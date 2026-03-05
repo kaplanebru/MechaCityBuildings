@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e04f4e41249ff43168234927eb97f046, type: 3}
-  m_Name: New Grid Data
+  m_Name: GridData
   m_EditorClassIdentifier: 
   OriginWorldTransform: {fileID: 0}
   CellSize: 0

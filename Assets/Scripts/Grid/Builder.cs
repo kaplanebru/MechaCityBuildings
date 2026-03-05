@@ -11,20 +11,20 @@ public class Builder : MonoBehaviour
     private void OnEnable()
     {
         if(floorManagement != null && overlayPainter != null)
-            floorManagement.db.OnActiveFloorUpdate += SetOverlayPainterHeight;
+            floorManagement.db.OnActiveFloorUpdate += SetOverlayMeshHeight;
     }
 
     private void OnDisable()
     {
         if(floorManagement != null && overlayPainter != null)
-            floorManagement.db.OnActiveFloorUpdate -= SetOverlayPainterHeight;
+            floorManagement.db.OnActiveFloorUpdate -= SetOverlayMeshHeight;
     }
     
-    private void SetOverlayPainterHeight(FloorData floorData) => overlayPainter.SetPainterHeight(floorData);
+    private void SetOverlayMeshHeight(FloorData floorData) => overlayPainter.SetOverlayMeshHeight(floorData);
     
     public void ConstructBuildingsOnCells()
     {
-        var registeredCells = gridData.cellRecorderCache.ToHashSet();//GridMasker.RegisterTrackedCells();
+        var registeredCells = gridData.CellRecorderCache.ToHashSet();//GridMasker.RegisterTrackedCells();
         GridToConstruction.Construct(registeredCells, gridData, floorManagement.db);
         
     }

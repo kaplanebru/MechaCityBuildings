@@ -20,8 +20,8 @@ public static class GridToConstruction
     
     public static Vector3 GetCellIndexToWorldPositionCenter(int xIndex, int yIndex, GridData gridData)
     {
-        float worldX = gridData.OriginWorldTransform.position.x + (xIndex + 0.5f) * gridData.CellSize;
-        float worldZ = gridData.OriginWorldTransform.position.z + (yIndex + 0.5f) * gridData.CellSize;
+        float worldX = gridData.OriginWorldTransform.position.x + (xIndex + 0.5f) * gridData.BuildingCellSize;
+        float worldZ = gridData.OriginWorldTransform.position.z + (yIndex + 0.5f) * gridData.BuildingCellSize;
 
 
         float worldY = gridData.OriginWorldTransform.position.y;
@@ -32,8 +32,8 @@ public static class GridToConstruction
    
     public static Vector3 CellIndexToWorldPositionCorner(int xIndex, int yIndex, GridData gridData)
     {
-        float worldX = gridData.OriginWorldTransform.position.x + xIndex * gridData.CellSize;
-        float worldZ = gridData.OriginWorldTransform.position.z + yIndex * gridData.CellSize;
+        float worldX = gridData.OriginWorldTransform.position.x + xIndex * gridData.BuildingCellSize;
+        float worldZ = gridData.OriginWorldTransform.position.z + yIndex * gridData.BuildingCellSize;
         float worldY = gridData.OriginWorldTransform.position.y;
 
         return new Vector3(worldX, worldY, worldZ);
@@ -48,7 +48,7 @@ public static class GridToConstruction
         }
 
         var floorData = floorDb.GetActiveFloorData();
-        ConstructBuildingsOnCells(floorData, registeredCells, gridData);
+        ConstructBuildingsOnCells(floorData, registeredCells, gridData, floorDb.Dummy, floorDb.AverageBuildingHeight);
 
         if (TryDeconstructInvisibleIntersections(floorData, floorDb, out var intersectingBuildings))
         {
@@ -71,7 +71,7 @@ public static class GridToConstruction
         return false;
     }
    
-    public static void ConstructBuildingsOnCells(FloorData floorData, HashSet<Vector2Int> registeredCells, GridData gridData)
+    public static void ConstructBuildingsOnCells(FloorData floorData, HashSet<Vector2Int> registeredCells, GridData gridData, CellItem cellItem, int averageBuildingHeight)
     {
         if (registeredCells.Count == 0)
         {
@@ -80,18 +80,18 @@ public static class GridToConstruction
         }
         foreach (var cell in registeredCells)
         {
-            var dummyInstance = ConstructItem(cell, floorData, gridData);
+            var dummyInstance = ConstructItem(cell, cellItem, floorData, gridData, averageBuildingHeight);
             floorData.AddItemToCell(cell, dummyInstance);
         }
     }
 
-    private static CellItem ConstructItem(Vector2Int cell, FloorData floorData, GridData gridData)
+    private static CellItem ConstructItem(Vector2Int cell, CellItem cellItem, FloorData floorData, GridData gridData, int averageBuildingHeight)
     {
         Vector3 pos = GetCellIndexToWorldPositionCenter(cell.x, cell.y, gridData);
-        pos.y += floorData.FloorGroundHeight;
+        pos.y += floorData.FloorGroundHeight(averageBuildingHeight);
             
         var dummyInstance = Object.Instantiate(
-            Configurations.UserPreferences.Dummy,
+            cellItem,
             pos,
             gridData.OriginWorldTransform.rotation,
             floorData.Root);
@@ -122,7 +122,7 @@ public static class GridToConstruction
         floorData.ClearCells();
     }
 
-    public static void RestoreBuildingsOnFloor(FloorData floorData,GridData gridData)
+    /*public static void RestoreBuildingsOnFloor(FloorData floorData,GridData gridData)
     {
         HashSet<Vector2Int> keys = floorData.GetTotalItemsByCell().Keys.ToHashSet();
         foreach (var key in keys)
@@ -131,6 +131,6 @@ public static class GridToConstruction
             
             floorData.SetItemOnCell(key, ConstructItem(key, floorData, gridData));
         }
-    }
+    }*/
 }
 
