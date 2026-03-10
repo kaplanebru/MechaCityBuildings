@@ -4,7 +4,7 @@ using UnityEditor;
 
 public static class UserPrefEditorHelper
 {
-    public static void SetGridPreferencesFields(GridData gridData, Action gridReloadCallback, Action cacheCallback)
+    public static void SetGridPreferencesFields(GridData gridData, Action gridReloadCallback, Action floorReloadCallback, Action cacheCallback)
     {
         if (gridData == null)
         {
@@ -15,7 +15,7 @@ public static class UserPrefEditorHelper
         //EditorGUI.BeginChangeCheck();
         using (new EditorGUILayout.HorizontalScope())
         {
-            int cellSize = EditorGUILayout.IntField(
+            gridData.BuildingCellSize = EditorGUILayout.IntField(
                 "Building Cell Size",
                 gridData.BuildingCellSize);
 
@@ -23,11 +23,23 @@ public static class UserPrefEditorHelper
             {
                 cacheCallback();
                 Undo.RecordObject(gridData, "Modify Grid Preferences");
-
-                gridData.BuildingCellSize = cellSize;
-
                 EditorUtility.SetDirty(gridData);
                 gridReloadCallback();
+            }
+        }
+
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            gridData.AverageBuildingHeight = EditorGUILayout.IntField(
+                "Average Building Height",
+                gridData.AverageBuildingHeight);
+
+            if (GUILayout.Button("Apply"))
+            {
+                cacheCallback();
+                Undo.RecordObject(gridData, "Modify Height");
+                EditorUtility.SetDirty(gridData);
+                floorReloadCallback();
             }
         }
 
@@ -38,44 +50,7 @@ public static class UserPrefEditorHelper
         GUILayout.Space(10);
     }
 
-    public static void SetFloorPreferencesFields(FloorDatabase floorDB,
-        Action cacheCallback)
-    {
-        /*if (floorDB == null)
-        {
-            Debug.LogError("floor database is null");
-            return;
-        }
-
-        using (new EditorGUILayout.HorizontalScope())
-        {
-            cacheCallback();
-
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                int averageBuildingHeight = EditorGUILayout.IntField(
-                    "Average Building Height",
-                    floorDB.AverageBuildingHeight);
-
-                if (GUILayout.Button("Apply"))
-                {
-                    cacheCallback();
-                    Undo.RecordObject(floorDB, "Modify Height");
-                
-                    floorDB.AverageBuildingHeight = averageBuildingHeight;
-                
-                    EditorUtility.SetDirty(floorDB);
-                }
-            }
-        }
-
-
-        CellItem dummy = (CellItem)EditorGUILayout.ObjectField(
-            "Dummy",
-            floorDB.Dummy,
-            typeof(CellItem),
-            false);*/
-    }
+   
 
     /* private static UserPreferences LoadOrCreatePreferences() //TODO: later
      {

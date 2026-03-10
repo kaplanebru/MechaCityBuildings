@@ -71,8 +71,10 @@ public sealed class OverlayPainter : MonoBehaviour
 
     public void SetOverlayMeshHeight(FloorData floorData, int averageBuildingHeight)
     {
-        _height = overlayHeightOffset + floorData.FloorGroundHeight(averageBuildingHeight);
-        transform.position = new Vector3(transform.position.x, floorData.FloorGroundHeight(averageBuildingHeight), transform.position.z);
+        var floorHeight = floorData.GetFloorHeight(averageBuildingHeight);
+        _height = overlayHeightOffset + floorHeight;
+        transform.localPosition = new Vector3(transform.localPosition.x, _height, transform.localPosition.z);
+        //transform.pos idi
     }
 
     public void CreateOverlayMesh(GridData gridData)

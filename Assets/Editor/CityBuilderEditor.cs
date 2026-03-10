@@ -4,7 +4,6 @@ using UnityEngine;
 [CustomEditor(typeof(CityBuilder))]
 public class CityBuilderEditor : Editor
 {
-    //User pref buraya eklenebilir
     protected CityBuilder t;
     private int floorIndex;
     public UserStates userState = UserStates.Empty;
@@ -35,12 +34,13 @@ public class CityBuilderEditor : Editor
         
         EditorGUILayout.Space(8);
         
-        UserPrefEditorHelper.SetGridPreferencesFields(t.units.gridSystem.gridData, RecalculateGrid, CacheTargetIfNeeded );
+        UserPrefEditorHelper.SetGridPreferencesFields(t.units.gridSystem.gridData,
+            RecalculateGrid,
+            t.UpdateAverageBuildingHeight,
+            CacheTargetIfNeeded );
         
         EditorGUILayout.Space(8);
         
-        UserPrefEditorHelper.SetFloorPreferencesFields(t.units.floorManagement.db, CacheTargetIfNeeded);
-
         if (GUILayout.Button("Recalculate Grid (On Map Update)"))
         {
             CacheTargetIfNeeded();
@@ -54,7 +54,7 @@ public class CityBuilderEditor : Editor
             if (GUILayout.Button("Start Painting On Floor"))
             {
                 CacheTargetIfNeeded();
-                t.units.gridSystem.ReloadGrid(); //TODO: if needed
+                t.units.gridSystem.ReloadGrid(); //TODO: overlay de reload olmalı
                 t.units.floorManagement.HardRestore(); //temp
                 userState = UserStates.Drawing;
             }

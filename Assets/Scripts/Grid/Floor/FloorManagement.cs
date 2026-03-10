@@ -12,37 +12,55 @@ public class FloorManagement : MonoBehaviour //can be made native or static
 
     public void DebugFM()
     {
-        db.FloorDatasCache.Clear();
-        db.FloorDatas.Clear();
-        HardRestore();
-        db.RestoreCacheIfNeeded();
         print("floor amount: " + db.GetFloorCount());
         print("current floor: " + db.ActiveFloorIndex);
+        
+        Reset();
     }
 
     private void RestoreCacheIfNeeded()
     {
         HardRestore();
-        db.RestoreCacheIfNeeded();
+    }
+
+    private void Reset()
+    {
+        db.FloorDatas.Clear();
+
+        var floors = floorsRoot.GetComponentsInChildren<Transform>().
+            Where(t => t != floorsRoot).ToArray();
+        for (var i = floors.Length - 1; i >= 0; i--)
+        {
+            var floor = floors[i];
+            DestroyImmediate(floor.gameObject);
+        }
+
+        db.SetActiveFloor(0);
     }
 
     public void HardRestore()
     {
-        if (floorsRoot.GetComponentsInChildren<Transform>().Length == 0)
+        if (floorsRoot.childCount == 0 && db.GetFloorCount() > 0)
         {
-            db.FloorDatasCache.Clear();
+            Debug.LogError("floor data > floor roots" 
+                           + " floor count: " + db.GetFloorCount() 
+                           + " root count: " + floorsRoot.childCount);
+            
+            //restore'un pek bir anlamı yok çünkü kaydedilen cell'ler de uçmuş olur
         }
 
-        if (db.FloorDatasCache.Count == 0)
+        if (db.GetFloorCount() == 0)
+        {
             CreateFloor(0);
+        }
+        
     }
 
-    private void AddFloorData(int index, FloorData floorData)
+    private void AddFloorData(FloorData floorData)
     {
 #if UNITY_EDITOR
         Undo.RecordObject(this, "Add Floor");
-        db.FloorDatas.Add(index, floorData);
-        db.FloorDatasCache.Add(floorData);
+        db.FloorDatas.Add(floorData);
         EditorUtility.SetDirty(this);
 #endif
     }
@@ -50,10 +68,12 @@ public class FloorManagement : MonoBehaviour //can be made native or static
     private void RemoveFloorData(FloorData floorData)
     {
 #if UNITY_EDITOR
-        Undo.RecordObject(this, "Remove Floor");
-        db.FloorDatas.Remove(floorData.Index);
-        db.FloorDatasCache.Remove(floorData);
-        EditorUtility.SetDirty(this);
+        if (db.FloorDatas.Contains(floorData))
+        {
+            Undo.RecordObject(this, "Remove Floor");
+            db.FloorDatas.Remove(floorData);
+            EditorUtility.SetDirty(this);
+        }
 #endif
     }
 
@@ -61,8 +81,9 @@ public class FloorManagement : MonoBehaviour //can be made native or static
     {
         var newFloor = new GameObject("Floor " + db.GetFloorCount()).transform;
         newFloor.SetParent(floorsRoot);
+        //zaten add floor'da set dirty yapılıyor
 
-        AddFloorData(floorIndex, new FloorData(floorIndex, newFloor, gridData.AverageBuildingHeight));
+        AddFloorData(new FloorData(floorIndex, newFloor, gridData.AverageBuildingHeight));
         db.SetActiveFloor(floorIndex);
     }
 
@@ -110,7 +131,7 @@ public class FloorManagement : MonoBehaviour //can be made native or static
 
         ClearActiveFloor();
         var activeRoot = activeFloor.Root;
-        Destroy(activeRoot.gameObject);
+        DestroyImmediate(activeRoot.gameObject);
 
         RemoveFloorData(activeFloor);
         db.SetActiveFloor(db.GetFloorCount() - 1); //db.FloorDatas.Last().Value.Index
@@ -129,5 +150,13 @@ public class FloorManagement : MonoBehaviour //can be made native or static
         }
 
         db.SetActiveFloor(floorIndex);
+    }
+
+    public void OnFloorHeightUpdate()
+    {
+        foreach (var floorData in db.FloorDatas)
+        {
+            floorData.ImplementFloorHeight(gridData.AverageBuildingHeight);
+        }
     }
 }

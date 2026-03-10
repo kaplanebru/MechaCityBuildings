@@ -3,28 +3,17 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+[Serializable]
 public class FloorDatabase : IGridRelatedData
 {
     public CellItem Dummy;
     public int ActiveFloorIndex { get; private set; } = 0;
-    public Dictionary<int, FloorData> FloorDatas = new();
-    public List<FloorData> FloorDatasCache = new();
+    [SerializeField] internal List<FloorData> FloorDatas = new(); //public Dictionary<int, FloorData> FloorDatas = new();
+    
 
-    public void RestoreCacheIfNeeded()
+    public FloorData GetActiveFloorData(Action restoreIfNeededCallback = null)
     {
-        //hard restore
-        if (GetFloorCount() == 0)
-        {
-            foreach (var cachedFloorData in FloorDatasCache)
-            {
-                RestoreFloorData(cachedFloorData);
-            }
-        }
-    }
-
-    public FloorData GetActiveFloorData()
-    {
-        RestoreCacheIfNeeded();
+       // restoreIfNeededCallback();
         return FloorDatas[ActiveFloorIndex];
     } 
     
@@ -35,30 +24,33 @@ public class FloorDatabase : IGridRelatedData
     public void SetActiveFloor(int index)
     {
         ActiveFloorIndex = index;
+        
+        if(FloorDatas.Count <= 0) return;
+        
         OnActiveFloorUpdate?.Invoke(FloorDatas[ActiveFloorIndex]);
+        Debug.Log("active floor: " +index);
     }
 
     public void InvokeDeleteLastFloor(FloorData newActiveFloor)
     {
         OnDeleteLastFloor?.Invoke(newActiveFloor);
     }
-
-  
-
-    private void RestoreFloorData(FloorData floorData)
+    
+    public bool TryGetFloorData(int floorIndex, out FloorData floorData)
     {
-        FloorDatas.Add(floorData.Index, floorData);
+        floorData = null;
+        if(floorIndex < 0 || floorIndex >= FloorDatas.Count) return false;
+
+        floorData = FloorDatas[floorIndex];
+        return true;
     }
 
-   
-    public bool TryGetFloorData(int floorIndex) => FloorDatas.TryGetValue(floorIndex, out FloorData data);
     public bool TryGetLowerFloorData(int upperFloorIndex, out FloorData lowerFloorData)
     {
         lowerFloorData = null;
         if (upperFloorIndex <= 0) return false;
         
         int lowerFloorIndex = upperFloorIndex - 1;
-        return FloorDatas.TryGetValue(lowerFloorIndex, out lowerFloorData);
+        return TryGetFloorData(lowerFloorIndex, out lowerFloorData);
     }
 }
-public interface IGridDatabase {}

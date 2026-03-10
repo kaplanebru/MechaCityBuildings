@@ -7,10 +7,10 @@ public class FloorData
     //[HideInInspector]
     public int Index;
     public Transform Root;
-    public List<Vector2Int> FloorCells;
+    public List<Vector2Int> FloorCells = new();
     public int AverageBuildingHeight = 2;
-    private Dictionary<Vector2Int, CellItem> ItemsByCell;
-    public float FloorGroundHeight(int averageBuildingHeight) => Index * averageBuildingHeight;
+    private Dictionary<Vector2Int, CellItem> ItemsByCell = new();
+    public float GetFloorHeight(int averageBuildingHeight) => Index * averageBuildingHeight;
 
     public CellItem GetItemByCell(Vector2Int cell) => ItemsByCell[cell];
 
@@ -19,8 +19,18 @@ public class FloorData
         //set dirty, also floorcells
         Index = index;
         Root = root;
-        ItemsByCell = new();
-        FloorCells = new();
+        
+        //ItemsByCell = new();
+        //FloorCells = new();
+        
+        ImplementFloorHeight(averageBuildingHeight);
+    }
+
+    public void ImplementFloorHeight(int averageBuildingHeight)
+    {
+        var pos = Root.localPosition;
+        pos.y = GetFloorHeight(averageBuildingHeight);
+        Root.localPosition = pos;
     }
 
     public void SetFloorCells(List<Vector2Int> cells)

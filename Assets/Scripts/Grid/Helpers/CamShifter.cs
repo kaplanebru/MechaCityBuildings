@@ -37,7 +37,7 @@ public class CamShifter : MonoBehaviour
     private void AlignHeightByFloor(FloorData floorData)
     {
         var pos = camTransforms[0].position;
-        pos.y = startHeightTopdownCam + floorData.FloorGroundHeight(gridData.AverageBuildingHeight) + floorChangeOffset;
+        pos.y = startHeightTopdownCam + floorData.GetFloorHeight(gridData.AverageBuildingHeight) + floorChangeOffset;
         
         camTransforms[0].position = pos;
         ApplyTransform();

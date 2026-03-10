@@ -88,13 +88,13 @@ public static class GridToConstruction
     private static CellItem ConstructItem(Vector2Int cell, CellItem cellItem, FloorData floorData, GridData gridData)
     {
         Vector3 pos = GetCellIndexToWorldPositionCenter(cell.x, cell.y, gridData);
-        pos.y += floorData.FloorGroundHeight(gridData.AverageBuildingHeight);
-            
+        pos.y += floorData.GetFloorHeight(gridData.AverageBuildingHeight);
+
         var dummyInstance = Object.Instantiate(
-            cellItem,
-            pos,
-            gridData.OriginWorldTransform.rotation,
-            floorData.Root);
+            cellItem, floorData.Root);
+        
+        dummyInstance.transform.position = pos;
+        dummyInstance.transform.rotation = gridData.OriginWorldTransform.rotation;
         
         return dummyInstance;
     }
@@ -103,7 +103,7 @@ public static class GridToConstruction
    {
        for (int i = buildings.Count - 1; i >= 0; i--)
        {
-           Object.Destroy(buildings[i].gameObject);
+           Object.DestroyImmediate(buildings[i].gameObject);
        }
    }
 

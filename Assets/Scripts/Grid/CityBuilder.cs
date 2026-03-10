@@ -12,6 +12,14 @@ public class CityBuilderUnits
 public class CityBuilder : MonoBehaviour
 {
     public CityBuilderUnits units;
+
+    public void UpdateAverageBuildingHeight()
+    {
+        units.floorManagement.OnFloorHeightUpdate();
+        
+        var activeFloor = units.floorManagement.db.GetActiveFloorData();
+        units.gridSystem.OnFloorHeightUpdate(activeFloor);
+    }
 }
 
 public enum UserStates

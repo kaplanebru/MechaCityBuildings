@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[ExecuteInEditMode]
+
 public class Builder : MonoBehaviour
 {
     [SerializeField] private OverlayPainter overlayPainter;
@@ -11,17 +13,19 @@ public class Builder : MonoBehaviour
     
     private void OnEnable()
     {
-        if(floorManagement != null && overlayPainter != null)
-            floorManagement.db.OnActiveFloorUpdate += SetOverlayMeshHeight;
+        floorManagement.db.OnActiveFloorUpdate += SetOverlayMeshHeight;
     }
 
     private void OnDisable()
     {
-        if(floorManagement != null && overlayPainter != null)
-            floorManagement.db.OnActiveFloorUpdate -= SetOverlayMeshHeight;
+        floorManagement.db.OnActiveFloorUpdate -= SetOverlayMeshHeight;
     }
-    
-    private void SetOverlayMeshHeight(FloorData floorData) => overlayPainter.SetOverlayMeshHeight(floorData, gridData.AverageBuildingHeight);
+
+    private void SetOverlayMeshHeight(FloorData activeFloor)
+    {
+        overlayPainter.SetOverlayMeshHeight(activeFloor, gridData.AverageBuildingHeight);
+        Debug.Log("on active floor: " + activeFloor);
+    }
     
     public void ConstructBuildingsOnCells(List<Vector2Int> cellRecorderCache)
     {
