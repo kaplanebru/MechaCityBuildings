@@ -83,19 +83,18 @@ public class CityBuilderEditor : Editor
             if (GUILayout.Button("Delete Last Floor"))
             {
                 CacheTargetIfNeeded();
+                
                 t.units.floorManagement.DeleteLastFloor();
+                if(t.units.floorManagement.db.ActiveFloorIndex == 0)
+                    ClearActiveFloor();
+                
                 userState = UserStates.Drawing;
             }
 
             if (GUILayout.Button("Clear Active Floor"))
             {
-                CacheTargetIfNeeded();
-                t.units.floorManagement.ClearActiveFloor();
-                
-                t.units.gridSystem.ReloadGrid();
-                GridMasker.ResetSelectedCells(t.units.gridSystem.overlayPainter, t.units.gridSystem.gridData);
-
-                userState = UserStates.Drawing;
+               ClearActiveFloor();
+               userState = UserStates.Drawing;
             }
         }
         
@@ -118,6 +117,16 @@ public class CityBuilderEditor : Editor
         DrawDefaultInspector();
     }
 
+    private void ClearActiveFloor()
+    {
+        CacheTargetIfNeeded();
+        t.units.floorManagement.ClearActiveFloor();
+                
+        t.units.gridSystem.ReloadGrid();
+        GridMasker.ResetSelectedCells(t.units.gridSystem.overlayPainter, t.units.gridSystem.gridData);
+
+       
+    }
     private void RecalculateGrid()
     {
         t.units.gridSystem.RecalculateGrid();

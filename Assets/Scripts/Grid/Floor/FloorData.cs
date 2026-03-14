@@ -72,7 +72,7 @@ public class FloorData
         if (ItemsByCell.ContainsKey(cell))
         {
             ItemsByCell.Remove(cell);
-            item.ResetCellMetaData();
+            //item.ResetCellMetaData();
             Items.Remove(item);
             OccupiedCells.Remove(cell);
         }
@@ -83,8 +83,9 @@ public class FloorData
         OccupiedCells.Clear();
         Items.Clear();
         
-        RestoreItemsByCellIfNeeded();
-        ItemsByCell.Clear();
+        //RestoreItemsByCellIfNeeded();
+        if(ItemsByCell != null)
+            ItemsByCell.Clear();
     }
 
     public bool HasItemOnCell(Vector2Int cell, out CellItem item)

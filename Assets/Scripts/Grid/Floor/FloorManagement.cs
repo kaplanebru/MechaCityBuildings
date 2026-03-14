@@ -110,13 +110,18 @@ public class FloorManagement : MonoBehaviour //can be made native or static
     {
         RestoreCacheIfNeeded();
         var activeFloor = db.GetActiveFloorData();
-        if (activeFloor.GetItemsByCell().Count == 0) return;
+        if (activeFloor.Items.Count == 0) return;
 
-        var items = activeFloor.GetItemsByCell().Values.ToHashSet();
-        foreach (var item in items)
+        var items = activeFloor.Items;
+        for (int i = items.Count - 1; i >= 0; i--)
         {
+            var item = items[i];
+            if (item == null)
+            {
+                Debug.LogError("item is null");
+                continue;
+            }
             DestroyImmediate(item.gameObject);
-            //Undo.DestroyObjectImmediate(activeRoot);
         }
 
         activeFloor.ClearCells();
