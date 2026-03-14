@@ -2,10 +2,15 @@ using UnityEngine;
 
 public class CellItem : MonoBehaviour
 {
-    public Vector2Int cellCache = new Vector2Int(-1, -1);
+    public Vector2Int cellMetadata = new Vector2Int(-1, -1);
 
-    public void SetCellCache(Vector2Int cell)
+    public void SetCellMetaData(Vector2Int cell)
     {
-       cellCache = cell;
+       cellMetadata = cell;
+    }
+
+    public void ResetCellMetaData()
+    {
+        cellMetadata = new Vector2Int(-1, -1);
     }
 }

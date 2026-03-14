@@ -110,27 +110,30 @@ public static class GridToConstruction
     public static void DeconstructBuildingsOnCells(FloorDatabase floorDb)
     {
         var floorData = floorDb.GetActiveFloorData();
-        if (floorData.GetTotalItemsByCell().Count == 0)
+        var items = floorData.GetCellItems();
+        if (items.Count == 0)
         {
             Debug.Log("No constructed dummies found");
             return;
         }
-        foreach (var dummy in floorData.GetTotalItemsByCell().Values)
+        
+       
+        foreach (var dummy in items)
         {
-            Object.Destroy(dummy.gameObject);
+            Object.DestroyImmediate(dummy.gameObject);
         }
         floorData.ClearCells();
     }
 
-    /*public static void RestoreBuildingsOnFloor(FloorData floorData,GridData gridData)
+    public static void RestoreBuildingsOnFloor(FloorData floorData,GridData gridData)
     {
-        HashSet<Vector2Int> keys = floorData.GetTotalItemsByCell().Keys.ToHashSet();
+        HashSet<Vector2Int> keys = floorData.OccupiedCells.ToHashSet();
         foreach (var key in keys)
         {
-            if (floorData.HasItemOnCell(key)) continue;
+            if (floorData.HasItemOnCell(key, out var item)) continue;
             
-            floorData.SetItemOnCell(key, ConstructItem(key, floorData, gridData));
+            floorData.SetItemOnCell(key, ConstructItem(key, item, floorData, gridData));
         }
-    }*/
+    }
 }
 

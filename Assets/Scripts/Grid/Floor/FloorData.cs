@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -7,22 +8,26 @@ public class FloorData
     //[HideInInspector]
     public int Index;
     public Transform Root;
-    public List<Vector2Int> FloorCells = new();
-    public int AverageBuildingHeight = 2;
+    public List<Vector2Int> OccupiedCells = new();
+    public List<CellItem> CellItems = new();
+
     private Dictionary<Vector2Int, CellItem> ItemsByCell = new();
     public float GetFloorHeight(int averageBuildingHeight) => Index * averageBuildingHeight;
 
-    public CellItem GetItemByCell(Vector2Int cell) => ItemsByCell[cell];
+    public List<CellItem> GetCellItems() => CellItems;
+
+    public CellItem GetItemByCell(Vector2Int cell) =>
+        CellItems.FirstOrDefault(i => i.cellMetadata == cell); //ItemsByCell[cell];
 
     public FloorData(int index, Transform root, int averageBuildingHeight)
     {
         //set dirty, also floorcells
         Index = index;
         Root = root;
-        
+
         //ItemsByCell = new();
         //FloorCells = new();
-        
+
         ImplementFloorHeight(averageBuildingHeight);
     }
 
@@ -35,67 +40,74 @@ public class FloorData
 
     public void SetFloorCells(List<Vector2Int> cells)
     {
-        FloorCells.Clear();
-        FloorCells.AddRange(cells);
+        OccupiedCells.Clear();
+        OccupiedCells.AddRange(cells);
     }
 
-    public Dictionary<Vector2Int, CellItem> GetTotalItemsByCell()
+    public Dictionary<Vector2Int, CellItem> GetItemsByCell()
     {
+        ItemsByCell ??= new();
+
         if (ItemsByCell.Count == 0)
-        {
-            //TODO: Restore
-        }
+            ItemsByCell = CellItems.ToDictionary(i => i.cellMetadata, i => i);
 
         return ItemsByCell;
     }
 
-    private void RestoreItemsByCellIfNeeded()
+    public void AddItemToCell(Vector2Int cell, CellItem item)
     {
-        if(ItemsByCell != null)
+        if (OccupiedCells.Contains(cell)) return;
+
+
+        item.SetCellMetaData(cell);
+        CellItems.Add(item);
+        OccupiedCells.Add(cell);
+
+
+        /*if (ItemsByCell.TryAdd(cell, item))
         {
-            if(ItemsByCell.Count == FloorCells.Count)
-                return;
-            
-            ItemsByCell = null;
-        }
-        ItemsByCell = new Dictionary<Vector2Int, CellItem>();
-       /* foreach (var cell in FloorCells)
-        {
-            //TODO: ItemsByCell.Add(cell, );
+            Cells.Add(cell);
         }*/
     }
 
-    public void AddItemToCell(Vector2Int cell, CellItem item)
-    {
-        if (ItemsByCell.TryAdd(cell, item))
-        {
-            FloorCells.Add(cell);
-        }
-    }
 
-
-    public void RemoveItemFromCell(Vector2Int cell)
+    public void RemoveItemFromCell(Vector2Int cell, CellItem item)
     {
-        if (ItemsByCell.ContainsKey(cell))
+        if (!OccupiedCells.Contains(cell)) return;
+        item.ResetCellMetaData();
+        CellItems.Remove(item);
+        OccupiedCells.Remove(cell);
+
+        /*if (ItemsByCell.ContainsKey(cell))
         {
-            FloorCells.Remove(cell);
+            Cells.Remove(cell);
             ItemsByCell.Remove(cell);
-        }
+        }*/
     }
 
     public void ClearCells()
     {
-        FloorCells.Clear();
-        ItemsByCell.Clear();
+        OccupiedCells.Clear();
+        CellItems.Clear();
+
+        //ItemsByCell.Clear();
     }
 
-    public bool HasItemOnCell(Vector2Int cell)
+    public bool HasItemOnCell(Vector2Int cell, out CellItem item)
     {
-        return ItemsByCell[cell] != null;
+        item = null;
+        if (OccupiedCells.Contains(cell))
+        {
+            item = GetItemByCell(cell);
+            return true;
+        }
+        return false;
+        //return ItemsByCell[cell] != null;
     }
 
     public void SetItemOnCell(Vector2Int cell, CellItem item)
     {
-        ItemsByCell[cell] = item;
+        AddItemToCell(cell, item);
+        //ItemsByCell[cell] = item;
     }
 }

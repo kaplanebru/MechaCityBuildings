@@ -12,9 +12,10 @@ public class FloorManagement : MonoBehaviour //can be made native or static
 
     public void DebugFM()
     {
+        
         print("floor amount: " + db.GetFloorCount());
         print("current floor: " + db.ActiveFloorIndex);
-        
+
         Reset();
     }
 
@@ -27,8 +28,7 @@ public class FloorManagement : MonoBehaviour //can be made native or static
     {
         db.FloorDatas.Clear();
 
-        var floors = floorsRoot.GetComponentsInChildren<Transform>().
-            Where(t => t != floorsRoot).ToArray();
+        var floors = floorsRoot.GetComponentsInChildren<Transform>().Where(t => t != floorsRoot).ToArray();
         for (var i = floors.Length - 1; i >= 0; i--)
         {
             var floor = floors[i];
@@ -40,20 +40,30 @@ public class FloorManagement : MonoBehaviour //can be made native or static
 
     public void HardRestore()
     {
-        if (floorsRoot.childCount == 0 && db.GetFloorCount() > 0)
-        {
-            Debug.LogError("floor data > floor roots" 
-                           + " floor count: " + db.GetFloorCount() 
-                           + " root count: " + floorsRoot.childCount);
-            
-            //restore'un pek bir anlamı yok çünkü kaydedilen cell'ler de uçmuş olur
-        }
-
+        
         if (db.GetFloorCount() == 0)
         {
-            CreateFloor(0);
+            if (floorsRoot.childCount == 0)
+            {
+                CreateFloor(0);
+                return;
+            }
+
+            Debug.LogError("floor roots > floor data"
+                           + " floor count: " + db.GetFloorCount()
+                           + " root count: " + floorsRoot.childCount);
         }
-        
+        else
+        {
+            if (floorsRoot.childCount == 0)
+            {
+                Debug.LogError("floor data > floor roots"
+                               + " floor count: " + db.GetFloorCount()
+                               + " root count: " + floorsRoot.childCount);
+
+                //restore'un pek bir anlamı yok çünkü kaydedilen cell'ler de uçmuş olur
+            }
+        }
     }
 
     private void AddFloorData(FloorData floorData)
@@ -64,7 +74,7 @@ public class FloorManagement : MonoBehaviour //can be made native or static
         EditorUtility.SetDirty(this);
 #endif
     }
-    
+
     private void RemoveFloorData(FloorData floorData)
     {
 #if UNITY_EDITOR
@@ -79,6 +89,7 @@ public class FloorManagement : MonoBehaviour //can be made native or static
 
     private void CreateFloor(int floorIndex)
     {
+       
         var newFloor = new GameObject("Floor " + db.GetFloorCount()).transform;
         newFloor.SetParent(floorsRoot);
         //zaten add floor'da set dirty yapılıyor
@@ -99,16 +110,16 @@ public class FloorManagement : MonoBehaviour //can be made native or static
 
         RestoreCacheIfNeeded();
         var activeFloor = db.GetActiveFloorData();
-        if (activeFloor.GetTotalItemsByCell().Count == 0) return;
+        if (activeFloor.GetCellItems().Count == 0) return;
 
-        var items = activeFloor.GetTotalItemsByCell().Values.ToHashSet();
+        var items = activeFloor.GetCellItems();
         foreach (var item in items)
         {
             DestroyImmediate(item.gameObject);
             //Undo.DestroyObjectImmediate(activeRoot);
         }
 
-        activeFloor.GetTotalItemsByCell().Clear();
+        activeFloor.ClearCells();
     }
 
     public void DeleteLastFloor()
@@ -143,6 +154,7 @@ public class FloorManagement : MonoBehaviour //can be made native or static
     public void SwitchActiveFloor(int floorIndex)
     {
         RestoreCacheIfNeeded();
+
         if (floorIndex >= db.GetFloorCount())
         {
             Debug.LogError("Floor index out of bounds");
