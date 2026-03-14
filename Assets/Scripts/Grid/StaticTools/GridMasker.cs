@@ -20,18 +20,16 @@ public static class GridMasker
 
         if (gridHeightInCells <= 0)
             throw new ArgumentOutOfRangeException(nameof(gridHeightInCells));
-
-        cellRecorderCache = cellRecorder;
+        
         selectedCells = new bool[gridWidthInCells, gridHeightInCells];
-        RestoreSelectedCells(gridData);
+        RestoreSelectedCells(cellRecorder);
     }
     
     public static bool TrySetSelected(int xIndex, int yIndex, bool selected)
     {
         if (selectedCells == null)
         {
-            //SetGridWithinCells(gridData);//
-            Debug.Log("Switch to painting state");
+            Eventbus.OnReloadCall?.Invoke();
             return false;
         }
         
@@ -72,8 +70,9 @@ public static class GridMasker
         }
     }
 
-    public static void RestoreSelectedCells(GridData gridData)
+    public static void RestoreSelectedCells(List<Vector2Int> cellRecorder)
     {
+        cellRecorderCache = cellRecorder;
         foreach (var cell in cellRecorderCache)
         {
             selectedCells[cell.x, cell.y] = true;
