@@ -51,7 +51,7 @@ public class CityBuilderEditor : Editor
 
         using (new EditorGUILayout.HorizontalScope())
         {
-            if (GUILayout.Button("Start Painting On Floor"))
+            if (GUILayout.Button("Painting State"))
             {
                 CacheTargetIfNeeded();
                 t.units.gridSystem.ReloadGrid(); //TODO: overlay de reload olmalı
@@ -66,7 +66,6 @@ public class CityBuilderEditor : Editor
                 userState = UserStates.Construction;
                 t.units.builder.ConstructBuildingsOnCells(t.units.gridSystem.cellRecorderCache);
                 GridMasker.ResetSelectedCells(t.units.gridSystem.overlayPainter, t.units.gridSystem.gridData);
-
             }
         }
 
@@ -92,6 +91,10 @@ public class CityBuilderEditor : Editor
             {
                 CacheTargetIfNeeded();
                 t.units.floorManagement.ClearActiveFloor();
+                
+                t.units.gridSystem.ReloadGrid();
+                GridMasker.ResetSelectedCells(t.units.gridSystem.overlayPainter, t.units.gridSystem.gridData);
+
                 userState = UserStates.Drawing;
             }
         }

@@ -26,16 +26,18 @@ public static class GridMasker
         RestoreSelectedCells(gridData);
     }
     
-    public static void SetSelected(int xIndex, int yIndex, bool selected)
+    public static bool TrySetSelected(int xIndex, int yIndex, bool selected)
     {
         if (selectedCells == null)
         {
-            //SetGridWithinCells(gridData);
-            Debug.Log("No selected cells set");
+            //SetGridWithinCells(gridData);//
+            Debug.Log("Switch to painting state");
+            return false;
         }
         
         selectedCells[xIndex, yIndex] = selected;
         UpdateTracker(new Vector2Int(xIndex, yIndex), selected);
+        return true;
     }
 
     private static void UpdateTracker(Vector2Int cell, bool selected)
@@ -65,8 +67,8 @@ public static class GridMasker
 
         foreach (var cell in recorderOutcome)
         {
-            SetSelected(cell.x, cell.y, value);
-            overlayPainter.SetCellPainted(cell.x, cell.y, value, gridData);
+            if(TrySetSelected(cell.x, cell.y, value))
+                overlayPainter.SetCellPainted(cell.x, cell.y, value, gridData);
         }
     }
 

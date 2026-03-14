@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public static class GridToConstruction
 {
     //private FloorDatabase floorDb;
@@ -85,13 +86,13 @@ public static class GridToConstruction
         }
     }
 
-    private static CellItem ConstructItem(Vector2Int cell, CellItem cellItem, FloorData floorData, GridData gridData)
+    private static CellItem ConstructItem(Vector2Int cell, CellItem dummy, FloorData floorData, GridData gridData)
     {
         Vector3 pos = GetCellIndexToWorldPositionCenter(cell.x, cell.y, gridData);
         pos.y += floorData.GetFloorHeight(gridData.AverageBuildingHeight);
 
         var dummyInstance = Object.Instantiate(
-            cellItem, floorData.Root);
+            dummy, floorData.Root);
         
         dummyInstance.transform.position = pos;
         dummyInstance.transform.rotation = gridData.OriginWorldTransform.rotation;
@@ -110,13 +111,12 @@ public static class GridToConstruction
     public static void DeconstructBuildingsOnCells(FloorDatabase floorDb)
     {
         var floorData = floorDb.GetActiveFloorData();
-        var items = floorData.GetCellItems();
+        var items = floorData.GetItemsByCell().Values.ToHashSet();
         if (items.Count == 0)
         {
             Debug.Log("No constructed dummies found");
             return;
         }
-        
        
         foreach (var dummy in items)
         {
@@ -132,7 +132,7 @@ public static class GridToConstruction
         {
             if (floorData.HasItemOnCell(key, out var item)) continue;
             
-            floorData.SetItemOnCell(key, ConstructItem(key, item, floorData, gridData));
+            //floorData.SetItemOnCell(key, ConstructItem(key, floorData, gridData));
         }
     }
 }

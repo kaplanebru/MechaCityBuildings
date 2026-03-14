@@ -12,11 +12,13 @@ public class FloorManagement : MonoBehaviour //can be made native or static
 
     public void DebugFM()
     {
-        
         print("floor amount: " + db.GetFloorCount());
         print("current floor: " + db.ActiveFloorIndex);
 
         Reset();
+        
+        print("floor amount: " + db.GetFloorCount());
+        print("current floor: " + db.ActiveFloorIndex);
     }
 
     private void RestoreCacheIfNeeded()
@@ -106,13 +108,11 @@ public class FloorManagement : MonoBehaviour //can be made native or static
 
     public void ClearActiveFloor()
     {
-        //if(db.FloorDatas.Count <= 1) return;
-
         RestoreCacheIfNeeded();
         var activeFloor = db.GetActiveFloorData();
-        if (activeFloor.GetCellItems().Count == 0) return;
+        if (activeFloor.GetItemsByCell().Count == 0) return;
 
-        var items = activeFloor.GetCellItems();
+        var items = activeFloor.GetItemsByCell().Values.ToHashSet();
         foreach (var item in items)
         {
             DestroyImmediate(item.gameObject);
