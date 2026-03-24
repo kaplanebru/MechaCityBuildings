@@ -6,9 +6,9 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Randomizer : MonoBehaviour
 {
-    public PlacementDatabase placementDatabase;
     [SerializeField] private CityData cityData;
     [SerializeField] private StructureTypeDatabase structureTypeDatabase;
+    public FloorResidentsDatabase floorResidentsDb;
     
     private HeightTierHelper _heightTierHelper;
     private PlacementOrderRegulator _orderRegulator;
@@ -16,14 +16,14 @@ public class Randomizer : MonoBehaviour
     
     public void SetPlacementsOnFloor(HashSet<CellWorldData> cellWorldDatas, int floorIndex)
     {
-        if (placementDatabase.placementFloors[floorIndex] == null)
+        if(floorResidentsDb.GetFloor(floorIndex) == null)
         {
             Debug.LogError("No placement floor was found with index " + floorIndex);
             return;
         }
         
         _orderRegulator = new PlacementOrderRegulator(cityData.HeightGap);
-        placementDatabase.placementFloors[floorIndex].PlacementDataset = 
+        floorResidentsDb.GetFloor(floorIndex).PlacementDataset = 
             _orderRegulator.GetRegulatedPlacements(cellWorldDatas).ToList();
     }
     
@@ -52,7 +52,8 @@ public class Randomizer : MonoBehaviour
     private void ConvertFrequenciesToAmounts(int floorIndex)
     {
         FrequencyData[] frequencyDatas = cityData.RandomizerDataSet.Select(r => r.FrequencyData).ToArray();
-        FrequencyToAmountConverter.SetAmountsByRatio(frequencyDatas, placementDatabase.placementFloors[floorIndex].PlacementDataset.Count);
+        FrequencyToAmountConverter.SetAmountsByRatio
+            (frequencyDatas, floorResidentsDb.GetFloor(floorIndex).PlacementDataset.Count);
     }
 
     public void MixAndApplyPlacements(int floorIndex) 
@@ -70,7 +71,7 @@ public class Randomizer : MonoBehaviour
         _pendingPlacements = _pendingPlacements.Where(kvp => kvp.Value.Amount != 0)
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-        var placementDataset = placementDatabase.placementFloors[floorIndex].PlacementDataset;
+        var placementDataset = floorResidentsDb.GetFloor(floorIndex).PlacementDataset;
         foreach (var placementData in placementDataset)
         {
             if (_pendingPlacements.Count == 0)

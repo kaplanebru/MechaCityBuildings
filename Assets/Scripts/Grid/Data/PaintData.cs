@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PaintData", menuName = "CityBuilder/PaintData")]
-public class PaintData: ScriptableObject, IGridRelatedData
+public class PaintData: ScriptableObject
 {
     [Tooltip("Only colliders on these layers will be paintable.")]
     public LayerMask GroundLayerMask;

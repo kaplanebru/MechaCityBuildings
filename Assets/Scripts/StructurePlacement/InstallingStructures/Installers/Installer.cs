@@ -16,36 +16,65 @@ public enum StructureType
 public class Installer : MonoBehaviour
 {
     private Dictionary<StructureType, List<PlacementData>> _placementDatasByType = new();
-    public PlacementDatabase placementDatabase;
-    [SerializeField] private FloorManagement floorManagement;
+    public FloorResidentsDatabase floorResidentsDatabase;
     [SerializeField] private GridData gridData;
     public StructurePool[] pools;
     
-    public PlacementFloor _placementFloorToInstall;
-
-
-    private void OnEnable()
+    public FloorResidentsData floorToInstall;
+    
+    public void InstallStructures(FloorData floorData)
     {
-        floorManagement.OnFloorClearRequest += ClearStructuresOnFloor;
+        ClassifyPlacementDatasOnFloor(floorData.Index);
+        InstallStructuresFromMultiplePools(floorData.Root);
     }
-
-    private void OnDisable()
+    
+    private void InstallStructuresFromMultiplePools(Transform floorRoot)
     {
-       floorManagement.OnFloorClearRequest -= ClearStructuresOnFloor;
+        List<Structure> structuresByType = new ();
+        foreach (var pool in pools)
+        {
+            structuresByType.AddRange(InstallStructuresFromPool(pool, floorRoot));
+        }
+        
+        floorToInstall.Structures = structuresByType.ToArray();
     }
+    
+    private Structure[]  InstallStructuresFromPool(StructurePool pool, Transform floorRoot)
+    {
+        RestorePoolIfNeeded(pool);
+        var placementDataset = _placementDatasByType[pool.poolData.StructureType];
+
+        if (pool.poolData.PoolSize < placementDataset.Count)
+        {
+            Debug.LogWarning("Pool size is too small for " + pool.poolData.StructureType);
+            return Array.Empty<Structure>();
+        }
+
+        var structuresByType = InstallerHelper.Install(
+            placementDataset.ToArray(), 
+            floorRoot, 
+            pool);
+        
+        InstallerHelper.SealCellMetadataToStructure(structuresByType, gridData);
+
+        return structuresByType;
+    }
+    
+    
+
 
     private void ClassifyPlacementDatasOnFloor(int floorIndex)
     {
-        _placementFloorToInstall = placementDatabase.GetPlacementFloor(floorIndex);
+        floorToInstall = floorResidentsDatabase.GetFloor(floorIndex);
         
-        if (_placementFloorToInstall.PlacementDataset.Count == 0)
+        if (floorToInstall.PlacementDataset.Count == 0)
         {
             Debug.Log("No placement dataset found");
             return;
         }
 
         /*_placementDatasByType.Clear();
-        _placementDatasByType = _placementFloorToInstall.PlacementDataset
+        _placementDatasByType = floorToInstall.PlacementDataset
             .GroupBy(p => p.GetStructureType())
             .ToDictionary(g =>
                 g.Key, g => g.ToList());*/
@@ -55,13 +84,12 @@ public class Installer : MonoBehaviour
         {
             _placementDatasByType[pool.poolData.StructureType] = new List<PlacementData>();
         }
-        foreach (var placementData in _placementFloorToInstall.PlacementDataset)
+        foreach (var placementData in floorToInstall.PlacementDataset)
         {
             _placementDatasByType[placementData.GetStructureType()].Add(placementData);
         }
     }
-
-
+    
     public void InitiatePools()
     {
         //todo destroy immediate
@@ -77,84 +105,22 @@ public class Installer : MonoBehaviour
         if (!pool.IsInitialized()) 
             pool.InitializePool();
         else
-            ReleaseItemsToPool(_placementFloorToInstall.FloorData.Index); //dunno
-    }
-    
-    public void InstallStructures(int floorIndex)
-    {
-        ClassifyPlacementDatasOnFloor(floorIndex);
-        InstallStructuresFromMultiplePools();
-    }
-    
-    private void InstallStructuresFromMultiplePools()
-    {
-        List<Structure> structuresByType = new ();
-        foreach (var pool in pools)
-        {
-            structuresByType.AddRange(InstallStructuresFromPool(pool));
-        }
-        
-        _placementFloorToInstall.Structures = structuresByType.ToArray();
-
-    }
-   
-    private Structure[]  InstallStructuresFromPool(StructurePool pool)
-    {
-        RestorePoolIfNeeded(pool);
-        var placementDataset = _placementDatasByType[pool.poolData.StructureType];
-
-        if (pool.poolData.PoolSize < placementDataset.Count)
-        {
-            Debug.LogWarning("Pool size is too small for " + pool.poolData.StructureType);
-            return Array.Empty<Structure>();
-        }
-
-        var structuresByType = InstallerHelper.Install(
-            placementDataset.ToArray(), 
-            _placementFloorToInstall.FloorData.Root, 
-            pool);
-        
-        InstallerHelper.SealCellMetadataToStructure(structuresByType, gridData);
-
-        return structuresByType;
+            ReleaseItemsToPool(floorToInstall.Structures.ToHashSet()); //dunno
     }
 
-   
-
-    public void ReleaseItemsToPool(int floorIndex) //PlacementFloor placementFloor
+    public void ReleaseItemsToPool(HashSet<Structure> structures) //PlacementFloor placementFloor
     {
-       //belki de delete floor deyince hiç floor datadan gitmeyip burdan sileriz
-
-       var placementFloor = placementDatabase.GetPlacementFloor(floorIndex);
-       
-       if (placementFloor.Structures == null || placementFloor.Structures.Length == 0) return;
+       if (structures == null || structures.Count == 0) return;
        
         foreach (var pool in pools)
         {
-            pool.ReleaseItemsToPool(placementFloor.Structures.Where
+            pool.ReleaseItemsToPool(structures.Where
                 (s => s.type == pool.poolData.StructureType).ToArray());
         }
-        
-        placementFloor.Structures = null;
-    }
-
-    public void UninstallStructures(int floorIndex, Action<int> onUninstall)
-    {
-        ReleaseItemsToPool(floorIndex);
-
-        var placementFloor = placementDatabase.GetPlacementFloor(floorIndex);
-        placementFloor.FloorData.ClearCells();
-        placementFloor.PlacementDataset.Clear();
-        
-        onUninstall?.Invoke(floorIndex);
     }
     
-    private void ClearStructuresOnFloor(int floorIndex)
+    public void ClearStructures(HashSet<Structure> structures)
     {
-        var placementFloor = placementDatabase.GetPlacementFloor(floorIndex);
-        
-        ReleaseItemsToPool(floorIndex);
-        placementDatabase.placementFloors.Remove(placementFloor);
-        
+        ReleaseItemsToPool(structures);
     }
 }

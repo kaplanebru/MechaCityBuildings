@@ -45,7 +45,6 @@ public static class GridMasker
             if (!cellRecorderCache.Contains(cell))
             {
                 cellRecorderCache.Add(cell);
-                //todo: set dirty if needed
             }
         }
         else
@@ -53,7 +52,6 @@ public static class GridMasker
             if (cellRecorderCache.Contains(cell))
             {
                 cellRecorderCache.Remove(cell);
-                //todo: set dirty if needed
             }
         }
     }

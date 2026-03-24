@@ -7,12 +7,10 @@ public class FloorIntersectionMasker
     //Todo: after that call deconstruct dummies at intersections on the lower floor
     //tODO: bir floor silinince alttaki intersectionların da recover olması lazım: keyler dursun, hidden diye liste de tutulabilir
     public static HashSet<Structure> GetIntersectionsUnderFloor(
-        FloorData upperFloor, 
-        FloorData lowerFloor,
+       HashSet<Vector2Int> upperCells, 
+       HashSet<Vector2Int> lowerCells,
         Dictionary<Vector2Int, Structure> lowerFloorStructures)
     {
-        var upperCells = upperFloor.GetCells();
-        var lowerCells = lowerFloor.GetCells();
 
         var intersections = FindIntersections(upperCells, lowerCells);
         RemoveIntersectionBoundary(intersections);

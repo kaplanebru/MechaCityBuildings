@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [Serializable]
@@ -9,15 +10,14 @@ public class CityDrawerUnits
     public PaintData paintData;
     
     public GridSystem gridSystem;
-    public FloorManagement floorManagement;
+    public FloorDatabase floorDatabase;
 }
 
 [ExecuteInEditMode]
 public class CityDrawer : MonoBehaviour
 {
-   
     public CityDrawerUnits units;
-    public Action<HashSet<CellWorldData>, int> OnCellsReady;
+    public Action<int, HashSet<Vector2Int>, HashSet<CellWorldData>> OnCellsReady;
 
      public void ExecutePainting(Event e) //todo: to call with editor update that triggered by Start Painting Button
     {
@@ -35,24 +35,26 @@ public class CityDrawer : MonoBehaviour
     }
     public void UpdateAverageBuildingHeight()
     {
-        units.floorManagement.OnFloorHeightUpdate();
+        FloorManagement.OnFloorHeightUpdate(units.floorDatabase);
 
-        var activeFloor = units.floorManagement.db.GetActiveFloorData();
+        var activeFloor = units.floorDatabase.GetActiveFloorData();
         units.gridSystem.OnFloorHeightUpdate(activeFloor);
     }
 
     public void ConstructBuildingsRequest()
     {
-        var activeFloor = units.floorManagement.db.GetActiveFloorData();
+        var activeFloor = units.floorDatabase.GetActiveFloorData();
+        var cells = units.gridSystem.cellRecorderCache;
+            
         var worldCells = CellRegistry.RegisterCellsOnFloorAndSendWorldCells(
-            units.gridSystem.cellRecorderCache,
+            cells,
             activeFloor,
             units.gridSystem.gridData);
 
         GridMasker.ResetSelectedCells(units.gridSystem.overlayPainter, units.gridSystem.gridData);
         
         print("world cells" + worldCells.Count);
-        OnCellsReady?.Invoke(worldCells, activeFloor.Index);
+        OnCellsReady?.Invoke(activeFloor.Index, cells.ToHashSet(), worldCells);
     }
 }
 

@@ -3,19 +3,28 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[Serializable]
-public class FloorDatabase : IGridRelatedData
+//[Serializable]
+public class FloorDatabase: MonoBehaviour
 { 
     public int ActiveFloorIndex { get; private set; } = 0;
 
     [SerializeField]
     internal List<FloorData> FloorDatas = new();
+
+    public GridData gridData;
+    public Transform floorsRoot;
+    
+    public Action<FloorData> OnFloorCreated;
+    public Action OnLastFloorRemoved;
+    public Action<int> OnFloorClearRequest;
     
     public FloorData GetActiveFloorData(Action restoreIfNeededCallback = null)
     {
         restoreIfNeededCallback?.Invoke();
         return FloorDatas[ActiveFloorIndex];
     }
+    
+    public FloorData GetFloorData(int floorIndex) => FloorDatas[floorIndex];
 
     public int GetFloorCount()
     {

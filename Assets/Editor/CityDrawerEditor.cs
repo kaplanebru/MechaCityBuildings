@@ -33,7 +33,7 @@ public class CityDrawerEditor : Editor
 
         if (GUILayout.Button("Debug"))
         {
-            t.units.floorManagement.DebugFM();
+            FloorManagement.DebugFM(t.units.floorDatabase);
             userState = UserStates.Drawing;
         }
         
@@ -60,7 +60,7 @@ public class CityDrawerEditor : Editor
             {
                 CacheTargetIfNeeded();
                 t.units.gridSystem.ReloadGrid(); //TODO: overlay de reload olmalı
-                t.units.floorManagement.HardRestore(); //temp
+                FloorManagement.HardRestore(t.units.floorDatabase); //temp
                 userState = UserStates.Drawing;
             }
 
@@ -80,7 +80,7 @@ public class CityDrawerEditor : Editor
             {
                 CacheTargetIfNeeded();
                 
-                t.units.floorManagement.IncreaseFloor();
+               FloorManagement.IncreaseFloor(t.units.floorDatabase);
                 userState = UserStates.Drawing;
             }
 
@@ -88,8 +88,8 @@ public class CityDrawerEditor : Editor
             {
                 CacheTargetIfNeeded();
                 
-                t.units.floorManagement.DeleteLastFloor();
-                if(t.units.floorManagement.db.ActiveFloorIndex == 0)
+                FloorManagement.DeleteLastFloor(t.units.floorDatabase);
+                if(t.units.floorDatabase.ActiveFloorIndex == 0)
                     ClearActiveFloor();
                 
                 userState = UserStates.Drawing;
@@ -107,7 +107,7 @@ public class CityDrawerEditor : Editor
             if (GUILayout.Button("Switch Active Floor To"))
             {
                 CacheTargetIfNeeded();
-                t.units.floorManagement.SwitchActiveFloor(floorIndex);
+                FloorManagement.SwitchActiveFloor(floorIndex, t.units.floorDatabase);
                 userState = UserStates.Drawing;
             }
 
@@ -124,7 +124,7 @@ public class CityDrawerEditor : Editor
     private void ClearActiveFloor()
     {
         CacheTargetIfNeeded();
-        t.units.floorManagement.ClearActiveFloor();
+        FloorManagement.ClearActiveFloor(t.units.floorDatabase);
                 
         t.units.gridSystem.ReloadGrid();
         GridMasker.ResetSelectedCells(t.units.gridSystem.overlayPainter, t.units.gridSystem.gridData);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -11,30 +12,42 @@ public class CityBuilder : MonoBehaviour
 {
     public Randomizer randomizer;
     public Installer installer;
-    public PlacementDatabase placementDatabase;
+    public FloorResidentsDatabase floorResidentsDb;
+    public FloorDatabase floorDb;
     [SerializeField] private CityDrawer cityDrawer;
-
+    
     private void OnEnable()
     {
-        cityDrawer.OnCellsReady += SetPlacementsAndInstallSingleFloor;
+        cityDrawer.OnCellsReady += SetFloorResidentsAndInstall;
+        floorDb.OnFloorClearRequest += ClearResidentsOnFloor;
+        floorDb.OnFloorCreated += AddFloorResidentsData;
+        floorDb.OnLastFloorRemoved += RemoveLastFloorResidentsData;
     }
+
+   
 
     private void OnDisable()
     {
-        cityDrawer.OnCellsReady -= SetPlacementsAndInstallSingleFloor;
+        cityDrawer.OnCellsReady -= SetFloorResidentsAndInstall;
+        floorDb.OnFloorClearRequest -= ClearResidentsOnFloor;
+        floorDb.OnFloorCreated -= AddFloorResidentsData;
+        floorDb.OnLastFloorRemoved -= RemoveLastFloorResidentsData;
     }
 
-    private void SetPlacementsAndInstallSingleFloor(HashSet<CellWorldData> cellWorldDatas, int floorIndex)
+    private void SetFloorResidentsAndInstall(int floorIndex, HashSet<Vector2Int> cells, HashSet<CellWorldData> worldCells)
     {
 #if UNITY_EDITOR
-        Undo.RecordObject(placementDatabase,"Installment From Cell");
+        Undo.RecordObject(floorResidentsDb,"Installment From Cell");
         Undo.RecordObject(installer, "Installment From Cell");
-
-        randomizer.SetPlacementsOnFloor(cellWorldDatas, floorIndex);
+        
+        floorResidentsDb.RegisterCells(floorIndex, cells.ToList());
+        randomizer.SetPlacementsOnFloor(worldCells, floorIndex);
         randomizer.MixAndApplyPlacements(floorIndex);
-        installer.InstallStructures(floorIndex);
 
-        EditorUtility.SetDirty(placementDatabase);
+        var floorData = floorDb.GetFloorData(floorIndex);
+        installer.InstallStructures(floorData);
+
+        EditorUtility.SetDirty(floorResidentsDb);
         EditorUtility.SetDirty(installer);
 
         //if (!Application.isPlaying)
@@ -44,24 +57,39 @@ public class CityBuilder : MonoBehaviour
 
     public void RandomizeAndInstallTotalZone()
     {
-        int floorCount = placementDatabase.GetPlacementFloorCount();
-
 #if UNITY_EDITOR
         
-        Undo.RecordObject(placementDatabase,"Installment From Cell");
+        Undo.RecordObject(floorResidentsDb,"Installment From Cell");
         Undo.RecordObject(installer, "Installment From Cell");
-        
-        for (int i = 0; i < floorCount; i++)
+
+        foreach (var floorData in floorDb.FloorDatas)
         {
-            randomizer.MixAndApplyPlacements(i);
-            installer.InstallStructures(i);
+            randomizer.MixAndApplyPlacements(floorData.Index);
+            installer.InstallStructures(floorData);
         }
         
-        EditorUtility.SetDirty(placementDatabase);
+        EditorUtility.SetDirty(floorResidentsDb);
         EditorUtility.SetDirty(installer);
 #endif
     }
+    
+    private void AddFloorResidentsData(FloorData floorData)
+    {
+        floorResidentsDb.AddFloorResidentsData(floorData);
+    }
+    private void ClearResidentsOnFloor(int floorIndex)
+    {
+        var structures = floorResidentsDb.ClearResidents(floorIndex);
+        installer.ClearStructures(structures);
+    }
+    
+    private void RemoveLastFloorResidentsData()
+    {
+        ClearResidentsOnFloor(floorDb.GetFloorCount()-1);
+        floorResidentsDb.RemoveLastFloor();
+    }
 
+   
     public void InstallGivenArrangement()
     {
         //placement data with placement floors

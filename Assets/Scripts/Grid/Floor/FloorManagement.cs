@@ -1,122 +1,114 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
+
 using UnityEngine;
 
-public class FloorManagement : MonoBehaviour //can be made native or static
+public static class FloorManagement
 {
-    public GridData gridData;
-    public Transform floorsRoot;
-    public FloorDatabase db;
-    
-    public Action<FloorData> OnFloorCreated;
-    public Action OnLastFloorRemoved;
-    public Action<int> OnFloorClearRequest;
-
-    public void DebugFM()
+    public static void DebugFM(FloorDatabase db)
     {
-        print("floor amount: " + db.GetFloorCount());
-        print("current floor: " + db.ActiveFloorIndex);
+        Debug.Log("floor amount: " + db.GetFloorCount());
+        Debug.Log("current floor: " + db.ActiveFloorIndex);
 
-        Reset();
+        Reset(db);
         
-        print("floor amount: " + db.GetFloorCount());
-        print("current floor: " + db.ActiveFloorIndex);
+        Debug.Log("floor amount: " + db.GetFloorCount());
+        Debug.Log("current floor: " + db.ActiveFloorIndex);
     }
 
-    private void RestoreCacheIfNeeded()
+    private static void RestoreCacheIfNeeded(FloorDatabase db)
     {
-        HardRestore();
+        HardRestore(db);
     }
     
-    private void AddFloorData(FloorData floorData)
+    private static void AddFloorData(FloorData floorData, FloorDatabase db)
     {
 #if UNITY_EDITOR
-        Undo.RecordObject(this, "Add Floor");
+        Undo.RecordObject(db, "Add Floor");
         db.FloorDatas.Add(floorData);
-        EditorUtility.SetDirty(this);
-        
-        //OnFloorCreated?.Invoke(floorData);
+        EditorUtility.SetDirty(db);
 #endif
     }
 
-    private void RemoveFloorData(FloorData floorData)
+    private static void RemoveFloorData(FloorData floorData, FloorDatabase db)
     {
 #if UNITY_EDITOR
         if (db.FloorDatas.Contains(floorData))
         {
-            Undo.RecordObject(this, "Remove Floor");
+            Undo.RecordObject(db, "Remove Floor");
             db.FloorDatas.Remove(floorData);
-            EditorUtility.SetDirty(this);
-            
+            EditorUtility.SetDirty(db);
         }
 #endif
     }
 
-    private void CreateFloor(int floorIndex)
+    private static void CreateFloor(int floorIndex, FloorDatabase db)
     {
         var newFloor = new GameObject("Floor " + db.GetFloorCount()).transform;
-        newFloor.SetParent(floorsRoot);
+        newFloor.SetParent(db.floorsRoot);
 
-        var floorData = new FloorData(floorIndex, newFloor, gridData.AverageBuildingHeight);
-        AddFloorData(floorData);
+        var floorData = new FloorData(floorIndex, newFloor, db.gridData.AverageBuildingHeight);
+        AddFloorData(floorData, db);
         db.SetActiveFloor(floorIndex);
         
-        OnFloorCreated?.Invoke(floorData);
+        db.OnFloorCreated?.Invoke(floorData);
     }
 
-    public void IncreaseFloor()
+    public static void IncreaseFloor(FloorDatabase db)
     {
-        RestoreCacheIfNeeded();
-        CreateFloor(db.ActiveFloorIndex + 1);
+        RestoreCacheIfNeeded(db);
+        CreateFloor(db.ActiveFloorIndex + 1, db);
     }
 
-    public void ClearActiveFloor()
+    public static void ClearActiveFloor(FloorDatabase db)
     {
-        RestoreCacheIfNeeded();
+        RestoreCacheIfNeeded(db);
         var activeFloor = db.GetActiveFloorData();
-        activeFloor.ClearCells();
+        //activeFloor.ClearCells();
         
-        OnFloorClearRequest?.Invoke(activeFloor.Index);
+        db.OnFloorClearRequest?.Invoke(activeFloor.Index);
       
     }
 
-    public void DeleteLastFloor()
+    public static void DeleteLastFloor(FloorDatabase db)
     {
-        RestoreCacheIfNeeded();
-        if (TryDeleteLastFloor(out var newActiveFloor))
+        RestoreCacheIfNeeded(db);
+        if (TryDeleteLastFloor(db, out var newActiveFloor))
         {
             //todo
         }
     }
 
 
-    private bool TryDeleteLastFloor(out FloorData newActiveFloor)
+    private static bool TryDeleteLastFloor(FloorDatabase db, out FloorData newActiveFloor)
     {
-        RestoreCacheIfNeeded();
+        RestoreCacheIfNeeded(db);
         newActiveFloor = null;
         if (db.GetFloorCount() <= 1) return false;
 
         var activeFloor = db.GetActiveFloorData();
 
-        ClearActiveFloor();
+        ClearActiveFloor(db);
         
         var activeRoot = activeFloor.Root;
-        DestroyImmediate(activeRoot.gameObject);
+        UnityEngine.Object.DestroyImmediate(activeRoot.gameObject);
 
-        RemoveFloorData(activeFloor);
+        RemoveFloorData(activeFloor, db);
         db.SetActiveFloor(db.GetFloorCount() - 1); //db.FloorDatas.Last().Value.Index
 
         newActiveFloor = db.GetActiveFloorData();
         
-        OnLastFloorRemoved?.Invoke();
+        db.OnLastFloorRemoved?.Invoke();
         return true;
     }
 
-    public void SwitchActiveFloor(int floorIndex)
+    public static void SwitchActiveFloor(int floorIndex, FloorDatabase db)
     {
-        RestoreCacheIfNeeded();
+        RestoreCacheIfNeeded(db);
 
         if (floorIndex >= db.GetFloorCount())
         {
@@ -127,50 +119,50 @@ public class FloorManagement : MonoBehaviour //can be made native or static
         db.SetActiveFloor(floorIndex);
     }
 
-    public void OnFloorHeightUpdate()
+    public static void OnFloorHeightUpdate(FloorDatabase db)
     {
         foreach (var floorData in db.FloorDatas)
         {
-            floorData.ImplementFloorHeight(gridData.AverageBuildingHeight);
+            floorData.ImplementFloorHeight(db.gridData.AverageBuildingHeight);
         }
     }
     
-    private void Reset()
+    private static void Reset(FloorDatabase db)
     {
         db.FloorDatas.Clear();
 
-        var floors = floorsRoot.GetComponentsInChildren<Transform>().Where(t => t != floorsRoot).ToArray();
+        var floors = db.floorsRoot.GetComponentsInChildren<Transform>().
+            Where(t => t != db.floorsRoot).ToArray();
         for (var i = floors.Length - 1; i >= 0; i--)
         {
             var floor = floors[i];
-            DestroyImmediate(floor.gameObject);
+            UnityEngine.Object.DestroyImmediate(floor.gameObject);
         }
 
         db.SetActiveFloor(0);
     }
 
-    public void HardRestore()
+    public static void HardRestore(FloorDatabase db)
     {
-        
         if (db.GetFloorCount() == 0)
         {
-            if (floorsRoot.childCount == 0)
+            if (db.floorsRoot.childCount == 0)
             {
-                CreateFloor(0);
+                CreateFloor(0, db);
                 return;
             }
 
             Debug.LogError("floor roots > floor data"
                            + " floor count: " + db.GetFloorCount()
-                           + " root count: " + floorsRoot.childCount);
+                           + " root count: " + db.floorsRoot.childCount);
         }
         else
         {
-            if (floorsRoot.childCount == 0)
+            if (db.floorsRoot.childCount == 0)
             {
                 Debug.LogError("floor data > floor roots"
                                + " floor count: " + db.GetFloorCount()
-                               + " root count: " + floorsRoot.childCount);
+                               + " root count: " + db.floorsRoot.childCount);
 
                 //restore'un pek bir anlamı yok çünkü kaydedilen cell'ler de uçmuş olur
             }

@@ -33,11 +33,11 @@ public static class InstallerEditorHelper
 
     public static void ReleaseItemsToPool(Installer t)
     {
-        int floorCount = t.placementDatabase.GetPlacementFloorCount();
+        /*int floorCount = t.placementDatabase.GetPlacementFloorCount();
         for (int i = 0; i < floorCount; i++)
         {
             t.ReleaseItemsToPool(i);
-        }
+        }*/
     }
 
     public static void SetSceneDirty(Installer t)

@@ -21,7 +21,7 @@ public sealed class OverlayPainter : MonoBehaviour
     private bool allowFullRebuild = true;
 
     [SerializeField] MeshFilter meshFilter;
-    [SerializeField] FloorManagement floorManagement;
+    [SerializeField] FloorDatabase floorDatabase;
     [SerializeField] GridData gridData;
 
     // Mesh + arrays.
@@ -39,12 +39,12 @@ public sealed class OverlayPainter : MonoBehaviour
 
     private void OnEnable()
     {
-        floorManagement.db.OnActiveFloorUpdate += SetOverlayMeshHeight;
+        floorDatabase.OnActiveFloorUpdate += SetOverlayMeshHeight;
     }
 
     private void OnDisable()
     {
-        floorManagement.db.OnActiveFloorUpdate -= SetOverlayMeshHeight;
+        floorDatabase.OnActiveFloorUpdate -= SetOverlayMeshHeight;
     }
     
 

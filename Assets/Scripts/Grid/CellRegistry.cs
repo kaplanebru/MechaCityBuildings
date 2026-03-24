@@ -21,8 +21,6 @@ public class CellRegistry
         HashSet<CellWorldData> cellWorldDataset = new();
         foreach (var cell in registeredCells)
         {
-            floorData.AddCell(cell);
-
             Vector3 worldPos = CellConverter.GetWorldPositionCenterFromCellIndex(cell.x, cell.y, gridData);
             //worldPos.y += gridData.AverageBuildingHeight;
             
