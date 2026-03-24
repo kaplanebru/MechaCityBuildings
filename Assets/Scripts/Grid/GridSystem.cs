@@ -56,6 +56,6 @@ public class GridSystem : MonoBehaviour
     
     public void OnFloorHeightUpdate(FloorData activeFloor)
     {
-        overlayPainter.SetOverlayMeshHeight(activeFloor, gridData.AverageBuildingHeight);
+        overlayPainter.SetOverlayMeshHeight(activeFloor);
     }
 }

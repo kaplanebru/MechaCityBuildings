@@ -7,21 +7,21 @@ using UnityEngine;
 public class ArrangementData
 {
     public string Name;
-    public Dictionary<ReplacementType, List<PlaceholderData>> CategorizedBuildings { get; private set; } = new();
-    public ArrangementData(string name, PlaceholderData[] savedBuildings)
+    public Dictionary<StructureType, List<PlacementData>> CategorizedBuildings { get; private set; } = new();
+    public ArrangementData(string name, PlacementData[] savedBuildings)
     {
         Name = name;
         CategorizeBuildings(savedBuildings);
     }
 
-    private void CategorizeBuildings(PlaceholderData[] savedBuildings)
+    private void CategorizeBuildings(PlacementData[] savedBuildings)
     {
         foreach (var savedBuilding in savedBuildings)
         {
-            if(!CategorizedBuildings.ContainsKey(savedBuilding.GetReplacementType()))
-                CategorizedBuildings.Add(savedBuilding.GetReplacementType(), new List<PlaceholderData>());
+            if(!CategorizedBuildings.ContainsKey(savedBuilding.GetStructureType()))
+                CategorizedBuildings.Add(savedBuilding.GetStructureType(), new List<PlacementData>());
             
-            var buildingGroup = CategorizedBuildings[savedBuilding.GetReplacementType()];
+            var buildingGroup = CategorizedBuildings[savedBuilding.GetStructureType()];
             buildingGroup.Add(savedBuilding);
         }
     }
@@ -38,7 +38,7 @@ public class ArrangementCache
         return arrangements.ContainsKey(name);
     }
 
-    public void Add(string name, PlaceholderData[] savedBuildings)
+    public void Add(string name, PlacementData[] savedBuildings)
     {
         if (IsNameTaken(name))
         {
@@ -61,7 +61,8 @@ public class ArrangementCache
     
     public void ResurrectArrangement(string arrangementName)
     {
-        var categorizedBuildings = GetArrangement(arrangementName).CategorizedBuildings;
+        var categorizedBuildings = 
+            GetArrangement(arrangementName).CategorizedBuildings;
         
         Eventbus.OnReplacementWithSavedRequest?.Invoke(categorizedBuildings);
     }

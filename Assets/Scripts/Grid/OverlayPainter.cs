@@ -5,6 +5,7 @@ using UnityEngine;
 //TODO: Aslında grid size ve plane aynı olmalı. ya da grid 1 birimi değişir. ama plane ile eşleşse iyi olur
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
+[ExecuteInEditMode]
 public sealed class OverlayPainter : MonoBehaviour
 {
     [Header("Visual")] [Tooltip("Small vertical offset above the ground to avoid z-fighting.")] [SerializeField]
@@ -20,6 +21,8 @@ public sealed class OverlayPainter : MonoBehaviour
     private bool allowFullRebuild = true;
 
     [SerializeField] MeshFilter meshFilter;
+    [SerializeField] FloorManagement floorManagement;
+    [SerializeField] GridData gridData;
 
     // Mesh + arrays.
     private Mesh overlayMesh;
@@ -34,6 +37,16 @@ public sealed class OverlayPainter : MonoBehaviour
 
     private bool hasAnyColorChanges;
 
+    private void OnEnable()
+    {
+        floorManagement.db.OnActiveFloorUpdate += SetOverlayMeshHeight;
+    }
+
+    private void OnDisable()
+    {
+        floorManagement.db.OnActiveFloorUpdate -= SetOverlayMeshHeight;
+    }
+    
 
     public void RecoverMeshIfNecessary(GridData gridData)
     {
@@ -69,12 +82,13 @@ public sealed class OverlayPainter : MonoBehaviour
         }
     }
 
-    public void SetOverlayMeshHeight(FloorData floorData, int averageBuildingHeight)
+    public void SetOverlayMeshHeight(FloorData floorData)
     {
-        var floorHeight = floorData.GetFloorHeight(averageBuildingHeight);
+        var floorHeight = floorData.GetFloorHeight(gridData.AverageBuildingHeight);
         _height = overlayHeightOffset + floorHeight;
         transform.localPosition = new Vector3(transform.localPosition.x, _height, transform.localPosition.z);
         //transform.pos idi
+        Debug.Log("on active floor: " + floorData.FloorIdentifier.Index);
     }
 
     public void CreateOverlayMesh(GridData gridData)

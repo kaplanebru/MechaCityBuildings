@@ -6,14 +6,17 @@ public class FloorIntersectionMasker
 {
     //Todo: after that call deconstruct dummies at intersections on the lower floor
     //tODO: bir floor silinince alttaki intersectionların da recover olması lazım: keyler dursun, hidden diye liste de tutulabilir
-    public static HashSet<CellItem> GetIntersectionsUnderFloor(FloorData upperFloor, FloorData lowerFloor)
+    public static HashSet<Structure> GetIntersectionsUnderFloor(
+        FloorData upperFloor, 
+        FloorData lowerFloor,
+        Dictionary<Vector2Int, Structure> lowerFloorStructures)
     {
-        var upperCells = upperFloor.GetItemsByCell().Keys.ToHashSet();
-        var lowerCells = lowerFloor.GetItemsByCell().Keys.ToHashSet();
+        var upperCells = upperFloor.GetCells();
+        var lowerCells = lowerFloor.GetCells();
 
         var intersections = FindIntersections(upperCells, lowerCells);
         RemoveIntersectionBoundary(intersections);
-        return GetItemsOnIntersectionPoints(intersections, lowerFloor);
+        return GetItemsOnIntersectionPoints(intersections, lowerFloorStructures);
     }
 
     private static HashSet<Vector2Int> FindIntersections(HashSet<Vector2Int> upperCells, HashSet<Vector2Int> lowerCells)
@@ -38,16 +41,17 @@ public class FloorIntersectionMasker
         intersections.RemoveWhere(intersection => intersectionBounds.Contains(intersection));
     }
     
-    private static HashSet<CellItem> GetItemsOnIntersectionPoints(HashSet<Vector2Int> intersections, FloorData lowerFloor)
+    private static HashSet<Structure> GetItemsOnIntersectionPoints
+        (HashSet<Vector2Int> intersections, Dictionary<Vector2Int, Structure> lowerFloorStructures)
     {
-        HashSet<CellItem> buildings = new HashSet<CellItem>();
+        HashSet<Structure> structuresToRemove = new HashSet<Structure>();
         foreach (var intersection in intersections)
         {
-            if (lowerFloor.GetItemsByCell().TryGetValue(intersection, out var value))
+            if (lowerFloorStructures.TryGetValue(intersection, out var structure))
             {
-                buildings.Add(value);
+                structuresToRemove.Add(structure);
             }
         }
-        return buildings;
+        return structuresToRemove;
     }
 }

@@ -7,8 +7,12 @@ using UnityEngine;
 public class FloorManagement : MonoBehaviour //can be made native or static
 {
     public GridData gridData;
-    public FloorDatabase db;
     public Transform floorsRoot;
+    public FloorDatabase db;
+    
+    public Action<FloorData> OnFloorCreated;
+    public Action OnLastFloorRemoved;
+    public Action<int> OnFloorClearRequest;
 
     public void DebugFM()
     {
@@ -25,7 +29,112 @@ public class FloorManagement : MonoBehaviour //can be made native or static
     {
         HardRestore();
     }
+    
+    private void AddFloorData(FloorData floorData)
+    {
+#if UNITY_EDITOR
+        Undo.RecordObject(this, "Add Floor");
+        db.FloorDatas.Add(floorData);
+        EditorUtility.SetDirty(this);
+        
+        //OnFloorCreated?.Invoke(floorData);
+#endif
+    }
 
+    private void RemoveFloorData(FloorData floorData)
+    {
+#if UNITY_EDITOR
+        if (db.FloorDatas.Contains(floorData))
+        {
+            Undo.RecordObject(this, "Remove Floor");
+            db.FloorDatas.Remove(floorData);
+            EditorUtility.SetDirty(this);
+            
+        }
+#endif
+    }
+
+    private void CreateFloor(int floorIndex)
+    {
+        var newFloor = new GameObject("Floor " + db.GetFloorCount()).transform;
+        newFloor.SetParent(floorsRoot);
+
+        var floorData = new FloorData(floorIndex, newFloor, gridData.AverageBuildingHeight);
+        AddFloorData(floorData);
+        db.SetActiveFloor(floorIndex);
+        
+        OnFloorCreated?.Invoke(floorData);
+    }
+
+    public void IncreaseFloor()
+    {
+        RestoreCacheIfNeeded();
+        CreateFloor(db.ActiveFloorIndex + 1);
+    }
+
+    public void ClearActiveFloor()
+    {
+        RestoreCacheIfNeeded();
+        var activeFloor = db.GetActiveFloorData();
+        activeFloor.ClearCells();
+        
+        OnFloorClearRequest?.Invoke(activeFloor.FloorIdentifier.Index);
+      
+    }
+
+    public void DeleteLastFloor()
+    {
+        RestoreCacheIfNeeded();
+        if (TryDeleteLastFloor(out var newActiveFloor))
+        {
+            //todo
+        }
+    }
+
+
+    private bool TryDeleteLastFloor(out FloorData newActiveFloor)
+    {
+        RestoreCacheIfNeeded();
+        newActiveFloor = null;
+        if (db.GetFloorCount() <= 1) return false;
+
+        var activeFloor = db.GetActiveFloorData();
+
+        ClearActiveFloor();
+        
+        var activeRoot = activeFloor.FloorIdentifier.Root;
+        DestroyImmediate(activeRoot.gameObject);
+
+        RemoveFloorData(activeFloor);
+        db.SetActiveFloor(db.GetFloorCount() - 1); //db.FloorDatas.Last().Value.Index
+
+        newActiveFloor = db.GetActiveFloorData();
+        
+        OnLastFloorRemoved?.Invoke();
+        return true;
+    }
+
+    public void SwitchActiveFloor(int floorIndex)
+    {
+        RestoreCacheIfNeeded();
+
+        if (floorIndex >= db.GetFloorCount())
+        {
+            Debug.LogError("Floor index out of bounds");
+            return;
+        }
+
+        db.SetActiveFloor(floorIndex);
+    }
+
+    public void OnFloorHeightUpdate()
+    {
+        foreach (var floorData in db.FloorDatas)
+        {
+            floorData.ImplementFloorHeight(gridData.AverageBuildingHeight);
+        }
+    }
+    
     private void Reset()
     {
         db.FloorDatas.Clear();
@@ -65,115 +174,6 @@ public class FloorManagement : MonoBehaviour //can be made native or static
 
                 //restore'un pek bir anlamı yok çünkü kaydedilen cell'ler de uçmuş olur
             }
-        }
-    }
-
-    private void AddFloorData(FloorData floorData)
-    {
-#if UNITY_EDITOR
-        Undo.RecordObject(this, "Add Floor");
-        db.FloorDatas.Add(floorData);
-        EditorUtility.SetDirty(this);
-#endif
-    }
-
-    private void RemoveFloorData(FloorData floorData)
-    {
-#if UNITY_EDITOR
-        if (db.FloorDatas.Contains(floorData))
-        {
-            Undo.RecordObject(this, "Remove Floor");
-            db.FloorDatas.Remove(floorData);
-            EditorUtility.SetDirty(this);
-        }
-#endif
-    }
-
-    private void CreateFloor(int floorIndex)
-    {
-       
-        var newFloor = new GameObject("Floor " + db.GetFloorCount()).transform;
-        newFloor.SetParent(floorsRoot);
-        //zaten add floor'da set dirty yapılıyor
-
-        AddFloorData(new FloorData(floorIndex, newFloor, gridData.AverageBuildingHeight));
-        db.SetActiveFloor(floorIndex);
-    }
-
-    public void IncreaseFloor()
-    {
-        RestoreCacheIfNeeded();
-        CreateFloor(db.ActiveFloorIndex + 1);
-    }
-
-    public void ClearActiveFloor()
-    {
-        RestoreCacheIfNeeded();
-        var activeFloor = db.GetActiveFloorData();
-        if (activeFloor.Items.Count == 0) return;
-
-        var items = activeFloor.Items;
-        for (int i = items.Count - 1; i >= 0; i--)
-        {
-            var item = items[i];
-            if (item == null)
-            {
-                Debug.LogError("item is null");
-                continue;
-            }
-            DestroyImmediate(item.gameObject);
-        }
-
-        activeFloor.ClearCells();
-    }
-
-    public void DeleteLastFloor()
-    {
-        RestoreCacheIfNeeded();
-        if (TryDeleteLastFloor(out var newActiveFloor))
-        {
-            db.InvokeDeleteLastFloor(newActiveFloor);
-        }
-    }
-
-
-    private bool TryDeleteLastFloor(out FloorData newActiveFloor)
-    {
-        RestoreCacheIfNeeded();
-        newActiveFloor = null;
-        if (db.GetFloorCount() <= 1) return false;
-
-        var activeFloor = db.GetActiveFloorData();
-
-        ClearActiveFloor();
-        var activeRoot = activeFloor.Root;
-        DestroyImmediate(activeRoot.gameObject);
-
-        RemoveFloorData(activeFloor);
-        db.SetActiveFloor(db.GetFloorCount() - 1); //db.FloorDatas.Last().Value.Index
-
-        newActiveFloor = db.GetActiveFloorData();
-        return true;
-    }
-
-    public void SwitchActiveFloor(int floorIndex)
-    {
-        RestoreCacheIfNeeded();
-
-        if (floorIndex >= db.GetFloorCount())
-        {
-            Debug.LogError("Floor index out of bounds");
-            return;
-        }
-
-        db.SetActiveFloor(floorIndex);
-    }
-
-    public void OnFloorHeightUpdate()
-    {
-        foreach (var floorData in db.FloorDatas)
-        {
-            floorData.ImplementFloorHeight(gridData.AverageBuildingHeight);
         }
     }
 }
