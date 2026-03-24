@@ -22,13 +22,13 @@ public class FloorResidentsDatabase : MonoBehaviour
     
     public HashSet<Structure> ClearResidents(int floorIndex)
     {
-        var occupant =  residentsFloor[floorIndex];
+        var floorResidentsData = residentsFloor[floorIndex];
         
-            occupant.OccupiedCells.Clear();
-            occupant.PlacementDataset.Clear();
+            floorResidentsData.OccupiedCells.Clear();
+            floorResidentsData.PlacementDataset.Clear();
 
-            HashSet<Structure> tempStructures = new(occupant.Structures);
-            occupant.Structures = null;
+            HashSet<Structure> tempStructures = new(floorResidentsData.Structures);
+            floorResidentsData.Structures.Clear();
             return tempStructures;
     }
     

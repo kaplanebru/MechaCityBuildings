@@ -7,7 +7,7 @@ public class FloorResidentsData
 {
     public List<Vector2Int> OccupiedCells = new();
     public List<PlacementData> PlacementDataset = new();
-    public Structure[] Structures;
+    public List<Structure> Structures = new();
 }
 
 

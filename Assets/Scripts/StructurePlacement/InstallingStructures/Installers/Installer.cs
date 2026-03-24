@@ -35,7 +35,7 @@ public class Installer : MonoBehaviour
             structuresByType.AddRange(InstallStructuresFromPool(pool, floorRoot));
         }
         
-        floorToInstall.Structures = structuresByType.ToArray();
+        floorToInstall.Structures = structuresByType;
     }
     
     private Structure[]  InstallStructuresFromPool(StructurePool pool, Transform floorRoot)

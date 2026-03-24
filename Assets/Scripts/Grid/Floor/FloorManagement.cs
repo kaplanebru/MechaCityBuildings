@@ -68,10 +68,13 @@ public static class FloorManagement
     {
         RestoreCacheIfNeeded(db);
         var activeFloor = db.GetActiveFloorData();
-        //activeFloor.ClearCells();
-        
         db.OnFloorClearRequest?.Invoke(activeFloor.Index);
-      
+    }
+
+    private static void ClearLastFloor(FloorDatabase db)
+    {
+        var lastFloor = db.GetLastFloorData();
+        db.OnFloorClearRequest?.Invoke(lastFloor.Index);
     }
 
     public static void DeleteLastFloor(FloorDatabase db)
@@ -88,18 +91,16 @@ public static class FloorManagement
     {
         RestoreCacheIfNeeded(db);
         newActiveFloor = null;
-        if (db.GetFloorCount() <= 1) return false;
-
-        var activeFloor = db.GetActiveFloorData();
-
-        ClearActiveFloor(db);
         
-        var activeRoot = activeFloor.Root;
-        UnityEngine.Object.DestroyImmediate(activeRoot.gameObject);
+        ClearLastFloor(db);
+        if (db.GetFloorCount() <= 1) return false;
+        
+        var lastFloor = db.GetLastFloorData();
+        var lastRoot = lastFloor.Root;
+        UnityEngine.Object.DestroyImmediate(lastRoot.gameObject);
 
-        RemoveFloorData(activeFloor, db);
-        db.SetActiveFloor(db.GetFloorCount() - 1); //db.FloorDatas.Last().Value.Index
-
+        RemoveFloorData(lastFloor, db);
+        db.SetActiveFloor(db.GetFloorCount() - 1);
         newActiveFloor = db.GetActiveFloorData();
         
         db.OnLastFloorRemoved?.Invoke();

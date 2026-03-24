@@ -85,7 +85,7 @@ public class CityBuilder : MonoBehaviour
     
     private void RemoveLastFloorResidentsData()
     {
-        ClearResidentsOnFloor(floorDb.GetFloorCount()-1);
+        //ClearResidentsOnFloor(floorDb.GetFloorCount()-1); already cleared on delete call
         floorResidentsDb.RemoveLastFloor();
     }
 

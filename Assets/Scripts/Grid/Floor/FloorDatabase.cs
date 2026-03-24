@@ -23,6 +23,12 @@ public class FloorDatabase: MonoBehaviour
         restoreIfNeededCallback?.Invoke();
         return FloorDatas[ActiveFloorIndex];
     }
+
+    public FloorData GetLastFloorData(Action restoreIfNeededCallback = null)
+    {
+        restoreIfNeededCallback?.Invoke();
+        return FloorDatas[^1];
+    }
     
     public FloorData GetFloorData(int floorIndex) => FloorDatas[floorIndex];
 
