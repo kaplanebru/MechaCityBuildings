@@ -16,15 +16,14 @@ public enum StructureType
 public class Installer : MonoBehaviour
 {
     private Dictionary<StructureType, List<PlacementData>> _placementDatasByType = new();
-    public FloorResidentsDatabase floorResidentsDatabase;
     [SerializeField] private GridData gridData;
     public StructurePool[] pools;
     
     public FloorResidentsData floorToInstall;
     
-    public void InstallStructures(FloorData floorData)
+    public void InstallStructures(FloorData floorData, FloorResidentsData floorResidentsData)
     {
-        ClassifyPlacementDatasOnFloor(floorData.Index);
+        ClassifyPlacementDatasOnFloor(floorResidentsData);
         InstallStructuresFromMultiplePools(floorData.Root);
     }
     
@@ -60,34 +59,20 @@ public class Installer : MonoBehaviour
         return structuresByType;
     }
     
-    
-
-
-    private void ClassifyPlacementDatasOnFloor(int floorIndex)
+    private void ClassifyPlacementDatasOnFloor(FloorResidentsData floorResidentsData)
     {
-        floorToInstall = floorResidentsDatabase.GetFloor(floorIndex);
-        
+        floorToInstall = floorResidentsData;
         if (floorToInstall.PlacementDataset.Count == 0)
         {
             Debug.Log("No placement dataset found");
             return;
         }
 
-        /*_placementDatasByType.Clear();
+        _placementDatasByType.Clear();
         _placementDatasByType = floorToInstall.PlacementDataset
             .GroupBy(p => p.GetStructureType())
             .ToDictionary(g =>
-                g.Key, g => g.ToList());*/
-        
-        _placementDatasByType.Clear();
-        foreach (var pool in pools)
-        {
-            _placementDatasByType[pool.poolData.StructureType] = new List<PlacementData>();
-        }
-        foreach (var placementData in floorToInstall.PlacementDataset)
-        {
-            _placementDatasByType[placementData.GetStructureType()].Add(placementData);
-        }
+                g.Key, g => g.ToList());
     }
     
     public void InitiatePools()
@@ -105,10 +90,15 @@ public class Installer : MonoBehaviour
         if (!pool.IsInitialized()) 
             pool.InitializePool();
         else
-            ReleaseItemsToPool(floorToInstall.Structures.ToHashSet()); //dunno
+        {
+            if (floorToInstall.Structures != null)
+            {
+                ReleaseItemsToPool(floorToInstall.Structures.ToHashSet()); //dunno
+            }
+        }
     }
 
-    public void ReleaseItemsToPool(HashSet<Structure> structures) //PlacementFloor placementFloor
+    public void ReleaseItemsToPool(HashSet<Structure> structures)
     {
        if (structures == null || structures.Count == 0) return;
        

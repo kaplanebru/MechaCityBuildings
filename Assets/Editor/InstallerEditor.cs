@@ -28,7 +28,7 @@ public class InstallerEditor : Editor
         if (GUILayout.Button("Release To Pool")) //TODO
         {
             CacheTarget();
-            InstallerEditorHelper.ReleaseItemsToPool(t);
+            //InstallerEditorHelper.ReleaseItemsToPool(t);
         }
 
         if (GUILayout.Button("Refresh Pool With New Object"))

@@ -39,13 +39,13 @@ public class CityBuilder : MonoBehaviour
 #if UNITY_EDITOR
         Undo.RecordObject(floorResidentsDb,"Installment From Cell");
         Undo.RecordObject(installer, "Installment From Cell");
+
+        FloorResidentsData floorResidentsData = floorResidentsDb.GetFloor(floorIndex);
         
         floorResidentsDb.RegisterCells(floorIndex, cells.ToList());
-        randomizer.SetPlacementsOnFloor(worldCells, floorIndex);
-        randomizer.MixAndApplyPlacements(floorIndex);
-
-        var floorData = floorDb.GetFloorData(floorIndex);
-        installer.InstallStructures(floorData);
+        randomizer.SetPlacementsOnFloor(worldCells, floorResidentsData);
+        randomizer.MixAndApplyPlacements(floorResidentsData);
+        installer.InstallStructures(floorDb.GetFloorData(floorIndex), floorResidentsData);
 
         EditorUtility.SetDirty(floorResidentsDb);
         EditorUtility.SetDirty(installer);
@@ -64,8 +64,8 @@ public class CityBuilder : MonoBehaviour
 
         foreach (var floorData in floorDb.FloorDatas)
         {
-            randomizer.MixAndApplyPlacements(floorData.Index);
-            installer.InstallStructures(floorData);
+            randomizer.MixAndApplyPlacements(floorResidentsDb.GetFloor(floorData.Index));
+            installer.InstallStructures(floorData, floorResidentsDb.GetFloor(floorData.Index));
         }
         
         EditorUtility.SetDirty(floorResidentsDb);
@@ -73,9 +73,9 @@ public class CityBuilder : MonoBehaviour
 #endif
     }
     
-    private void AddFloorResidentsData(FloorData floorData)
+    private void AddFloorResidentsData()
     {
-        floorResidentsDb.AddFloorResidentsData(floorData);
+        floorResidentsDb.AddFloorResidentsData();
     }
     private void ClearResidentsOnFloor(int floorIndex)
     {

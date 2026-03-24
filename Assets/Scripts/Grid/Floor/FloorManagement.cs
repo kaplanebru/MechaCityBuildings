@@ -55,7 +55,7 @@ public static class FloorManagement
         AddFloorData(floorData, db);
         db.SetActiveFloor(floorIndex);
         
-        db.OnFloorCreated?.Invoke(floorData);
+        db.OnFloorCreated?.Invoke();
     }
 
     public static void IncreaseFloor(FloorDatabase db)

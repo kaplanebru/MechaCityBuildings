@@ -15,9 +15,9 @@ public class FloorResidentsDatabase : MonoBehaviour
         residentsFloor[floorIndex].OccupiedCells = occupiedCells.ToList();
     }
     
-    public void AddFloorResidentsData(FloorData floorData)
+    public void AddFloorResidentsData()
     {
-        residentsFloor.Add(new FloorResidentsData(floorData.Index));
+        residentsFloor.Add(new FloorResidentsData());
     }
     
     public HashSet<Structure> ClearResidents(int floorIndex)

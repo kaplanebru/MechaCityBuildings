@@ -5,15 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class FloorResidentsData
 {
-    public int Index;
     public List<Vector2Int> OccupiedCells = new();
     public List<PlacementData> PlacementDataset = new();
     public Structure[] Structures;
-
-    public FloorResidentsData(int index)
-    {
-        Index = index;
-    }
 }
 
 

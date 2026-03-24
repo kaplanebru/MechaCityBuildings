@@ -8,22 +8,15 @@ public class Randomizer : MonoBehaviour
 {
     [SerializeField] private CityData cityData;
     [SerializeField] private StructureTypeDatabase structureTypeDatabase;
-    public FloorResidentsDatabase floorResidentsDb;
     
     private HeightTierHelper _heightTierHelper;
     private PlacementOrderRegulator _orderRegulator;
     private Dictionary<StructureType, PendingPlacements> _pendingPlacements = new();
     
-    public void SetPlacementsOnFloor(HashSet<CellWorldData> cellWorldDatas, int floorIndex)
+    public void SetPlacementsOnFloor(HashSet<CellWorldData> cellWorldDatas, FloorResidentsData floorResidentsData)
     {
-        if(floorResidentsDb.GetFloor(floorIndex) == null)
-        {
-            Debug.LogError("No placement floor was found with index " + floorIndex);
-            return;
-        }
-        
         _orderRegulator = new PlacementOrderRegulator(cityData.HeightGap);
-        floorResidentsDb.GetFloor(floorIndex).PlacementDataset = 
+       floorResidentsData.PlacementDataset = 
             _orderRegulator.GetRegulatedPlacements(cellWorldDatas).ToList();
     }
     
@@ -49,29 +42,29 @@ public class Randomizer : MonoBehaviour
         }
     }
 
-    private void ConvertFrequenciesToAmounts(int floorIndex)
+    private void ConvertFrequenciesToAmounts(FloorResidentsData floorResidentsData)
     {
         FrequencyData[] frequencyDatas = cityData.RandomizerDataSet.Select(r => r.FrequencyData).ToArray();
         FrequencyToAmountConverter.SetAmountsByRatio
-            (frequencyDatas, floorResidentsDb.GetFloor(floorIndex).PlacementDataset.Count);
+            (frequencyDatas, floorResidentsData.PlacementDataset.Count);
     }
 
-    public void MixAndApplyPlacements(int floorIndex) 
+    public void MixAndApplyPlacements(FloorResidentsData floorResidentsData) 
     {
-        ConvertFrequenciesToAmounts(floorIndex);
+        ConvertFrequenciesToAmounts(floorResidentsData);
         InitiateQuotas();
         InitiatePendingStructures();
-        ApplyTypesToPlacements(floorIndex);
+        ApplyTypesToPlacements(floorResidentsData);
     }
 
 
-    private void ApplyTypesToPlacements(int floorIndex)
+    private void ApplyTypesToPlacements(FloorResidentsData floorResidentsData)
     {
         //eliminate zeros at start:
         _pendingPlacements = _pendingPlacements.Where(kvp => kvp.Value.Amount != 0)
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-        var placementDataset = floorResidentsDb.GetFloor(floorIndex).PlacementDataset;
+        var placementDataset = floorResidentsData.PlacementDataset;
         foreach (var placementData in placementDataset)
         {
             if (_pendingPlacements.Count == 0)

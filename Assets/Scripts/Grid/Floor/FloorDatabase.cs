@@ -14,7 +14,7 @@ public class FloorDatabase: MonoBehaviour
     public GridData gridData;
     public Transform floorsRoot;
     
-    public Action<FloorData> OnFloorCreated;
+    public Action OnFloorCreated;
     public Action OnLastFloorRemoved;
     public Action<int> OnFloorClearRequest;
     
