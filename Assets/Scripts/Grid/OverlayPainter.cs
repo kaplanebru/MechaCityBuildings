@@ -88,7 +88,7 @@ public sealed class OverlayPainter : MonoBehaviour
         _height = overlayHeightOffset + floorHeight;
         transform.localPosition = new Vector3(transform.localPosition.x, _height, transform.localPosition.z);
         //transform.pos idi
-        Debug.Log("on active floor: " + floorData.FloorIdentifier.Index);
+        Debug.Log("on active floor: " + floorData.Index);
     }
 
     public void CreateOverlayMesh(GridData gridData)

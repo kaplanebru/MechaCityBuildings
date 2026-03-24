@@ -3,35 +3,28 @@ using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
-public class FloorIdentifier
+public class FloorData
 {
     public int Index;
     public Transform Root;
-}
-
-[System.Serializable]
-public class FloorData
-{
-    public FloorIdentifier FloorIdentifier = new FloorIdentifier();
     public List<Vector2Int> OccupiedCells = new();
 
-    public float GetFloorHeight(int averageBuildingHeight) => FloorIdentifier.Index * averageBuildingHeight;
+    public float GetFloorHeight(int averageBuildingHeight) => Index * averageBuildingHeight;
 
     public HashSet<Vector2Int> GetCells() => OccupiedCells.ToHashSet();
     public FloorData(int index, Transform root, int averageBuildingHeight)
     {
-        //set dirty, also floorcells
-        FloorIdentifier.Index = index;
-        FloorIdentifier.Root = root;
+        Index = index;
+        Root = root;
 
         ImplementFloorHeight(averageBuildingHeight);
     }
 
     public void ImplementFloorHeight(int averageBuildingHeight)
     {
-        var pos = FloorIdentifier.Root.localPosition;
+        var pos = Root.localPosition;
         pos.y = GetFloorHeight(averageBuildingHeight);
-        FloorIdentifier.Root.localPosition = pos;
+        Root.localPosition = pos;
     }
 
     public void AddCell(Vector2Int cell)

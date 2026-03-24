@@ -9,7 +9,7 @@ public class FloorDatabase : IGridRelatedData
     public int ActiveFloorIndex { get; private set; } = 0;
 
     [SerializeField]
-    internal List<FloorData> FloorDatas = new(); //public Dictionary<int, FloorData> FloorDatas = new();
+    internal List<FloorData> FloorDatas = new();
     
     public FloorData GetActiveFloorData(Action restoreIfNeededCallback = null)
     {

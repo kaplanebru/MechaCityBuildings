@@ -52,7 +52,7 @@ public class CityDrawer : MonoBehaviour
         GridMasker.ResetSelectedCells(units.gridSystem.overlayPainter, units.gridSystem.gridData);
         
         print("world cells" + worldCells.Count);
-        OnCellsReady?.Invoke(worldCells, activeFloor.FloorIdentifier.Index);
+        OnCellsReady?.Invoke(worldCells, activeFloor.Index);
     }
 }
 

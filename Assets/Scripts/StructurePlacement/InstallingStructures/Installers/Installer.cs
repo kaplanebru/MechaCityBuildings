@@ -77,7 +77,7 @@ public class Installer : MonoBehaviour
         if (!pool.IsInitialized()) 
             pool.InitializePool();
         else
-            ReleaseItemsToPool(_placementFloorToInstall.FloorData.FloorIdentifier.Index); //dunno
+            ReleaseItemsToPool(_placementFloorToInstall.FloorData.Index); //dunno
     }
     
     public void InstallStructures(int floorIndex)
@@ -111,7 +111,7 @@ public class Installer : MonoBehaviour
 
         var structuresByType = InstallerHelper.Install(
             placementDataset.ToArray(), 
-            _placementFloorToInstall.FloorData.FloorIdentifier.Root, 
+            _placementFloorToInstall.FloorData.Root, 
             pool);
         
         InstallerHelper.SealCellMetadataToStructure(structuresByType, gridData);

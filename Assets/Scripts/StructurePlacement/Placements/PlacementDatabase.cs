@@ -64,7 +64,7 @@ public class PlacementDatabase: MonoBehaviour
         out HashSet<Structure> intersectingBuildings)
     {
         intersectingBuildings = null;
-        int floorIndex = activeFloorData.FloorIdentifier.Index;
+        int floorIndex = activeFloorData.Index;
         if (floorDb.TryGetLowerFloorData(floorIndex, out var lowerFloorData))
         {
             intersectingBuildings = FloorIntersectionMasker.GetIntersectionsUnderFloor(

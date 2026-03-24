@@ -78,7 +78,7 @@ public class FloorManagement : MonoBehaviour //can be made native or static
         var activeFloor = db.GetActiveFloorData();
         activeFloor.ClearCells();
         
-        OnFloorClearRequest?.Invoke(activeFloor.FloorIdentifier.Index);
+        OnFloorClearRequest?.Invoke(activeFloor.Index);
       
     }
 
@@ -102,7 +102,7 @@ public class FloorManagement : MonoBehaviour //can be made native or static
 
         ClearActiveFloor();
         
-        var activeRoot = activeFloor.FloorIdentifier.Root;
+        var activeRoot = activeFloor.Root;
         DestroyImmediate(activeRoot.gameObject);
 
         RemoveFloorData(activeFloor);
