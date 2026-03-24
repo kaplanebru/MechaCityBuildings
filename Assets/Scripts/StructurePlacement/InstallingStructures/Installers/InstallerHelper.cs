@@ -10,14 +10,16 @@ public static class InstallerHelper
         {
             var structure = pool.GetItem();
             structures.Add(structure);
+            
+            structure.transform.SetParent(parent);
 
-            structure.transform.position = placementData.Position;
-            structure.transform.rotation = placementData.Rotation;
+
+            structure.transform.localPosition = placementData.Position;
+            structure.transform.localRotation = placementData.Rotation;
             structure.transform.localScale = placementData.Scale;
             structure.type = placementData.GetStructureType();
 
-            structure.transform.SetParent(parent);
-            // structure.cellMetadata = GridToConstruction. todo: bunu reverse eden func vardı
+           // structure.transform.SetParent(parent);
         }
 
         return structures.ToArray();

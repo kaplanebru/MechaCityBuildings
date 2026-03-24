@@ -50,11 +50,11 @@ public class CityDrawer : MonoBehaviour
             cells,
             activeFloor,
             units.gridSystem.gridData);
-
-        GridMasker.ResetSelectedCells(units.gridSystem.overlayPainter, units.gridSystem.gridData);
         
         print("world cells" + worldCells.Count);
         OnCellsReady?.Invoke(activeFloor.Index, cells.ToHashSet(), worldCells);
+        
+        GridMasker.ResetSelectedCells(units.gridSystem.overlayPainter, units.gridSystem.gridData);
     }
 }
 
