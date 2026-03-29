@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class CellRegistry
 {
-    
     public static HashSet<CellWorldData> RegisterCellsOnFloorAndSendWorldCells(List<Vector2Int> cellRecorderCache, FloorData floorData, GridData gridData)
     {
         var registeredCells = cellRecorderCache.ToHashSet();
@@ -39,4 +38,5 @@ public class CellRegistry
         //OnCellsReady?.Invoke(cellWorldDataset, floorData.FloorIdentifier.Index);
     }
 
+   
 }

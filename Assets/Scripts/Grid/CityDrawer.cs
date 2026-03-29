@@ -43,7 +43,7 @@ public class CityDrawer : MonoBehaviour
 
     public void ConstructBuildingsRequest()
     {
-        var activeFloor = units.floorDatabase.GetActiveFloorData();
+        var activeFloor = units.floorDatabase.GetActiveFloorData(); //register as CellData
         var cells = units.gridSystem.cellRecorderCache;
             
         var worldCells = CellRegistry.RegisterCellsOnFloorAndSendWorldCells(
