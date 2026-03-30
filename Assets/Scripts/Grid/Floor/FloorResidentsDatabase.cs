@@ -11,7 +11,7 @@ public class FloorResidentsDatabase : MonoBehaviour
 
     public FloorResidentsData GetFloor(int floorIndex) => residentsFloor[floorIndex];
 
-    public void RegisterCells(int floorIndex, List<Vector2Int> occupiedCells)
+    public void RegisterCells(int floorIndex, List<CellData> occupiedCells)
     {
         GetFloor(floorIndex).OccupiedCells = occupiedCells.ToList();
     }
@@ -51,8 +51,8 @@ public class FloorResidentsDatabase : MonoBehaviour
         if (floorDb.TryGetLowerFloorData(activeFloorIndex, out var lowerFloorData))
         {
             intersectingBuildings = FloorIntersectionMasker.GetIntersectionsUnderFloor(
-                GetFloor(activeFloorIndex).OccupiedCells.ToHashSet(),
-                GetFloor(lowerFloorData.Index).OccupiedCells.ToHashSet(),
+                GetFloor(activeFloorIndex).OccupiedCells.Select(cd=>cd.CellIndex).ToHashSet(),
+                GetFloor(lowerFloorData.Index).OccupiedCells.Select(cd=>cd.CellIndex).ToHashSet(),
                 GetStructuresByCell(structuresOnFloor) //placementFloors[floorIndex].Structures;
             );
             return true;

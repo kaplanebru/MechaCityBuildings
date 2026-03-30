@@ -34,7 +34,7 @@ public class CityBuilder : MonoBehaviour
         floorDb.OnLastFloorRemoved -= RemoveLastFloorResidentsData;
     }
 
-    private void SetFloorResidentsAndInstall(int floorIndex, HashSet<Vector2Int> cells, HashSet<CellWorldData> worldCells)
+    private void SetFloorResidentsAndInstall(int floorIndex, HashSet<CellData> cells, HashSet<CellWorldData> worldCells)
     {
 #if UNITY_EDITOR
         Undo.RecordObject(floorResidentsDb,"Installment From Cell");

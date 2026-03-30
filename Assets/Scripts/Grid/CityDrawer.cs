@@ -17,7 +17,7 @@ public class CityDrawerUnits
 public class CityDrawer : MonoBehaviour
 {
     public CityDrawerUnits units;
-    public Action<int, HashSet<Vector2Int>, HashSet<CellWorldData>> OnCellsReady;
+    public Action<int, HashSet<CellData>, HashSet<CellWorldData>> OnCellsReady;
 
      public void ExecutePainting(Event e) //todo: to call with editor update that triggered by Start Painting Button
     {
@@ -45,6 +45,7 @@ public class CityDrawer : MonoBehaviour
     {
         var activeFloor = units.floorDatabase.GetActiveFloorData(); //register as CellData
         var cells = units.gridSystem.cellRecorderCache;
+        var cellDataSet = CellDataCreator.ConvertToCellData(cells.ToHashSet(), units.gridData.BuildingCellSize);
             
         var worldCells = CellRegistry.RegisterCellsOnFloorAndSendWorldCells(
             cells,
@@ -52,7 +53,7 @@ public class CityDrawer : MonoBehaviour
             units.gridSystem.gridData);
         
         print("world cells" + worldCells.Count);
-        OnCellsReady?.Invoke(activeFloor.Index, cells.ToHashSet(), worldCells);
+        OnCellsReady?.Invoke(activeFloor.Index, cellDataSet, worldCells);
         
         GridMasker.ResetSelectedCells(units.gridSystem.overlayPainter, units.gridSystem.gridData);
     }
