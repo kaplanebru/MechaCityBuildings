@@ -44,7 +44,9 @@ public class CityDrawerEditor : Editor
             t.UpdateAverageBuildingHeight,
             CacheTargetIfNeeded);
 
-        EditorGUILayout.Space(8);
+        UserPrefEditorHelper.SetBrushPreferences(t.units.paintData);
+        EditorGUILayout.Space(2);
+
 
         if (GUILayout.Button("Recalculate Grid (On Map Update)"))
         {

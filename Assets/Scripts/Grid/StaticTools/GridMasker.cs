@@ -71,6 +71,7 @@ public static class GridMasker
     public static void RestoreSelectedCells(List<Vector2Int> cellRecorder)
     {
         cellRecorderCache = cellRecorder;
+        if(cellRecorder == null ||cellRecorder.Count == 0) return;
         foreach (var cell in cellRecorderCache)
         {
             selectedCells[cell.x, cell.y] = true;

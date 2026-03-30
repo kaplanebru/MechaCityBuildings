@@ -47,7 +47,20 @@ public static class UserPrefEditorHelper
         {
         }*/
 
-        GUILayout.Space(10);
+        GUILayout.Space(2);
+    }
+
+    public static void SetBrushPreferences(PaintData paintData)
+    {
+        if (paintData == null)
+        {
+            Debug.LogError("paint data is null");
+            return;
+        }
+        
+        paintData.BrushRadius = EditorGUILayout.IntField(
+            "Brush Radius",
+            paintData.BrushRadius);
     }
 
    

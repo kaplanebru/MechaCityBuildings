@@ -41,7 +41,9 @@ public class Installer : MonoBehaviour
     private Structure[]  InstallStructuresFromPool(StructurePool pool, Transform floorRoot)
     {
         RestorePoolIfNeeded(pool);
-        var placementDataset = _placementDatasByType[pool.poolData.StructureType];
+        _placementDatasByType.TryGetValue(pool.poolData.StructureType, out List<PlacementData> placementDataset);
+
+        if (placementDataset == null) return Array.Empty<Structure>();
 
         if (pool.poolData.PoolSize < placementDataset.Count)
         {
