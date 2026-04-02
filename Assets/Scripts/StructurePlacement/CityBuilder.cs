@@ -34,7 +34,7 @@ public class CityBuilder : MonoBehaviour
         floorDb.OnLastFloorRemoved -= RemoveLastFloorResidentsData;
     }
 
-    private void SetFloorResidentsAndInstall(int floorIndex, HashSet<CellData> cells, HashSet<CellWorldData> worldCells)
+    private void SetFloorResidentsAndInstall(int floorIndex, HashSet<CellData> cells)
     {
 #if UNITY_EDITOR
         Undo.RecordObject(floorResidentsDb,"Installment From Cell");
@@ -43,7 +43,7 @@ public class CityBuilder : MonoBehaviour
         FloorResidentsData floorResidentsData = floorResidentsDb.GetFloor(floorIndex);
         
         floorResidentsDb.RegisterCells(floorIndex, cells.ToList());
-        randomizer.SetPlacementsOnFloor(worldCells, floorResidentsData);
+        randomizer.SetPlacementsOnFloor(cells, floorResidentsData);
         randomizer.MixAndApplyPlacements(floorResidentsData);
         installer.InstallStructures(floorDb.GetFloorData(floorIndex), floorResidentsData);
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CellToPlacementData
 {
-    private static PlacementData CreatePlacementFromCell(CellWorldData cellWorldData)
+    /*private static PlacementData CreatePlacementFromCell(CellWorldData cellWorldData)
     {
         var placementData = new PlacementData();
         
@@ -20,5 +20,5 @@ public class CellToPlacementData
             yield return CreatePlacementFromCell(cellData);
             //placeholders.Add(Create(cellPosition, Quaternion.identity, Vector3.one));
         }
-    }
+    }*/
 }

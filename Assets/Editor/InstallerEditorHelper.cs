@@ -70,7 +70,7 @@ public static class InstallerEditorHelper
         Debug.Log("Replace saved attempt");
     }*/
     
-    public static void InstallSavedData(Installer t, PlacementData[] placeholderDataSet)
+    public static void InstallSavedData(Installer t, CellData[] placeholderDataSet)
     {
         /*Undo.RecordObject(t, "ReplaceGiven All Saved Data");
         t.InstallFromAllPools(placeholderDataSet);

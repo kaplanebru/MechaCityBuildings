@@ -7,7 +7,10 @@ using UnityEngine;
 
 public class CellRegistry
 {
-    public static HashSet<CellWorldData> RegisterCellsOnFloorAndSendWorldCells(HashSet<CellData> cellDataSet, FloorData floorData, GridData gridData)
+    public static HashSet<CellWorldData> RegisterCellsOnFloorAndSendWorldCells
+        (HashSet<CellData> cellDataSet, 
+            FloorData floorData, 
+            GridData gridData)
     {
         if (cellDataSet.Count == 0)
         {
@@ -20,7 +23,6 @@ public class CellRegistry
         {
             Vector3 worldPos = CellConverter.
                 GetWorldPositionCenterFromCellIndex(cell.CellIndex.x, cell.CellIndex.y, gridData);
-            //worldPos.y += gridData.AverageBuildingHeight;
             
             var cellWorldData = new CellWorldData(
                 worldPos, 

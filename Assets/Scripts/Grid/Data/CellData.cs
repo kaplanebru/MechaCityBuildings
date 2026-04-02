@@ -11,11 +11,18 @@ public class CellData
     public List<Vector2Int> Neighbors = new();
     public Vector2Int OutwardNormal = Vector2Int.zero;
     public Quaternion Rotation = Quaternion.Euler(Vector3.zero);//Quaternion.identity;
+    
+    public StructureType StructureType; 
+    public int OrderIndex;
 
     public CellData(Vector2Int cellIndex)
     {
         CellIndex = cellIndex;
     }
+
+    public StructureType GetStructureType() => StructureType;
+    public void ApplyStructureType(StructureType type) => StructureType = type;
+    public void SetOrderIndex(int orderIndex) => OrderIndex = orderIndex;
 
     private void SetType()
     {

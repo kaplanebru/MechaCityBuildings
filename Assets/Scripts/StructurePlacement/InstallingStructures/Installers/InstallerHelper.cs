@@ -3,21 +3,22 @@ using UnityEngine;
 
 public static class InstallerHelper
 {
-    public static Structure[] Install(PlacementData[] placementDataset, Transform parent, StructurePool pool)
+    public static Structure[] Install(CellData[] cellDataSet, Transform parent, StructurePool pool, GridData gridData)
     {
         List<Structure> structures = new List<Structure>();
-        foreach (var placementData in placementDataset)
+        foreach (var cellData in cellDataSet)
         {
             var structure = pool.GetItem();
             structures.Add(structure);
             
             structure.transform.SetParent(parent);
-
-
-            structure.transform.localPosition = placementData.Position;
-            structure.transform.localRotation = placementData.Rotation;
-            structure.type = placementData.GetStructureType();
-
+            
+            Vector3 worldPos = CellConverter.
+                GetWorldPositionCenterFromCellIndex(cellData.CellIndex.x, cellData.CellIndex.y, gridData);
+            
+            structure.transform.localPosition = worldPos;
+            structure.transform.localRotation = cellData.Rotation;
+            structure.type = cellData.GetStructureType();
         }
 
         return structures.ToArray();

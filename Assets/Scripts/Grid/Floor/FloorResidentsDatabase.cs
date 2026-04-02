@@ -26,7 +26,6 @@ public class FloorResidentsDatabase : MonoBehaviour
         var floorResidentsData = residentsFloor[floorIndex];
 
         floorResidentsData.OccupiedCells.Clear();
-        floorResidentsData.PlacementDataset.Clear();
 
         HashSet<Structure> tempStructures = new(floorResidentsData.Structures);
         floorResidentsData.Structures.Clear();
@@ -76,7 +75,7 @@ public class FloorResidentsDatabase : MonoBehaviour
 
     public void SaveCurrentArrangement(string arrangementName, int floorIndex)
     {
-        arrangementCache.Add(arrangementName, residentsFloor[floorIndex].PlacementDataset.ToArray());
+        arrangementCache.Add(arrangementName, residentsFloor[floorIndex].OccupiedCells.ToArray());
     }
 
 

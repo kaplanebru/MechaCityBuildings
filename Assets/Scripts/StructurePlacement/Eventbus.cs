@@ -5,7 +5,7 @@ using UnityEngine;
 
 public static class Eventbus
 {
-    public static Action<Dictionary<StructureType, List<PlacementData>>> OnReplacementWithSavedRequest;
+    public static Action<Dictionary<StructureType, List<CellData>>> OnReplacementWithSavedRequest;
 
     public static Action OnReloadCall;
 

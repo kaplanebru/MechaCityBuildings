@@ -17,7 +17,7 @@ public class CityDrawerUnits
 public class CityDrawer : MonoBehaviour
 {
     public CityDrawerUnits units;
-    public Action<int, HashSet<CellData>, HashSet<CellWorldData>> OnCellsReady;
+    public Action<int, HashSet<CellData>> OnCellsReady;
 
      public void ExecutePainting(Event e) //todo: to call with editor update that triggered by Start Painting Button
     {
@@ -54,7 +54,7 @@ public class CityDrawer : MonoBehaviour
             activeFloor,
             units.gridSystem.gridData);
         
-        OnCellsReady?.Invoke(activeFloor.Index, cellDataSet, worldCells);
+        OnCellsReady?.Invoke(activeFloor.Index, cellDataSet);
         GridMasker.ResetSelectedCells(units.gridSystem.overlayPainter, units.gridSystem.gridData);
     }
 }

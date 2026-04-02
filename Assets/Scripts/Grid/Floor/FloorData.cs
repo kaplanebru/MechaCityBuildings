@@ -6,7 +6,6 @@ using UnityEngine;
 public class FloorResidentsData
 {
     public List<CellData> OccupiedCells = new();
-    public List<PlacementData> PlacementDataset = new();
     public List<Structure> Structures = new();
 }
 

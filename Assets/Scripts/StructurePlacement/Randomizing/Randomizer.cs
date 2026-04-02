@@ -10,14 +10,14 @@ public class Randomizer : MonoBehaviour
     [SerializeField] private StructureTypeDatabase structureTypeDatabase;
     
     private HeightTierHelper _heightTierHelper;
-    private PlacementOrderRegulator _orderRegulator;
+    private CellOrderRegulator _orderRegulator;
     private Dictionary<StructureType, PendingPlacements> _pendingPlacements = new();
     
-    public void SetPlacementsOnFloor(HashSet<CellWorldData> cellWorldDatas, FloorResidentsData floorResidentsData)
+    public void SetPlacementsOnFloor(HashSet<CellData> cellDatas, FloorResidentsData floorResidentsData)
     {
-        _orderRegulator = new PlacementOrderRegulator(cityData.HeightGap);
-       floorResidentsData.PlacementDataset = 
-            _orderRegulator.GetRegulatedPlacements(cellWorldDatas).ToList();
+        _orderRegulator = new CellOrderRegulator(cityData.HeightGap);
+       floorResidentsData.OccupiedCells = 
+            _orderRegulator.GetRegulatedPlacements(cellDatas).ToList();
     }
     
 
@@ -46,7 +46,7 @@ public class Randomizer : MonoBehaviour
     {
         FrequencyData[] frequencyDatas = cityData.RandomizerDataSet.Select(r => r.FrequencyData).ToArray();
         FrequencyToAmountConverter.SetAmountsByRatio
-            (frequencyDatas, floorResidentsData.PlacementDataset.Count);
+            (frequencyDatas, floorResidentsData.OccupiedCells.Count);
     }
 
     public void MixAndApplyPlacements(FloorResidentsData floorResidentsData) 
@@ -64,8 +64,8 @@ public class Randomizer : MonoBehaviour
         _pendingPlacements = _pendingPlacements.Where(kvp => kvp.Value.Amount != 0)
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-        var placementDataset = floorResidentsData.PlacementDataset;
-        foreach (var placementData in placementDataset)
+        var cellDataSet = floorResidentsData.OccupiedCells;
+        foreach (var placementData in cellDataSet)
         {
             if (_pendingPlacements.Count == 0)
                 return;

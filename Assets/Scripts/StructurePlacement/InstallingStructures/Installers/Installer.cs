@@ -15,7 +15,7 @@ public enum StructureType
 [ExecuteInEditMode]
 public class Installer : MonoBehaviour
 {
-    private Dictionary<StructureType, List<PlacementData>> _placementDatasByType = new();
+    private Dictionary<StructureType, List<CellData>> _cellDatasByType = new();
     [SerializeField] private GridData gridData;
     public StructurePool[] pools;
     
@@ -41,20 +41,21 @@ public class Installer : MonoBehaviour
     private Structure[]  InstallStructuresFromPool(StructurePool pool, Transform floorRoot)
     {
         RestorePoolIfNeeded(pool);
-        _placementDatasByType.TryGetValue(pool.poolData.StructureType, out List<PlacementData> placementDataset);
+        _cellDatasByType.TryGetValue(pool.poolData.StructureType, out List<CellData> cellDataSet);
 
-        if (placementDataset == null) return Array.Empty<Structure>();
+        if (cellDataSet == null) return Array.Empty<Structure>();
 
-        if (pool.poolData.PoolSize < placementDataset.Count)
+        if (pool.poolData.PoolSize < cellDataSet.Count)
         {
             Debug.LogWarning("Pool size is too small for " + pool.poolData.StructureType);
             return Array.Empty<Structure>();
         }
 
         var structuresByType = InstallerHelper.Install(
-            placementDataset.ToArray(), 
+            cellDataSet.ToArray(), 
             floorRoot, 
-            pool);
+            pool,
+            gridData);
         
         InstallerHelper.SealCellMetadataToStructure(structuresByType, gridData);
 
@@ -64,14 +65,14 @@ public class Installer : MonoBehaviour
     private void ClassifyPlacementDatasOnFloor(FloorResidentsData floorResidentsData)
     {
         floorToInstall = floorResidentsData;
-        if (floorToInstall.PlacementDataset.Count == 0)
+        if (floorToInstall.OccupiedCells.Count == 0)
         {
             Debug.Log("No placement dataset found");
             return;
         }
 
-        _placementDatasByType.Clear();
-        _placementDatasByType = floorToInstall.PlacementDataset
+        _cellDatasByType.Clear();
+        _cellDatasByType = floorToInstall.OccupiedCells
             .GroupBy(p => p.GetStructureType())
             .ToDictionary(g =>
                 g.Key, g => g.ToList());
