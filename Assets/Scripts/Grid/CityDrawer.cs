@@ -45,16 +45,16 @@ public class CityDrawer : MonoBehaviour
     {
         var activeFloor = units.floorDatabase.GetActiveFloorData(); //register as CellData
         var cells = units.gridSystem.cellRecorderCache;
+        
         var cellDataSet = CellDataCreator.ConvertToCellData(cells.ToHashSet(), units.gridData.BuildingCellSize);
-            
+        
+        //todo: adjust by ordered and maybe randomized cell data set
         var worldCells = CellRegistry.RegisterCellsOnFloorAndSendWorldCells(
             cells,
             activeFloor,
             units.gridSystem.gridData);
         
-        print("world cells" + worldCells.Count);
         OnCellsReady?.Invoke(activeFloor.Index, cellDataSet, worldCells);
-        
         GridMasker.ResetSelectedCells(units.gridSystem.overlayPainter, units.gridSystem.gridData);
     }
 }

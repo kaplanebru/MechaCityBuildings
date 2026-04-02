@@ -27,8 +27,5 @@ public class CellDataCreator
         return cellDataDict;
     }
 
-    public static HashSet<CellData> GetBoundaries(HashSet<CellData> cellDataSet)
-    {
-        return cellDataSet.Where(cellData => cellData.Type == CellData.CellType.Boundary).ToHashSet();
-    }
+    
 }

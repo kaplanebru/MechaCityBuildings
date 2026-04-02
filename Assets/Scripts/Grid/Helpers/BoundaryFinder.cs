@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class BoundaryFinder
 {
-
-    //TODO: Unitlerim 1 olmayabilir
-
     private static HashSet<Vector2Int> GetBoundary4(HashSet<Vector2Int> filled, int cellUnit)
     {
         var boundary = new HashSet<Vector2Int>();

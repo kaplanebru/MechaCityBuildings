@@ -38,5 +38,9 @@ public class CellRegistry
         //OnCellsReady?.Invoke(cellWorldDataset, floorData.FloorIdentifier.Index);
     }
 
+    public static HashSet<CellData> GetBoundaries(HashSet<CellData> cellDataSet)
+    {
+        return cellDataSet.Where(cellData => cellData.Type == CellType.Boundary).ToHashSet();
+    }
    
 }
