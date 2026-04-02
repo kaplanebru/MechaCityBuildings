@@ -50,7 +50,7 @@ public class CityDrawer : MonoBehaviour
         
         //todo: adjust by ordered and maybe randomized cell data set
         var worldCells = CellRegistry.RegisterCellsOnFloorAndSendWorldCells(
-            cells,
+            cellDataSet,
             activeFloor,
             units.gridSystem.gridData);
         

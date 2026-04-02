@@ -1,13 +1,16 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+[Serializable]
 public class CellData
 {
     public Vector2Int CellIndex;
     public CellType Type;
-    public List<CellData> Neighbors = new();
+    public List<Vector2Int> Neighbors = new();
     public Vector2Int OutwardNormal = Vector2Int.zero;
+    public Quaternion Rotation = Quaternion.Euler(Vector3.zero);//Quaternion.identity;
 
     public CellData(Vector2Int cellIndex)
     {
@@ -40,7 +43,7 @@ public class CellData
 
             if (cellDataDict.TryGetValue(pendingNeighbor, out var cellData))
             {
-                Neighbors.Add(cellData);
+                Neighbors.Add(cellData.CellIndex);
             }
             else
             {

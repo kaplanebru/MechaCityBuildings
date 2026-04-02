@@ -7,25 +7,24 @@ using UnityEngine;
 
 public class CellRegistry
 {
-    public static HashSet<CellWorldData> RegisterCellsOnFloorAndSendWorldCells(List<Vector2Int> cellRecorderCache, FloorData floorData, GridData gridData)
+    public static HashSet<CellWorldData> RegisterCellsOnFloorAndSendWorldCells(HashSet<CellData> cellDataSet, FloorData floorData, GridData gridData)
     {
-        var registeredCells = cellRecorderCache.ToHashSet();
-        
-        if (registeredCells.Count == 0)
+        if (cellDataSet.Count == 0)
         {
             Debug.Log("No tracked cells found");
             return null;
         }
         
         HashSet<CellWorldData> cellWorldDataset = new();
-        foreach (var cell in registeredCells)
+        foreach (var cell in cellDataSet)
         {
-            Vector3 worldPos = CellConverter.GetWorldPositionCenterFromCellIndex(cell.x, cell.y, gridData);
+            Vector3 worldPos = CellConverter.
+                GetWorldPositionCenterFromCellIndex(cell.CellIndex.x, cell.CellIndex.y, gridData);
             //worldPos.y += gridData.AverageBuildingHeight;
             
             var cellWorldData = new CellWorldData(
                 worldPos, 
-                Quaternion.identity, 
+                cell.Rotation, 
                 Vector3.one * gridData.BuildingCellSize); 
             
             //Vector3 cellScale = paintData.CellSizeInWorldUnits
@@ -35,7 +34,6 @@ public class CellRegistry
         }
         
         return cellWorldDataset;
-        //OnCellsReady?.Invoke(cellWorldDataset, floorData.FloorIdentifier.Index);
     }
 
     public static HashSet<CellData> GetBoundaries(HashSet<CellData> cellDataSet)

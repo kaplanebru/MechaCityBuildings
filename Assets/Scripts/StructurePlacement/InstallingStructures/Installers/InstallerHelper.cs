@@ -16,7 +16,6 @@ public static class InstallerHelper
 
             structure.transform.localPosition = placementData.Position;
             structure.transform.localRotation = placementData.Rotation;
-            //structure.transform.localScale = placementData.Scale;
             structure.type = placementData.GetStructureType();
 
         }

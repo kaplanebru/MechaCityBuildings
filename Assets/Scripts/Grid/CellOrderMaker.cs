@@ -5,15 +5,10 @@ using UnityEngine;
 public class CellOrderMaker
 {
     //kaç cell olduğunu bilmeden nasıl frequency belirleyebiliriz?
-
-
-    public void FindOrientations(HashSet<CellData> cellDataSet)
-    {
-        var boundaryCells = CellRegistry.GetBoundaries(cellDataSet);
-        
-    }
     
-    public void OrderCells(HashSet<CellData> cellDataSet)
+    
+
+    /*public void OrderCells(HashSet<CellData> cellDataSet)
     {
         var cityShape = DetectShape(cellDataSet.ToList());
     }
@@ -41,12 +36,12 @@ public class CellOrderMaker
             if (currentCell.CellIndex.y > maxYCell.CellIndex.y)
                 maxYCell = currentCell;
         }
-        
-        var xDistance = maxXCell.CellIndex.x - minXCell.CellIndex.x ;
+
+        var xDistance = maxXCell.CellIndex.x - minXCell.CellIndex.x;
         var yDistance = maxYCell.CellIndex.y - minYCell.CellIndex.y;
 
         return xDistance > yDistance ? CityShape.Horizontal : CityShape.Vertical;
-    }
+    }*/
 }
 
 
