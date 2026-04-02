@@ -6,38 +6,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 
 public class CellRegistry
-{
-    public static HashSet<CellWorldData> RegisterCellsOnFloorAndSendWorldCells
-        (HashSet<CellData> cellDataSet, 
-            FloorData floorData, 
-            GridData gridData)
-    {
-        if (cellDataSet.Count == 0)
-        {
-            Debug.Log("No tracked cells found");
-            return null;
-        }
-        
-        HashSet<CellWorldData> cellWorldDataset = new();
-        foreach (var cell in cellDataSet)
-        {
-            Vector3 worldPos = CellConverter.
-                GetWorldPositionCenterFromCellIndex(cell.CellIndex.x, cell.CellIndex.y, gridData);
-            
-            var cellWorldData = new CellWorldData(
-                worldPos, 
-                cell.Rotation, 
-                Vector3.one * gridData.BuildingCellSize); 
-            
-            //Vector3 cellScale = paintData.CellSizeInWorldUnits
-            //todo: brushdatadan zemini çek, aslında hiç sizinge gerek yok, cell'i binaya göre sizelıyoruz
-            
-            cellWorldDataset.Add(cellWorldData);
-        }
-        
-        return cellWorldDataset;
-    }
-
+{ 
     public static HashSet<CellData> GetBoundaries(HashSet<CellData> cellDataSet)
     {
         return cellDataSet.Where(cellData => cellData.Type == CellType.Boundary).ToHashSet();

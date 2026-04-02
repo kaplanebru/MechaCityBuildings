@@ -48,12 +48,6 @@ public class CityDrawer : MonoBehaviour
         
         var cellDataSet = CellDataCreator.ConvertToCellData(cells.ToHashSet(), units.gridData.BuildingCellSize);
         
-        //todo: adjust by ordered and maybe randomized cell data set
-        var worldCells = CellRegistry.RegisterCellsOnFloorAndSendWorldCells(
-            cellDataSet,
-            activeFloor,
-            units.gridSystem.gridData);
-        
         OnCellsReady?.Invoke(activeFloor.Index, cellDataSet);
         GridMasker.ResetSelectedCells(units.gridSystem.overlayPainter, units.gridSystem.gridData);
     }

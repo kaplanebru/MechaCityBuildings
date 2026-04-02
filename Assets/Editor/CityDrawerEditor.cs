@@ -10,8 +10,6 @@ public class CityDrawerEditor : Editor
     protected CityDrawer t;
     private int floorIndex;
     public UserStates userState = UserStates.Empty;
-    public Action<HashSet<CellWorldData>, int> OnCellsReady;
-
 
     private void OnEnable()
     {
