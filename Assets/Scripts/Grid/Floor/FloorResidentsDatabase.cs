@@ -6,10 +6,10 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class FloorResidentsDatabase : MonoBehaviour
 {
-    public List<FloorResidentsData> residentsFloor = new List<FloorResidentsData>();
+    public List<FloorResidentsData> floorResidents = new List<FloorResidentsData>();
     private ArrangementCache arrangementCache = new();
 
-    public FloorResidentsData GetFloor(int floorIndex) => residentsFloor[floorIndex];
+    public FloorResidentsData GetFloor(int floorIndex) => floorResidents[floorIndex];
 
     public void RegisterCells(int floorIndex, List<CellData> occupiedCells)
     {
@@ -18,12 +18,12 @@ public class FloorResidentsDatabase : MonoBehaviour
 
     public void AddFloorResidentsData()
     {
-        residentsFloor.Add(new FloorResidentsData());
+        floorResidents.Add(new FloorResidentsData());
     }
 
     public HashSet<Structure> ClearResidents(int floorIndex)
     {
-        var floorResidentsData = residentsFloor[floorIndex];
+        var floorResidentsData = floorResidents[floorIndex];
 
         floorResidentsData.OccupiedCells.Clear();
 
@@ -34,7 +34,7 @@ public class FloorResidentsDatabase : MonoBehaviour
 
     public void RemoveLastFloor()
     {
-        residentsFloor.RemoveAt(residentsFloor.Count - 1);
+        floorResidents.RemoveAt(floorResidents.Count - 1);
     }
 
 
@@ -75,7 +75,7 @@ public class FloorResidentsDatabase : MonoBehaviour
 
     public void SaveCurrentArrangement(string arrangementName, int floorIndex)
     {
-        arrangementCache.Add(arrangementName, residentsFloor[floorIndex].OccupiedCells.ToArray());
+        arrangementCache.Add(arrangementName, floorResidents[floorIndex].OccupiedCells.ToArray());
     }
 
 

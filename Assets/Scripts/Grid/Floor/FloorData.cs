@@ -15,11 +15,9 @@ public class FloorData
 {
     public int Index;
     public Transform Root;
-    //public List<Vector2Int> OccupiedCells = new();
 
     public float GetFloorHeight(int averageBuildingHeight) => Index * averageBuildingHeight;
 
-    //public HashSet<Vector2Int> GetCells() => OccupiedCells.ToHashSet();
     public FloorData(int index, Transform root, int averageBuildingHeight)
     {
         Index = index;

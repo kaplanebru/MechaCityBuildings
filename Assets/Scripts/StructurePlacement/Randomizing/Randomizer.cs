@@ -13,7 +13,7 @@ public class Randomizer : MonoBehaviour
     private CellOrderRegulator _orderRegulator;
     private Dictionary<StructureType, PendingPlacements> _pendingPlacements = new();
     
-    public void SetPlacementsOnFloor(HashSet<CellData> cellDatas, FloorResidentsData floorResidentsData)
+    public void OrderCellsOnFloor(HashSet<CellData> cellDatas, FloorResidentsData floorResidentsData)
     {
         _orderRegulator = new CellOrderRegulator(cityData.HeightGap);
        floorResidentsData.OccupiedCells = 
