@@ -33,7 +33,7 @@ public class CityDrawer : MonoBehaviour
 
         }
     }
-    public void UpdateAverageBuildingHeight()
+    public void UpdateAverageStructureHeight()
     {
         FloorManagement.OnFloorHeightUpdate(units.floorDatabase);
 
@@ -41,7 +41,7 @@ public class CityDrawer : MonoBehaviour
         units.gridSystem.OnFloorHeightUpdate(activeFloor);
     }
 
-    public void ConstructBuildingsRequest()
+    public void ConstructionRequest()
     {
         var activeFloor = units.floorDatabase.GetActiveFloorData(); //register as CellData
         var cells = units.gridSystem.cellRecorderCache;

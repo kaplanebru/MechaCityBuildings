@@ -77,28 +77,4 @@ public static class GridMasker
             selectedCells[cell.x, cell.y] = true;
         }
     }
-    
-
-    /*public void ClearSelectedCells(bool value = false)
-    {
-        for (int yIndex = 0; yIndex < gridHeightInCells; yIndex++)
-        {
-            for (int xIndex = 0; xIndex < gridWidthInCells; xIndex++)
-            {
-                selectedCells[xIndex, yIndex] = value;
-            }
-        }
-    }
-
-
-    public void ClearOccupiedCells(bool value = false)
-    {
-        for (int yIndex = 0; yIndex < gridHeightInCells; yIndex++)
-        {
-            for (int xIndex = 0; xIndex < gridWidthInCells; xIndex++)
-            {
-                occupiedCells[xIndex, yIndex] = value;
-            }
-        }
-    }*/
 }

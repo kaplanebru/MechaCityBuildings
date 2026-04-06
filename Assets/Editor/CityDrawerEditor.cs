@@ -39,7 +39,7 @@ public class CityDrawerEditor : Editor
 
         UserPrefEditorHelper.SetGridPreferencesFields(t.units.gridSystem.gridData,
             RecalculateGrid,
-            t.UpdateAverageBuildingHeight,
+            t.UpdateAverageStructureHeight,
             CacheTargetIfNeeded);
 
         UserPrefEditorHelper.SetBrushPreferences(t.units.paintData);
@@ -69,7 +69,7 @@ public class CityDrawerEditor : Editor
             {
                 CacheTargetIfNeeded();
                 userState = UserStates.Construction;
-                t.ConstructBuildingsRequest();
+                t.ConstructionRequest();
             }
         }
 

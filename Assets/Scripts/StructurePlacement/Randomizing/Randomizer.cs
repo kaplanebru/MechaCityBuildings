@@ -20,6 +20,14 @@ public class Randomizer : MonoBehaviour
             _orderRegulator.GetRegulatedPlacements(cellDatas).ToList();
     }
     
+    public void MixAndApplyPlacements(FloorResidentsData floorResidentsData) 
+    {
+        ConvertFrequenciesToAmounts(floorResidentsData);
+        InitiateQuotas();
+        InitiatePendingStructures();
+        ApplyTypesToPlacements(floorResidentsData);
+    }
+    
 
     private void InitiateQuotas()
     {
@@ -49,13 +57,7 @@ public class Randomizer : MonoBehaviour
             (frequencyDatas, floorResidentsData.OccupiedCells.Count);
     }
 
-    public void MixAndApplyPlacements(FloorResidentsData floorResidentsData) 
-    {
-        ConvertFrequenciesToAmounts(floorResidentsData);
-        InitiateQuotas();
-        InitiatePendingStructures();
-        ApplyTypesToPlacements(floorResidentsData);
-    }
+   
 
 
     private void ApplyTypesToPlacements(FloorResidentsData floorResidentsData)
