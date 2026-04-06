@@ -3,19 +3,21 @@ using UnityEngine;
 
 public class SquareSearcher
 {
-    public void SearchSquares(int pow, HashSet<Vector2Int> map, int squareAmount)
+    public bool TrySearchSquares(int pow, HashSet<Vector2Int> map, int squareAmount, List<SquareData> requestedSquares)
     {
+        if (pow < 2) return false;
         
         foreach (var point in map)
         {
-           if(Squarefyer.TryGetSquarePoints(pow, point, out var squarePoints)) return;
+            var tempSquarePoints = Squarefyer.GetSquareSlotsByPoint(pow, point);
 
-           if (SquareIsOnMap(squarePoints, map))
-           {
-               
-           }
-          
+            if (SquareIsOnMap(tempSquarePoints, map))
+            {
+                requestedSquares.Add(new SquareData(pow, point));
+                if (requestedSquares.Count == squareAmount) break;
+            }
         }
+        return true;
     }
 
     private bool SquareIsOnMap(HashSet<Vector2Int> squarePoints, HashSet<Vector2Int> map)
@@ -25,6 +27,7 @@ public class SquareSearcher
             if (!map.Contains(squarePoint))
                 return false;
         }
+
         return true;
     }
 }
