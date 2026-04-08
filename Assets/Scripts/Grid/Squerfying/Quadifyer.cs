@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class Quadifyer
 {
-    public static HashSet<Vector2Int> GetQuadSlotsByPoint(Vector2Int widthHeight, Vector2Int point)
+    
+    public static IEnumerable<Vector2Int> GetNeighborsOnGivenPoint(Vector2Int point, QuadSample quadSample)
     {
-        QuadSample quadSample = new(widthHeight);
-        return ApplyQuadOnGivenPoint(point, quadSample.Grid);
+        var sampleNeighbors = quadSample.Neighbors;
+        return sampleNeighbors.Select(sampleNeighbor => sampleNeighbor + point);
     }
 
-    private static HashSet<Vector2Int> ApplyQuadOnGivenPoint(Vector2Int point, Vector2Int[,] quadGrid)
+    public static HashSet<Vector2Int> GetQuadOnGivenPoint(Vector2Int point, QuadSample quadSample)
     {
-        int width = quadGrid.GetLength(0);
-        int height = quadGrid.GetLength(1);
+        int width = quadSample.WidthHeight[0];
+        int height = quadSample.WidthHeight[1];
 
         // var quadPoints = new Vector2Int[width * height];
         List<Vector2Int> quadPoints = new();
@@ -21,11 +22,13 @@ public class Quadifyer
         {
             for (int y = 0; y < height; y++)
             {
-                var a = quadGrid[x, y] + point;
+                var a = quadSample.Grid[x, y] + point;
                 quadPoints.Add(a);
             }
         }
 
         return quadPoints.ToHashSet();
     }
+
+   
 }

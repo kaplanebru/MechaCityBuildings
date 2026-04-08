@@ -5,11 +5,15 @@ public class QuadSample
 {
     public Vector2Int WidthHeight { get; private set; }
     public Vector2Int[,] Grid { get; private set; }
+    
+    public HashSet<Vector2Int> Neighbors { get; private set; }
 
     public QuadSample(Vector2Int widthHeight)
     {
         WidthHeight = widthHeight;
+        
         SetQuadGrid(WidthHeight);
+        Neighbors = GetSampleNeighbors(Grid);
     }
 
     private void SetQuadGrid(Vector2Int widthHeight)
@@ -27,45 +31,33 @@ public class QuadSample
         Grid = quadGrid;
     }
     
-    public static void GetNeighbors(Vector2Int[,] quadGrid)
+    private static HashSet<Vector2Int> GetSampleNeighbors(Vector2Int[,] quadSample)
     {
-        int row = quadGrid.GetLength(0);
-        int column = quadGrid.GetLength(1);
-
-        if (row < 2 || column < 2)
-        {
-            //todo: if one dimensional handle wih different algorithm
-            return;
-        }
+        int row = quadSample.GetLength(0);
+        int column = quadSample.GetLength(1);
 
         int lastRow = row - 1;
         int lastColumn = column - 1;
         
-        Vector2Int[] corners =
-        {
-            quadGrid[0, 0],
-            quadGrid[lastRow, 0],
-            quadGrid[0, lastColumn],
-            quadGrid[lastRow, lastColumn]
-        };
+        HashSet<Vector2Int> edgeNeighbors = new();
 
-        List<Vector2Int> edges = new();
-
-        for (int i = 0; i < column; i++)
+        for (int c = 0; c < column; c++)
         {
-            edges.Add(quadGrid[0, i]);
-            edges.Add(quadGrid[lastRow, i]);
+            var upper = quadSample[0, c] + Vector2Int.up;
+            edgeNeighbors.Add(upper);
+            
+            var lower = quadSample[lastRow, c] + Vector2Int.down;
+            edgeNeighbors.Add(lower);
         }
 
-        for (int i = 0; i < row; i++)
+        for (int r = 0; r < row; r++)
         {
-            edges.Add(quadGrid[i, column]);
-            edges.Add(quadGrid[i, lastColumn]);
+            var left = quadSample[r, 0] + Vector2Int.left;
+            edgeNeighbors.Add(left);
+            
+            var right = quadSample[r, lastColumn] + Vector2Int.right;
+            edgeNeighbors.Add(right);
         }
-
-        foreach (var corner in corners)
-        {
-            edges.Remove(corner);
-        }
+        return edgeNeighbors;
     }
 }

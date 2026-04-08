@@ -6,29 +6,37 @@ using UnityEngine;
 public class QuadData
 {
     public Vector2Int WidthHeight;
-    public Vector2Int IndexPoint;
-    public Vector2Int[] Slots;
+    public Vector2Int StartPoint;
+    public Vector2Int[] Points;
     public Vector2 Center;
     public Vector2Int[] Neighbors;
 
-    public QuadData(Vector2Int widthHeight, Vector2Int indexPoint)
+    public QuadData(Vector2Int widthHeight)
     {
         WidthHeight = widthHeight;
-        IndexPoint = indexPoint;
-        Slots = Quadifyer.GetQuadSlotsByPoint(WidthHeight, IndexPoint).ToArray();
+    }
+
+    public void Setup(
+        Vector2Int startPoint,
+        Vector2Int[] points,
+        Vector2Int[] neighbors)
+    {
+        StartPoint = startPoint;
+        Points = points;
+        Neighbors = neighbors;
         SetCenter();
     }
 
     private void SetCenter()
     {
-        Vector2 sum = Slots.Aggregate(Vector2.zero, (current, slot) => current + slot);
-        Center = sum / Slots.Length;
+        Vector2 sum = Points.Aggregate(Vector2.zero, (current, slot) => current + slot);
+        Center = sum / Points.Length;
     }
 }
 
 public class SquareData : QuadData
 {
-    public SquareData(int pow, Vector2Int indexPoint) : base(new Vector2Int(pow, pow), indexPoint)
+    public SquareData(int pow) : base(new Vector2Int(pow, pow))
     {
     }
 }
