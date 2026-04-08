@@ -4,12 +4,14 @@ using UnityEngine;
 [Serializable]
 public class QuadData
 {
-    [Range(1, 16)] public Vector2Int WidthHeight;
+    public Vector2Int WidthHeight = new Vector2Int(2,2);
 
     //[HideInInspector]
     public Vector2Int[] Coords;
 
     //[HideInInspector]
     public Vector2Int[] Neighbors;
+    
+    public int GetPointAmount => WidthHeight.x * WidthHeight.y;
     
 }

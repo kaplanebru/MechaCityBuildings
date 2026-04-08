@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e04f4e41249ff43168234927eb97f046, type: 3}
   m_Name: GridData
   m_EditorClassIdentifier: 
-  BuildingCellSize: 4
+  MinBuildingCellSize: 4
   AverageBuildingHeight: 5
   OriginWorldTransform: {fileID: 0}
   AdaptiveGridSize: {x: 25, y: 12}

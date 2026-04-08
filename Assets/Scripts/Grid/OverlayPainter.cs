@@ -150,7 +150,7 @@ public sealed class OverlayPainter : MonoBehaviour
 
     private void BuildLocalGeometry(Vector3[] verticesArray, int[] trianglesArray, GridData gridData)
     {
-        float cellSize = gridData.BuildingCellSize;
+        float cellSize = gridData.MinBuildingCellSize;
 
         // LOCAL offset above ground.
         float y = _height; //overlayHeightOffset;

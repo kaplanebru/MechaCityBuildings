@@ -14,10 +14,14 @@ public class CellData
     
     public StructureType StructureType; 
     public int OrderIndex;
+    public Vector2 Center;
+    public Vector2Int CellSize = new (1, 1);
 
     public CellData(Vector2Int cellIndex)
     {
         CellIndex = cellIndex;
+        Center = new Vector2(CellIndex.x + 0.5f,
+            CellIndex.y + 0.5f); //CellIndex + Vector2Int.one/2; //todo: for oonly 1-1
     }
 
     public StructureType GetStructureType() => StructureType;
@@ -26,12 +30,21 @@ public class CellData
 
     private void SetType()
     {
+        //4=çevresi kadar neighbor'u olur max
+
+        Type = Neighbors.Count < 4
+            ? CellType.Boundary
+            : CellType.Regular;
+    }
+    
+    /*private void SetType()
+    {
         Type = Neighbors.Count switch
         {
             1 => CellType.Boundary,
             _ => CellType.Regular
         };
-    }
+    }*/
 
     public void SetNeighbors(
         int cellUnit,

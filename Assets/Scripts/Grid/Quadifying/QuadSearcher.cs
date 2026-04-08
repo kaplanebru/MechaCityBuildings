@@ -19,15 +19,14 @@ public class QuadSearcher
     }
     
     //todo: tek tip quad için geçerli
-    public bool TrySearchQuads(
+    public static QuadOnMap[] SearchQuads(
         QuadSample quadSample,
         HashSet<Vector2Int> map,
-        int quadAmount,
-        out List<QuadOnMap> requestedQuads)
+        int quadAmount)
     {
-        requestedQuads = new();
-        if (quadSample.data.WidthHeight.x < 2 && quadSample.data.WidthHeight.y < 2) return false; //todo: ya da base structure ne ebatlardaysa
+        List<QuadOnMap> requestedQuads = new();
         
+        //todo: quad bulunca map'i güncelle
         foreach (var examinedPoint in map)
         {
             var tempQuadPoints = QuadProjector.GetQuadOnGivenPoint(examinedPoint, quadSample).ToHashSet();
@@ -38,13 +37,13 @@ public class QuadSearcher
                 if (requestedQuads.Count == quadAmount) break;
             }
         }
-        return true;
+        return requestedQuads.ToArray();
     }
 
-    private QuadOnMap CreateQuadOnMap(Vector2Int startPoint, QuadSample quadSample, Vector2Int[] points)
+    private static QuadOnMap CreateQuadOnMap(Vector2Int startPoint, QuadSample quadSample, Vector2Int[] points)
     {
         var quad = new QuadOnMap(quadSample.data.WidthHeight, startPoint);
-        quad.SetPoints(
+        quad.Setup(
             points.ToArray(),
             QuadProjector.GetNeighborsOnGivenPoint(startPoint, quadSample).ToArray()
         );
@@ -52,7 +51,7 @@ public class QuadSearcher
         return quad;
     }
 
-    private bool QuadIsOnMap(HashSet<Vector2Int> quadPoints, HashSet<Vector2Int> map)
+    private static bool QuadIsOnMap(HashSet<Vector2Int> quadPoints, HashSet<Vector2Int> map)
     {
         foreach (var quadPoint in quadPoints)
         {

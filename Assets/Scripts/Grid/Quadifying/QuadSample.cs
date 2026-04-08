@@ -3,6 +3,8 @@ using System.Linq;
 using UnityEngine;
 
 
+//todo: Generate butonu ekle! ya da change olunca generate etsin
+
 [CreateAssetMenu(fileName = "QuadSample", menuName = "CityBuilder/QuadSample")]
 public class QuadSample : ScriptableObject
 {
@@ -19,6 +21,11 @@ public class QuadSample : ScriptableObject
 
     private void Generate()
     {
+        if (data.WidthHeight.x < 2 && data.WidthHeight.y < 2)
+        {
+            Debug.LogAssertion("Quad with that size is not possible: " + data.WidthHeight + " please change size");
+            return;
+        }
         GenerateQuad();
         data.Neighbors = GenerateNeighbors();
     }

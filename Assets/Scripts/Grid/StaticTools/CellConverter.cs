@@ -18,11 +18,24 @@ public static class CellConverter
     {
         floorDb.OnDeleteLastFloor -= RestoreBuildingsOnFloor;
     }*/
+
+   public static Vector3 GetWorldPositionFromCellCenter(CellData cellData, GridData gridData)
+   {
+       float worldX = gridData.OriginWorldTransform.position.x + cellData.Center.x * gridData.MinBuildingCellSize;
+       float worldZ = gridData.OriginWorldTransform.position.z + cellData.Center.y * gridData.MinBuildingCellSize;
+       
+       Debug.Log(cellData.Center);
+
+
+       float worldY = gridData.OriginWorldTransform.position.y;
+
+       return new Vector3(worldX, worldY, worldZ);
+   }
     
     public static Vector3 GetWorldPositionCenterFromCellIndex(int xIndex, int yIndex, GridData gridData)
     {
-        float worldX = gridData.OriginWorldTransform.position.x + (xIndex + 0.5f) * gridData.BuildingCellSize;
-        float worldZ = gridData.OriginWorldTransform.position.z + (yIndex + 0.5f) * gridData.BuildingCellSize;
+        float worldX = gridData.OriginWorldTransform.position.x + (xIndex + 0.5f) * gridData.MinBuildingCellSize;
+        float worldZ = gridData.OriginWorldTransform.position.z + (yIndex + 0.5f) * gridData.MinBuildingCellSize;
 
 
         float worldY = gridData.OriginWorldTransform.position.y;
@@ -32,8 +45,8 @@ public static class CellConverter
 
     public static Vector2Int GetCellIndexFromWorldPosition(Vector3 worldPosition, GridData gridData)
     {
-        int xIndex = Mathf.FloorToInt((worldPosition.x - gridData.OriginWorldTransform.position.x) / gridData.BuildingCellSize);
-        int yIndex = Mathf.FloorToInt((worldPosition.z - gridData.OriginWorldTransform.position.z) / gridData.BuildingCellSize);
+        int xIndex = Mathf.FloorToInt((worldPosition.x - gridData.OriginWorldTransform.position.x) / gridData.MinBuildingCellSize);
+        int yIndex = Mathf.FloorToInt((worldPosition.z - gridData.OriginWorldTransform.position.z) / gridData.MinBuildingCellSize);
 
         return new Vector2Int(xIndex, yIndex);
     }

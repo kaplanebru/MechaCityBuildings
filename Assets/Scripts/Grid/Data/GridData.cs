@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Grid Data", menuName = "CityBuilder/Grid Data")]
 public class GridData: ScriptableObject
 {
-    public int BuildingCellSize = 2;
+    public int MinBuildingCellSize = 2;
     public int AverageBuildingHeight = 2;
     
     [HideInInspector] public Transform OriginWorldTransform;

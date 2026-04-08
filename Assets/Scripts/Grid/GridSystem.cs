@@ -45,9 +45,9 @@ public class GridSystem : MonoBehaviour
         gridData.AdaptiveGridSize = mapSizeToGridSize.GetGridSizeFromMesh();
 
         gridData.AdaptiveGridSize.x =
-            Mathf.RoundToInt(gridData.AdaptiveGridSize.x / gridData.BuildingCellSize);
+            Mathf.RoundToInt(gridData.AdaptiveGridSize.x / gridData.MinBuildingCellSize);
         gridData.AdaptiveGridSize.y =
-            Mathf.RoundToInt(gridData.AdaptiveGridSize.y / gridData.BuildingCellSize);
+            Mathf.RoundToInt(gridData.AdaptiveGridSize.y / gridData.MinBuildingCellSize);
 
         
         //todo: user pref değil de grid dataya işlenmeli direkt.

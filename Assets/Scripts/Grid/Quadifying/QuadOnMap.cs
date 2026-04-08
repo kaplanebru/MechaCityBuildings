@@ -8,6 +8,7 @@ public class QuadOnMap
     public QuadData data = new();
     public Vector2Int StartPoint;
     public Vector2 Center;
+    public int Perimeter;
 
     public QuadOnMap(Vector2Int widthHeight, Vector2Int startPoint)
     {
@@ -15,7 +16,7 @@ public class QuadOnMap
         StartPoint = startPoint;
     }
 
-    public void SetPoints(Vector2Int[] points, Vector2Int[] neighbors)
+    public void Setup(Vector2Int[] points, Vector2Int[] neighbors)
     {
         data.Coords = points;
         data.Neighbors = neighbors;
@@ -26,6 +27,11 @@ public class QuadOnMap
     {
         Vector2 sum = data.Coords.Aggregate(Vector2.zero, (current, slot) => current + slot);
         Center = sum / data.Coords.Length;
+    }
+
+    private void SetPerimeter()
+    {
+        Perimeter = (data.WidthHeight.x + data.WidthHeight.y) * 2;
     }
 }
 

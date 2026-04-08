@@ -16,6 +16,7 @@ public class CityDrawerUnits
 [ExecuteInEditMode]
 public class CityDrawer : MonoBehaviour
 {
+    public QuadSample quadSample;
     public CityDrawerUnits units;
     public Action<int, HashSet<CellData>> OnCellsReady;
 
@@ -46,7 +47,8 @@ public class CityDrawer : MonoBehaviour
         var activeFloor = units.floorDatabase.GetActiveFloorData(); //register as CellData
         var cells = units.gridSystem.cellRecorderCache;
         
-        var cellDataSet = CellDataCreator.ConvertToCellData(cells.ToHashSet(), units.gridData.BuildingCellSize);
+        //var cellDataSet = CellDataCreator.ConvertToCellData(cells.ToHashSet(), units.gridData.MinBuildingCellSize);
+        var cellDataSet = MapOrganizer.ToCellData(cells, quadSample, 1);
         
         OnCellsReady?.Invoke(activeFloor.Index, cellDataSet);
         GridMasker.ResetSelectedCells(units.gridSystem.overlayPainter, units.gridSystem.gridData);

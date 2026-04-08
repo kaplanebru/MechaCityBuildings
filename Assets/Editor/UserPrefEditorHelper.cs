@@ -15,9 +15,9 @@ public static class UserPrefEditorHelper
         //EditorGUI.BeginChangeCheck();
         using (new EditorGUILayout.HorizontalScope())
         {
-            gridData.BuildingCellSize = EditorGUILayout.IntField(
+            gridData.MinBuildingCellSize = EditorGUILayout.IntField(
                 "Building Cell Size",
-                gridData.BuildingCellSize);
+                gridData.MinBuildingCellSize);
 
             if (GUILayout.Button("Apply"))
             {

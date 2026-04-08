@@ -12,9 +12,9 @@ public static class InstallerHelper
             structures.Add(structure);
             
             structure.transform.SetParent(parent);
-            
-            Vector3 worldPos = CellConverter.
-                GetWorldPositionCenterFromCellIndex(cellData.CellIndex.x, cellData.CellIndex.y, gridData);
+
+            Vector3 worldPos = CellConverter.GetWorldPositionFromCellCenter(cellData, gridData);
+                //GetWorldPositionCenterFromCellIndex(cellData.CellIndex.x, cellData.CellIndex.y, gridData);
             
             structure.transform.localPosition = worldPos;
             structure.transform.localRotation = cellData.Rotation;

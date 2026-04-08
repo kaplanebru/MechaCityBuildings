@@ -7,8 +7,8 @@ public static class GridBrusher
     public static void BrushSelectedCells(SelectedCellData selectedCellData, OverlayPainter overlayPainter,
         GridData gridData, PaintData paintData)
     {
-        if (gridData.BuildingCellSize <= 0f)
-            throw new ArgumentOutOfRangeException(nameof(gridData.BuildingCellSize),
+        if (gridData.MinBuildingCellSize <= 0f)
+            throw new ArgumentOutOfRangeException(nameof(gridData.MinBuildingCellSize),
                 "cellSizeInWorldUnits must be > 0");
 
         if (paintData.BrushRadius < 1f)
@@ -40,15 +40,15 @@ public static class GridBrusher
     public static void BrushSelectedCellsWithOffset(SelectedCellData selectedCellData, OverlayPainter overlayPainter,
         GridData gridData, PaintData paintData)
     {
-        if (gridData.BuildingCellSize <= 0f)
-            throw new ArgumentOutOfRangeException(nameof(gridData.BuildingCellSize),
+        if (gridData.MinBuildingCellSize <= 0f)
+            throw new ArgumentOutOfRangeException(nameof(gridData.MinBuildingCellSize),
                 "cellSizeInWorldUnits must be > 0");
 
         if (paintData.BrushRadius < 0f)
             return;
 
         int brushRadiusInCells = Mathf.CeilToInt
-            (paintData.BrushRadius / gridData.BuildingCellSize);
+            (paintData.BrushRadius / gridData.MinBuildingCellSize);
 
         int brushRadiusSquared = brushRadiusInCells * brushRadiusInCells;
         
