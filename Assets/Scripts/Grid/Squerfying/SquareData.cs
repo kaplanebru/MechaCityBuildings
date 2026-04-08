@@ -3,18 +3,18 @@ using System.Linq;
 using UnityEngine;
 
 [Serializable]
-public class SquareData
+public class QuadData
 {
-    public int Pow;
+    public Vector2Int WidthHeight;
     public Vector2Int IndexPoint;
     public Vector2Int[] Slots;
     public Vector2 Center;
 
-    public SquareData(int pow, Vector2Int indexPoint)
+    public QuadData(Vector2Int widthHeight, Vector2Int indexPoint)
     {
-        Pow = pow;
+        WidthHeight = widthHeight;
         IndexPoint = indexPoint;
-        Slots = Squarefyer.GetSquareSlotsByPoint(Pow, IndexPoint).ToArray();
+        Slots = Quadifyer.GetQuadSlotsByPoint(WidthHeight, IndexPoint).ToArray();
         SetCenter();
     }
 
@@ -22,5 +22,12 @@ public class SquareData
     {
         Vector2 sum = Slots.Aggregate(Vector2.zero, (current, slot) => current + slot);
         Center = sum / Slots.Length;
+    }
+}
+
+public class SquareData : QuadData
+{
+    public SquareData(int pow, Vector2Int indexPoint) : base(new Vector2Int(pow, pow), indexPoint)
+    {
     }
 }
