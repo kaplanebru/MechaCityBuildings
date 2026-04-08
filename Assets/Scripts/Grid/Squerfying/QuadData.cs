@@ -9,6 +9,7 @@ public class QuadData
     public Vector2Int IndexPoint;
     public Vector2Int[] Slots;
     public Vector2 Center;
+    public Vector2Int[] Neighbors;
 
     public QuadData(Vector2Int widthHeight, Vector2Int indexPoint)
     {
