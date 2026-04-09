@@ -4,32 +4,49 @@ using UnityEngine;
 
 public class CellDataCreator
 {
-    public static HashSet<CellData> ConvertToCellData(HashSet<Vector2Int> cellRecorderCache, int cellUnit)
+    public static HashSet<CellData> CreateCellDataFromQuads(QuadOnMap[] randomQuads, HashSet<Vector2Int> map)
     {
-        var cellDataDict = InitiateCellDatas(cellRecorderCache);
+        HashSet<CellData> quadCellDatas = new();
 
-        foreach (var cellData in cellDataDict.Values)
+        foreach (var quad in randomQuads)
         {
-            cellData.SetNeighbors(cellUnit, cellDataDict);
-        }
+            var cellData = new CellData(quad.StartPoint);
 
-        FindOrientations(cellDataDict.Values.ToHashSet());
+            foreach (var point in quad.data.Neighbors)
+            {
+                if(map.Contains(point))
+                    cellData.Neighbors.Add(new NeighborCellPoint(point));
+            }
 
-        return cellDataDict.Values.ToHashSet();
-    }
+            //çevresi kadar neighbor'u olur max
+            cellData.Type = quad.data.Neighbors.Length < quad.Perimeter ? CellType.Boundary : CellType.Regular;
+            cellData.CellSize = quad.data.WidthHeight;
+            cellData.Center = quad.Center;
 
-    private static Dictionary<Vector2Int, CellData> InitiateCellDatas(HashSet<Vector2Int> cellRecorderCache)
-    {
-        Dictionary<Vector2Int, CellData> cellDataDict = new();
-        foreach (Vector2Int cellIndex in cellRecorderCache)
-        {
-            cellDataDict.Add(cellIndex, new CellData(cellIndex));
+            quadCellDatas.Add(cellData);
         }
         
-        return cellDataDict;
+        return quadCellDatas;
     }
     
-    private static void FindOrientations(HashSet<CellData> cellDataSet)
+    public static HashSet<CellData> CreateCellDataFromSinglePoints(HashSet<Vector2Int> singleCells, HashSet<Vector2Int> map, int cellUnit)
+    {
+        HashSet<CellData> singleCellDatas = new HashSet<CellData>();
+        foreach (Vector2Int cellIndex in singleCells)
+        {
+            var cellData = new CellData(cellIndex);
+            cellData.SetNeighbors(cellUnit, map);
+
+            singleCellDatas.Add(cellData);
+        }
+
+        FindOrientationsForSingleCells(singleCellDatas.ToHashSet());
+
+        return singleCellDatas.ToHashSet();
+    }
+    
+    
+    private static void FindOrientationsForSingleCells(HashSet<CellData> cellDataSet)
     {
         var boundaryCells = CellRegistry.GetBoundaries(cellDataSet);
 

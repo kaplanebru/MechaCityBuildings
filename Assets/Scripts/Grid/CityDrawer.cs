@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+
 [Serializable]
 public class CityDrawerUnits
 {
@@ -46,8 +47,8 @@ public class CityDrawer : MonoBehaviour
     {
         var activeFloor = units.floorDatabase.GetActiveFloorData(); //register as CellData
         
-        //var cellDataSet = CellDataCreator.ConvertToCellData(cells.ToHashSet(), units.gridData.MinBuildingCellSize); //units.gridSystem.cellRecorderCache
-        var cellDataSet = MapOrganizer.ToCellData(units.gridSystem.cellRecorderCache, quadSample, 1);
+        //var cellDataSet = CellDataCreator.CreateCellDataFromSinglePoints(cells.ToHashSet(), units.gridData.MinBuildingCellSize); //units.gridSystem.cellRecorderCache
+        var cellDataSet = MapOrganizer.ToCellData(units.gridSystem.cellRecorderCache.ToHashSet(), quadSample, 1);
         
         OnCellsReady?.Invoke(activeFloor.Index, cellDataSet);
         GridMasker.ResetSelectedCells(units.gridSystem.overlayPainter, units.gridSystem.gridData);

@@ -8,7 +8,7 @@ public class CellData
 {
     public Vector2Int CellIndex;
     public CellType Type;
-    public List<Vector2Int> Neighbors = new();
+    public List<NeighborCellPoint> Neighbors = new();
     public Vector2Int OutwardNormal = Vector2Int.zero;
     public Quaternion Rotation = Quaternion.Euler(Vector3.zero);//Quaternion.identity;
     
@@ -36,19 +36,10 @@ public class CellData
             ? CellType.Boundary
             : CellType.Regular;
     }
-    
-    /*private void SetType()
-    {
-        Type = Neighbors.Count switch
-        {
-            1 => CellType.Boundary,
-            _ => CellType.Regular
-        };
-    }*/
 
     public void SetNeighbors(
         int cellUnit,
-        Dictionary<Vector2Int, CellData> cellDataDict)
+        HashSet<Vector2Int> allCells)
     {
         Vector2Int[] pendingNeighbors = new Vector2Int[4];
         pendingNeighbors[0] = CellIndex + Vector2Int.right * cellUnit; //east
@@ -61,9 +52,9 @@ public class CellData
         {
             var pendingNeighbor = pendingNeighbors[i];
 
-            if (cellDataDict.TryGetValue(pendingNeighbor, out var cellData))
+            if(allCells.Contains(pendingNeighbor))
             {
-                Neighbors.Add(cellData.CellIndex);
+                Neighbors.Add(new NeighborCellPoint(pendingNeighbor));
             }
             else
             {

@@ -24,11 +24,7 @@ public static class CellConverter
        float worldX = gridData.OriginWorldTransform.position.x + cellData.Center.x * gridData.MinBuildingCellSize;
        float worldZ = gridData.OriginWorldTransform.position.z + cellData.Center.y * gridData.MinBuildingCellSize;
        
-       Debug.Log(cellData.Center);
-
-
        float worldY = gridData.OriginWorldTransform.position.y;
-
        return new Vector3(worldX, worldY, worldZ);
    }
     
@@ -37,9 +33,7 @@ public static class CellConverter
         float worldX = gridData.OriginWorldTransform.position.x + (xIndex + 0.5f) * gridData.MinBuildingCellSize;
         float worldZ = gridData.OriginWorldTransform.position.z + (yIndex + 0.5f) * gridData.MinBuildingCellSize;
 
-
         float worldY = gridData.OriginWorldTransform.position.y;
-
         return new Vector3(worldX, worldY, worldZ);
     }
 
