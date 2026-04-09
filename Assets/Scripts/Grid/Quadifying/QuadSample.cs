@@ -13,11 +13,11 @@ public class QuadSample : ScriptableObject
 
     public void Generate()
     {
-        if (data.WidthHeight.x < 2 && data.WidthHeight.y < 2)
+        /*if (data.WidthHeight.x < 2 && data.WidthHeight.y < 2)
         {
             Debug.LogAssertion("Quad with that size is not possible: " + data.WidthHeight + " please change size");
             return;
-        }
+        }*/
         GenerateQuad();
         data.Neighbors = GenerateNeighbors();
     }

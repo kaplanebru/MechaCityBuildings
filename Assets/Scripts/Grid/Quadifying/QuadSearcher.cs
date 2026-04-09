@@ -33,8 +33,10 @@ public class QuadSearcher
         foreach (var quadSample in quadSamples)
         {
             int index = runningMap.Count - 1;
-            while (index > 0)
+            while (index >= 0)
             {
+                Debug.Log(index);
+
                 var examinedPoint = runningMap[index];
                 int quadCounter = 0;
                 

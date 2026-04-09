@@ -13,10 +13,9 @@ public class MapOrganizer
         var randomQuads = QuadSearcher.SearchQuads(quadSamplesAndAmounts, mapToAlter.ToHashSet());
         var quadCellDatas = CellDataCreator.CreateCellDataFromQuads(randomQuads, map);
         
-        EliminateQuadCoordsFromSinglePoints(randomQuads, mapToAlter);
-        var singleCellDatas = CellDataCreator.CreateCellDataFromSinglePoints(mapToAlter.ToHashSet(), map.ToHashSet(), 1);
-       
-        quadCellDatas.UnionWith(singleCellDatas);
+        //EliminateQuadCoordsFromSinglePoints(randomQuads, mapToAlter);
+        //var singleCellDatas = CellDataCreator.CreateCellDataFromSinglePoints(mapToAlter.ToHashSet(), map.ToHashSet(), 1);
+        //quadCellDatas.UnionWith(singleCellDatas);
         return quadCellDatas;
     }
 

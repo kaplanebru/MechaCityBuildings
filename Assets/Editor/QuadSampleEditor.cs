@@ -14,7 +14,9 @@ public class QuadSampleEditor: Editor
             t.data.WidthHeight = EditorGUILayout.Vector2IntField("Width Height", t.data.WidthHeight);
             if (GUILayout.Button("Apply"))
             {
+                Undo.RecordObject(target, "ApplyQuadSample");
                 t.Generate();
+                EditorUtility.SetDirty(target);
             }
         //}
         
