@@ -48,7 +48,10 @@ public class CityDrawer : MonoBehaviour
         var activeFloor = units.floorDatabase.GetActiveFloorData(); //register as CellData
         
         //var cellDataSet = CellDataCreator.CreateCellDataFromSinglePoints(cells.ToHashSet(), units.gridData.MinBuildingCellSize); //units.gridSystem.cellRecorderCache
-        var cellDataSet = MapOrganizer.ToCellData(units.gridSystem.cellRecorderCache.ToHashSet(), quadSample, 1);
+        
+        Dictionary<QuadSample, int> quadSamplesAndAmounts = new Dictionary<QuadSample, int>();
+        quadSamplesAndAmounts.Add(quadSample, 2);
+        var cellDataSet = MapOrganizer.ToCellData(units.gridSystem.cellRecorderCache.ToHashSet(), quadSamplesAndAmounts);
         
         OnCellsReady?.Invoke(activeFloor.Index, cellDataSet);
         GridMasker.ResetSelectedCells(units.gridSystem.overlayPainter, units.gridSystem.gridData);

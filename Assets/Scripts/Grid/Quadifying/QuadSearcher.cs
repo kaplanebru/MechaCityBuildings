@@ -20,14 +20,41 @@ public class QuadSearcher
     
     //todo: tek tip quad için geçerli
     public static QuadOnMap[] SearchQuads(
-        QuadSample quadSample,
-        HashSet<Vector2Int> map,
-        int quadAmount)
+        Dictionary<QuadSample, int> quadSamplesAndAmounts,
+        HashSet<Vector2Int> map)
     {
         List<QuadOnMap> requestedQuads = new();
+        List<Vector2Int> tempMap = new();
+        tempMap.AddRange(map);
+
+        var quadSamples = quadSamplesAndAmounts.Keys.ToArray();
+        quadSamples = quadSamples.OrderByDescending(qs => qs.data.GetPointAmount).ToArray();
+
+        foreach (var quadSample in quadSamples)
+        {
+            for (int i = tempMap.Count - 1; i >= 0; i--)
+            {
+                var examinedPoint = tempMap[i];
+                int counter = 0;
+                var tempQuadPoints = 
+                    QuadProjector.GetQuadOnGivenPoint(examinedPoint, quadSample).ToHashSet();
+                
+                if (QuadIsOnMap(tempQuadPoints, tempMap.ToHashSet()))
+                {
+                    requestedQuads.Add(CreateQuadOnMap(examinedPoint, quadSample, tempQuadPoints.ToArray()));
+                    tempQuadPoints.Remove(examinedPoint);
+                    
+                    if (counter >= quadSamplesAndAmounts[quadSample]) break;
+                }
+            }
+        }
         
+        return requestedQuads.ToArray();
+       
+         
         //todo: quad bulunca map'i güncelle
-        foreach (var examinedPoint in map)
+       
+        /*foreach (var examinedPoint in map)
         {
             var tempQuadPoints = QuadProjector.GetQuadOnGivenPoint(examinedPoint, quadSample).ToHashSet();
 
@@ -37,7 +64,7 @@ public class QuadSearcher
                 if (requestedQuads.Count == quadAmount) break;
             }
         }
-        return requestedQuads.ToArray();
+        return requestedQuads.ToArray();*/
     }
 
     private static QuadOnMap CreateQuadOnMap(Vector2Int startPoint, QuadSample quadSample, Vector2Int[] points)
