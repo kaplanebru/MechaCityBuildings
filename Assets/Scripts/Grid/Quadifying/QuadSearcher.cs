@@ -24,47 +24,42 @@ public class QuadSearcher
         HashSet<Vector2Int> map)
     {
         List<QuadOnMap> requestedQuads = new();
-        List<Vector2Int> tempMap = new();
-        tempMap.AddRange(map);
+        List<Vector2Int> runningMap = new();
+        runningMap.AddRange(map);
 
         var quadSamples = quadSamplesAndAmounts.Keys.ToArray();
         quadSamples = quadSamples.OrderByDescending(qs => qs.data.GetPointAmount).ToArray();
 
         foreach (var quadSample in quadSamples)
         {
-            for (int i = tempMap.Count - 1; i >= 0; i--)
+            int index = runningMap.Count - 1;
+            while (index > 0)
             {
-                var examinedPoint = tempMap[i];
-                int counter = 0;
+                var examinedPoint = runningMap[index];
+                int quadCounter = 0;
+                
                 var tempQuadPoints = 
                     QuadProjector.GetQuadOnGivenPoint(examinedPoint, quadSample).ToHashSet();
                 
-                if (QuadIsOnMap(tempQuadPoints, tempMap.ToHashSet()))
+                if (QuadIsOnMap(tempQuadPoints, runningMap.ToHashSet()))
                 {
-                    requestedQuads.Add(CreateQuadOnMap(examinedPoint, quadSample, tempQuadPoints.ToArray()));
-                    tempQuadPoints.Remove(examinedPoint);
+                    var newQuad = CreateQuadOnMap(examinedPoint, quadSample, tempQuadPoints.ToArray());
+                    requestedQuads.Add(newQuad);
+
+                    runningMap.RemoveAll(coord => newQuad.data.Coords.Contains(coord));
+                    index -= newQuad.data.Coords.Length;
                     
-                    if (counter >= quadSamplesAndAmounts[quadSample]) break;
+                    quadCounter++;
+                    if (quadCounter >= quadSamplesAndAmounts[quadSample]) break;
+                }
+                else
+                {
+                    index--;
                 }
             }
         }
         
         return requestedQuads.ToArray();
-       
-         
-        //todo: quad bulunca map'i güncelle
-       
-        /*foreach (var examinedPoint in map)
-        {
-            var tempQuadPoints = QuadProjector.GetQuadOnGivenPoint(examinedPoint, quadSample).ToHashSet();
-
-            if (QuadIsOnMap(tempQuadPoints, map))
-            {
-                requestedQuads.Add(CreateQuadOnMap(examinedPoint, quadSample, tempQuadPoints.ToArray()));
-                if (requestedQuads.Count == quadAmount) break;
-            }
-        }
-        return requestedQuads.ToArray();*/
     }
 
     private static QuadOnMap CreateQuadOnMap(Vector2Int startPoint, QuadSample quadSample, Vector2Int[] points)

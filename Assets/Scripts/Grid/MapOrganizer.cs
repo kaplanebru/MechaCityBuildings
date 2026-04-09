@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class MapOrganizer
 {
-    public static HashSet<CellData> ToCellData(HashSet<Vector2Int> map, Dictionary<QuadSample, int> quadSamples)
+    public static HashSet<CellData> ToCellData(HashSet<Vector2Int> map, Dictionary<QuadSample, int> quadSamplesAndAmounts)
     {
-        List<Vector2Int> singlePoints = new();
-        singlePoints.AddRange(map);
-        Shuffle(singlePoints);
+        List<Vector2Int> mapToAlter = new();
+        mapToAlter.AddRange(map);
+        Shuffle(mapToAlter);
         
-        var randomQuads = QuadSearcher.SearchQuads(quadSamples, singlePoints.ToHashSet());
+        var randomQuads = QuadSearcher.SearchQuads(quadSamplesAndAmounts, mapToAlter.ToHashSet());
         var quadCellDatas = CellDataCreator.CreateCellDataFromQuads(randomQuads, map);
         
-        EliminateQuadCoordsFromSinglePoints(randomQuads, singlePoints);
-        var singleCellDatas = CellDataCreator.CreateCellDataFromSinglePoints(singlePoints.ToHashSet(), map.ToHashSet(), 1);
+        EliminateQuadCoordsFromSinglePoints(randomQuads, mapToAlter);
+        var singleCellDatas = CellDataCreator.CreateCellDataFromSinglePoints(mapToAlter.ToHashSet(), map.ToHashSet(), 1);
        
         quadCellDatas.UnionWith(singleCellDatas);
         return quadCellDatas;
