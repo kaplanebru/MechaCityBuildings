@@ -9,17 +9,9 @@ using UnityEngine;
 public class QuadSample : ScriptableObject
 {
     public QuadData data;
+    
 
-    private void OnEnable()
-    {
-        if (data.Coords == null || data.Coords.Length != data.WidthHeight.x * data.WidthHeight.y)
-        {
-            data.Coords = new Vector2Int[data.WidthHeight.x * data.WidthHeight.y];
-            Generate();
-        }
-    }
-
-    private void Generate()
+    public void Generate()
     {
         if (data.WidthHeight.x < 2 && data.WidthHeight.y < 2)
         {

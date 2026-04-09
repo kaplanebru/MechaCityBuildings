@@ -5,8 +5,11 @@ using UnityEngine;
 public class MapOrganizer
 {
 
-    public static HashSet<CellData> ToCellData(List<Vector2Int> points, QuadSample quadSample, int quadAmount)
+    public static HashSet<CellData> ToCellData(List<Vector2Int> cellPoints, QuadSample quadSample, int quadAmount)
     {
+        List<Vector2Int> points = new();
+        points.AddRange(cellPoints);
+        
         Shuffle(points);
         var randomQuads = QuadSearcher.SearchQuads(quadSample, points.ToHashSet(), quadAmount);
 
@@ -39,7 +42,7 @@ public class MapOrganizer
         return cells;
     }
     
-    public static void Shuffle<T>(IList<T> collection) //T[]
+    public static void Shuffle<T>(IList<T> collection) //T[] //IList
     {
         int n = collection.Count;
         while (n > 1)

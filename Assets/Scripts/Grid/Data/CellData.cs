@@ -20,8 +20,8 @@ public class CellData
     public CellData(Vector2Int cellIndex)
     {
         CellIndex = cellIndex;
-        Center = new Vector2(CellIndex.x + 0.5f,
-            CellIndex.y + 0.5f); //CellIndex + Vector2Int.one/2; //todo: for oonly 1-1
+        Center = CellIndex + Vector2.one/2f;//new Vector2(CellIndex.x + 0.5f, CellIndex.y + 0.5f);
+                                            ////todo: for oonly 1-1
     }
 
     public StructureType GetStructureType() => StructureType;

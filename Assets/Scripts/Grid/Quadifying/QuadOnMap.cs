@@ -25,7 +25,7 @@ public class QuadOnMap
 
     private void SetCenter()
     {
-        Vector2 sum = data.Coords.Aggregate(Vector2.zero, (current, slot) => current + slot);
+        Vector2 sum = data.Coords.Aggregate(Vector2.zero, (current, slot) => current + slot +  Vector2.one/2f);
         Center = sum / data.Coords.Length;
     }
 

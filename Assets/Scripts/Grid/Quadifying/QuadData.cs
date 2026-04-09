@@ -4,6 +4,7 @@ using UnityEngine;
 [Serializable]
 public class QuadData
 {
+    [HideInInspector]
     public Vector2Int WidthHeight = new Vector2Int(2,2);
 
     //[HideInInspector]

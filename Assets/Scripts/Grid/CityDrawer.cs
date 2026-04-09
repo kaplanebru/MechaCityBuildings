@@ -45,13 +45,13 @@ public class CityDrawer : MonoBehaviour
     public void ConstructionRequest()
     {
         var activeFloor = units.floorDatabase.GetActiveFloorData(); //register as CellData
-        var cells = units.gridSystem.cellRecorderCache;
         
-        //var cellDataSet = CellDataCreator.ConvertToCellData(cells.ToHashSet(), units.gridData.MinBuildingCellSize);
-        var cellDataSet = MapOrganizer.ToCellData(cells, quadSample, 1);
+        //var cellDataSet = CellDataCreator.ConvertToCellData(cells.ToHashSet(), units.gridData.MinBuildingCellSize); //units.gridSystem.cellRecorderCache
+        var cellDataSet = MapOrganizer.ToCellData(units.gridSystem.cellRecorderCache, quadSample, 1);
         
         OnCellsReady?.Invoke(activeFloor.Index, cellDataSet);
         GridMasker.ResetSelectedCells(units.gridSystem.overlayPainter, units.gridSystem.gridData);
+
     }
 }
 
