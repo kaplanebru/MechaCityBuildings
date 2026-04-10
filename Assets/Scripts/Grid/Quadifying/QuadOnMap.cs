@@ -6,14 +6,12 @@ using UnityEngine;
 public class QuadOnMap
 {
     public QuadData data = new();
-    public Vector2Int StartPoint;
     public Vector2 Center;
     public int Perimeter;
 
-    public QuadOnMap(Vector2Int widthHeight, Vector2Int startPoint)
+    public QuadOnMap(Vector2Int widthHeight)
     {
         data.WidthHeight = widthHeight;
-        StartPoint = startPoint;
     }
 
     public void Setup(Vector2Int[] points, Vector2Int[] neighbors)
@@ -37,7 +35,7 @@ public class QuadOnMap
 
 public class SquareOnMap : QuadOnMap
 {
-    public SquareOnMap(int pow, Vector2Int startPoint) : base(new Vector2Int(pow, pow), startPoint)
+    public SquareOnMap(int pow) : base(new Vector2Int(pow, pow))
     {
     }
 }

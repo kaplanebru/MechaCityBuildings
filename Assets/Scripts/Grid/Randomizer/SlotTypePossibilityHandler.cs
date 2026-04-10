@@ -16,16 +16,17 @@ public class SlotTypePossibilityHandler
         );
     }
 
-    public void UpdateNeighbourPossibilities(SlotData slotData)
+    public void UpdateNeighbourPossibilities(QuadOnMap quadOnMap, StructureType currentType)
     {
-        var slotDataType = slotData.StructureType;
-
-        foreach (var slot in slotData.Cells)
+        foreach (var coord in quadOnMap.data.Coords)
         {
-            _possibleTypesOfSlot.Remove(slot);
+            _possibleTypesOfSlot.Remove(coord);
         }
-        
-        slotData.Neighbors.ForEach(n=> EliminatePossibilitiesOfGivenCell(n.Coords, slotDataType));
+
+        foreach (var neighbor in quadOnMap.data.Neighbors)
+        {
+            EliminatePossibilitiesOfGivenCell(neighbor, currentType);
+        }
     }
 
     private void EliminatePossibilitiesOfGivenCell(Vector2Int cell, params StructureType[] possibilitiesToEliminate)
@@ -44,7 +45,8 @@ public class SlotTypePossibilityHandler
         if (coords.Length == 1)
         {
             var possibilities = _possibleTypesOfSlot[coords[0]];
-            return possibilities.Contains(givenType);
+            return possibilities.Contains(givenType) || givenType == StructureType.RightBatiment;
+            //todo: || sonrası test amaçlı. yanyana gelebilenler olarak eleriz daha sonra
         }
         
         Dictionary<StructureType, int> frequencyInCoords = new();
@@ -65,7 +67,7 @@ public class SlotTypePossibilityHandler
             .Select(kvp => kvp.Key)
             .ToList();
         
-        return topCandidates.Contains(givenType);
+        return topCandidates.Contains(givenType) || givenType == StructureType.RightBatiment;
         //todo later: or yanyana olabilirler listesindeyse contains'de olmasa da olur
 
     }

@@ -26,17 +26,12 @@ public class QuadSearcher
         List<QuadOnMap> requestedQuads = new();
         List<Vector2Int> runningMap = new();
         runningMap.AddRange(map);
-        SlotTypePossibilityHandler possibilityHandler = new();
-
         var typeInfos = typeInfosAndAmounts.Keys.ToArray();
-        
-        possibilityHandler.Initiate(
-            map, 
-            typeInfos.Select(k=>k.Type).ToHashSet());
-        
 
-        typeInfos = typeInfos.OrderByDescending(
-            ti => ti.QuadSample.data.GetPointAmount).ToArray();
+        SlotTypePossibilityHandler possibilityHandler = new();
+        possibilityHandler.Initiate(map, typeInfos.Select(k=>k.Type).ToHashSet());
+        
+        typeInfos = typeInfos.OrderByDescending(ti => ti.QuadSample.data.GetPointAmount).ToArray();
 
         foreach (var typeInfo in typeInfos)
         {
@@ -44,23 +39,33 @@ public class QuadSearcher
             while (index >= 0)
             {
                 var examinedPoint = runningMap[index];
-                int quadCounter = 0;
-                
+               
                 var tempQuadPoints = 
                     QuadProjector.GetQuadOnGivenPoint(examinedPoint, typeInfo.QuadSample).ToHashSet();
                 
-                if (QuadIsOnMap(tempQuadPoints, runningMap.ToHashSet())) //T4
+                if (QuadIsOnMap(tempQuadPoints, runningMap.ToHashSet()))
                 {
-                    //TODO: check convenience in type
+                    if (!possibilityHandler.IsTypeConvenient(typeInfo.Type, tempQuadPoints.ToArray()))
+                    {
+                        index--;
+                        continue;
+                    }
                     
-                    var newQuad = CreateQuadOnMap(examinedPoint, typeInfo.QuadSample, tempQuadPoints.ToArray());
+                    var newQuad = CreateQuadOnMap(
+                        examinedPoint,
+                        typeInfo.QuadSample, 
+                        tempQuadPoints.ToArray()); //TODO.BU TYPELAR possibiliyy holderda STORE EDİLECEK QUADDA DEPİL!!!
+                    
+                    if(typeInfo.QuadSample.data.GetPointAmount == 4)
+                        Debug.Log("big quad");
+                    
+                    possibilityHandler.UpdateNeighbourPossibilities(newQuad, typeInfo.Type);
                     requestedQuads.Add(newQuad);
-
                     runningMap.RemoveAll(coord => newQuad.data.Coords.Contains(coord));
                     index -= newQuad.data.Coords.Length;
                     
-                    quadCounter++;
-                    if (quadCounter >= typeInfosAndAmounts[typeInfo]) break;
+                     typeInfosAndAmounts[typeInfo]--;
+                     if (typeInfosAndAmounts[typeInfo] <= 0) break;
                 }
                 else
                 {
@@ -74,7 +79,7 @@ public class QuadSearcher
 
     private static QuadOnMap CreateQuadOnMap(Vector2Int startPoint, QuadSample quadSample, Vector2Int[] points)
     {
-        var quad = new QuadOnMap(quadSample.data.WidthHeight, startPoint);
+        var quad = new QuadOnMap(quadSample.data.WidthHeight);
         quad.Setup(
             points.ToArray(),
             QuadProjector.GetNeighborsOnGivenPoint(startPoint, quadSample).ToArray()

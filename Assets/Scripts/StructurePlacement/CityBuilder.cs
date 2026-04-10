@@ -41,7 +41,7 @@ public class CityBuilder : MonoBehaviour
         
         floorResidentsDb.RegisterCells(floorIndex, cells.ToList());
         randomizer.OrderCellsOnFloor(cells, floorResidentsData);
-        randomizer.MixAndApplyPlacements(floorResidentsData);
+        //randomizer.MixAndApplyPlacements(floorResidentsData);
         installer.InstallStructures(floorDb.GetFloorData(floorIndex), floorResidentsData);
 
         EditorUtility.SetDirty(floorResidentsDb);
