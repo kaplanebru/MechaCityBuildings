@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2648b48460bb14478a83bb6440cf9dab, type: 3}
   m_Name: StructureType 1
   m_EditorClassIdentifier: 
+  Id: 1
+  Name: Left
   Type: 1
+  QuadSample: {fileID: 11400000, guid: fff60aaad246744f78bd1e0eb6b7d9f5, type: 2}
   HeightTier: 0
-  PatternTier: 0
   Color: {r: 0, g: 0, b: 0, a: 0}

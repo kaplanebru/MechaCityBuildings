@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class MapOrganizer
 {
-    public static HashSet<SlotData> ToSlotData(HashSet<Vector2Int> map, Dictionary<QuadSample, int> quadSamplesAndAmounts)
+    public static HashSet<SlotData> ToSlotData(HashSet<Vector2Int> map, Dictionary<StructureTypeData, int> structureTypeDatasAndAmounts)
     {
         List<Vector2Int> mapToAlter = new();
         mapToAlter.AddRange(map);
         Shuffle(mapToAlter);
         
-        var randomQuads = QuadSearcher.SearchQuads(quadSamplesAndAmounts, mapToAlter.ToHashSet());
+        var randomQuads = QuadSearcher.SearchQuads(structureTypeDatasAndAmounts, mapToAlter.ToHashSet());
         var slotDatas = SlotDataCreator.CreateCellDataFromQuads(randomQuads, map);
         
         //EliminateQuadCoordsFromSinglePoints(randomQuads, mapToAlter);

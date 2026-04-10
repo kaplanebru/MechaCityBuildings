@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Android;
 
 public class QuadSearcher
 {
@@ -18,19 +19,26 @@ public class QuadSearcher
         return sample;
     }
     
-    //todo: tek tip quad için geçerli
     public static QuadOnMap[] SearchQuads(
-        Dictionary<QuadSample, int> quadSamplesAndAmounts,
+        Dictionary<StructureTypeData, int> typeInfosAndAmounts,
         HashSet<Vector2Int> map)
     {
         List<QuadOnMap> requestedQuads = new();
         List<Vector2Int> runningMap = new();
         runningMap.AddRange(map);
+        SlotTypePossibilityHandler possibilityHandler = new();
 
-        var quadSamples = quadSamplesAndAmounts.Keys.ToArray();
-        quadSamples = quadSamples.OrderByDescending(qs => qs.data.GetPointAmount).ToArray();
+        var typeInfos = typeInfosAndAmounts.Keys.ToArray();
+        
+        possibilityHandler.Initiate(
+            map, 
+            typeInfos.Select(k=>k.Type).ToHashSet());
+        
 
-        foreach (var quadSample in quadSamples)
+        typeInfos = typeInfos.OrderByDescending(
+            ti => ti.QuadSample.data.GetPointAmount).ToArray();
+
+        foreach (var typeInfo in typeInfos)
         {
             int index = runningMap.Count - 1;
             while (index >= 0)
@@ -39,18 +47,20 @@ public class QuadSearcher
                 int quadCounter = 0;
                 
                 var tempQuadPoints = 
-                    QuadProjector.GetQuadOnGivenPoint(examinedPoint, quadSample).ToHashSet();
+                    QuadProjector.GetQuadOnGivenPoint(examinedPoint, typeInfo.QuadSample).ToHashSet();
                 
-                if (QuadIsOnMap(tempQuadPoints, runningMap.ToHashSet()))
+                if (QuadIsOnMap(tempQuadPoints, runningMap.ToHashSet())) //T4
                 {
-                    var newQuad = CreateQuadOnMap(examinedPoint, quadSample, tempQuadPoints.ToArray());
+                    //TODO: check convenience in type
+                    
+                    var newQuad = CreateQuadOnMap(examinedPoint, typeInfo.QuadSample, tempQuadPoints.ToArray());
                     requestedQuads.Add(newQuad);
 
                     runningMap.RemoveAll(coord => newQuad.data.Coords.Contains(coord));
                     index -= newQuad.data.Coords.Length;
                     
                     quadCounter++;
-                    if (quadCounter >= quadSamplesAndAmounts[quadSample]) break;
+                    if (quadCounter >= typeInfosAndAmounts[typeInfo]) break;
                 }
                 else
                 {
@@ -83,5 +93,3 @@ public class QuadSearcher
         return true;
     }
 }
-
-//todo: cellData'ya center ekle, points List ekle. Cell yerine slot da diyebiliriz belki

@@ -17,7 +17,7 @@ public class CityDrawerUnits
 [ExecuteInEditMode]
 public class CityDrawer : MonoBehaviour
 {
-    public QuadSample[] quadSamples;
+    public StructureTypeData[] structureTypeDatas; //TEMP: test
     public CityDrawerUnits units;
     public Action<int, HashSet<SlotData>> OnSlotsReady;
 
@@ -49,10 +49,10 @@ public class CityDrawer : MonoBehaviour
         
         //var cellDataSet = SlotDataCreator.CreateCellDataFromSinglePoints(cells.ToHashSet(), units.gridData.MinBuildingCellSize); //units.gridSystem.cellRecorderCache
         
-        Dictionary<QuadSample, int> quadSamplesAndAmounts = new Dictionary<QuadSample, int>();
-        
-        quadSamplesAndAmounts.Add(quadSamples[0], int.MaxValue);
-        quadSamplesAndAmounts.Add(quadSamples[1], 2); //max amount diye yazarız. max-min de verilebilir
+        //TEMPORARY: TEST
+        Dictionary<StructureTypeData, int> quadSamplesAndAmounts = new ();
+        quadSamplesAndAmounts.Add(structureTypeDatas[0], int.MaxValue);
+        quadSamplesAndAmounts.Add(structureTypeDatas[1], 2); //averageFrequency
         var cellDataSet = MapOrganizer.ToSlotData(units.gridSystem.cellRecorderCache.ToHashSet(), quadSamplesAndAmounts);
         
         OnSlotsReady?.Invoke(activeFloor.Index, cellDataSet);

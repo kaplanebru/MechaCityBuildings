@@ -39,36 +39,67 @@ public class SlotTypePossibilityHandler
         }
     }
 
-    public StructureType GetHighestPossibilityOnQuad(Vector2Int[] slotCells)
+    public bool IsTypeConvenient(StructureType givenType, Vector2Int[] coords)
     {
-        if (slotCells.Length == 1)
+        if (coords.Length == 1)
         {
-            var possibilities = _possibleTypesOfSlot[slotCells[0]];
+            var possibilities = _possibleTypesOfSlot[coords[0]];
+            return possibilities.Contains(givenType);
+        }
+        
+        Dictionary<StructureType, int> frequencyInCoords = new();
+        foreach (var coord in coords)
+        {
+            foreach (var type in _possibleTypesOfSlot[coord])
+            {
+                if (frequencyInCoords.TryGetValue(type, out int count))
+                    frequencyInCoords[type] = count + 1;
+                else
+                    frequencyInCoords[type] = 1;
+            }
+        }
+        int maxCount = frequencyInCoords.Values.Max();
+        
+        var topCandidates = frequencyInCoords
+            .Where(kvp => kvp.Value == maxCount)
+            .Select(kvp => kvp.Key)
+            .ToList();
+        
+        return topCandidates.Contains(givenType);
+        //todo later: or yanyana olabilirler listesindeyse contains'de olmasa da olur
+
+    }
+    
+    public StructureType GetHighestPossibilityOnQuad(Vector2Int[] coords)
+    {
+        if (coords.Length == 1)
+        {
+            var possibilities = _possibleTypesOfSlot[coords[0]];
             return possibilities.ElementAt(Random.Range(0, possibilities.Count));
         }
         
-        Dictionary<StructureType, int> frequencyInQuadCells = new();
-        foreach (var slotCell in slotCells)
+        Dictionary<StructureType, int> frequencyInCoords = new();
+        foreach (var coord in coords)
         {
-            foreach (var type in _possibleTypesOfSlot[slotCell])
+            foreach (var type in _possibleTypesOfSlot[coord])
             {
-                if (frequencyInQuadCells.TryGetValue(type, out int count))
+                if (frequencyInCoords.TryGetValue(type, out int count))
                 {
-                    frequencyInQuadCells[type] = count + 1;
+                    frequencyInCoords[type] = count + 1;
                 }
                 else
                 {
-                    frequencyInQuadCells[type] = 1;
+                    frequencyInCoords[type] = 1;
                 }
             }
         }
         
-        int maxCount = frequencyInQuadCells.Values.Max();
+        int maxCount = frequencyInCoords.Values.Max();
         
         if (maxCount == 0)
-            throw new InvalidOperationException("No possible types found for given cells.");
+            throw new InvalidOperationException("No possible types found for given coords.");
 
-        var topCandidates = frequencyInQuadCells
+        var topCandidates = frequencyInCoords
             .Where(kvp => kvp.Value == maxCount)
             .Select(kvp => kvp.Key)
             .ToList();
