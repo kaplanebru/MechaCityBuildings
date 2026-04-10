@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class FloorResidentsData
 {
-    public List<CellData> OccupiedCells = new();
+    public List<SlotData> Slots = new();
     public List<Structure> Structures = new();
 }
 

@@ -15,7 +15,7 @@ public enum StructureType
 [ExecuteInEditMode]
 public class Installer : MonoBehaviour
 {
-    private Dictionary<StructureType, List<CellData>> _cellDatasByType = new();
+    private Dictionary<StructureType, List<SlotData>> _slotDatasByType = new();
     [SerializeField] private GridData gridData;
     public StructurePool[] pools;
     
@@ -41,18 +41,18 @@ public class Installer : MonoBehaviour
     private Structure[]  InstallStructuresFromPool(StructurePool pool, Transform floorRoot)
     {
         RestorePoolIfNeeded(pool);
-        _cellDatasByType.TryGetValue(pool.poolData.StructureType, out List<CellData> cellDataSet);
+        _slotDatasByType.TryGetValue(pool.poolData.StructureType, out List<SlotData> slotDatas);
 
-        if (cellDataSet == null) return Array.Empty<Structure>();
+        if (slotDatas == null) return Array.Empty<Structure>();
 
-        if (pool.poolData.PoolSize < cellDataSet.Count)
+        if (pool.poolData.PoolSize < slotDatas.Count)
         {
             Debug.LogWarning("Pool size is too small for " + pool.poolData.StructureType);
             return Array.Empty<Structure>();
         }
 
         var structuresByType = InstallerHelper.Install(
-            cellDataSet.ToArray(), 
+            slotDatas.ToArray(), 
             floorRoot, 
             pool,
             gridData);
@@ -65,14 +65,14 @@ public class Installer : MonoBehaviour
     private void ClassifyPlacementDatasOnFloor(FloorResidentsData floorResidentsData)
     {
         floorToInstall = floorResidentsData;
-        if (floorToInstall.OccupiedCells.Count == 0)
+        if (floorToInstall.Slots.Count == 0)
         {
             Debug.Log("No placement dataset found");
             return;
         }
 
-        _cellDatasByType.Clear();
-        _cellDatasByType = floorToInstall.OccupiedCells
+        _slotDatasByType.Clear();
+        _slotDatasByType = floorToInstall.Slots
             .GroupBy(p => p.GetStructureType())
             .ToDictionary(g =>
                 g.Key, g => g.ToList());

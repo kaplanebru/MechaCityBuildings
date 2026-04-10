@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class InstallerHelper
 {
-    public static Structure[] Install(CellData[] cellDataSet, Transform parent, StructurePool pool, GridData gridData)
+    public static Structure[] Install(SlotData[] cellDataSet, Transform parent, StructurePool pool, GridData gridData)
     {
         List<Structure> structures = new List<Structure>();
         foreach (var cellData in cellDataSet)
@@ -14,7 +14,7 @@ public static class InstallerHelper
             structure.transform.SetParent(parent);
 
             Vector3 worldPos = CellConverter.GetWorldPositionFromCellCenter(cellData, gridData);
-                //GetWorldPositionCenterFromCellIndex(cellData.CellIndex.x, cellData.CellIndex.y, gridData);
+                //GetWorldPositionCenterFromCellIndex(cellData.Cells.x, cellData.Cells.y, gridData);
             
             structure.transform.localPosition = worldPos;
             structure.transform.localRotation = cellData.Rotation;
@@ -31,9 +31,10 @@ public static class InstallerHelper
             var cellIndex = CellConverter.
                 GetCellIndexFromWorldPosition(structure.transform.position, gridData);
             
-            structure.cellMetadata = cellIndex;
+            structure.slotMetadata = cellIndex;
             
             //todo: ya da structure positionunu convert ederiz direkt
+            //todo: cells[0]
         }
     }
 }

@@ -19,7 +19,7 @@ public class CityDrawer : MonoBehaviour
 {
     public QuadSample[] quadSamples;
     public CityDrawerUnits units;
-    public Action<int, HashSet<CellData>> OnCellsReady;
+    public Action<int, HashSet<SlotData>> OnSlotsReady;
 
      public void ExecutePainting(Event e) //todo: to call with editor update that triggered by Start Painting Button
     {
@@ -45,17 +45,17 @@ public class CityDrawer : MonoBehaviour
 
     public void ConstructionRequest()
     {
-        var activeFloor = units.floorDatabase.GetActiveFloorData(); //register as CellData
+        var activeFloor = units.floorDatabase.GetActiveFloorData(); //register as SlotData
         
-        //var cellDataSet = CellDataCreator.CreateCellDataFromSinglePoints(cells.ToHashSet(), units.gridData.MinBuildingCellSize); //units.gridSystem.cellRecorderCache
+        //var cellDataSet = SlotDataCreator.CreateCellDataFromSinglePoints(cells.ToHashSet(), units.gridData.MinBuildingCellSize); //units.gridSystem.cellRecorderCache
         
         Dictionary<QuadSample, int> quadSamplesAndAmounts = new Dictionary<QuadSample, int>();
         
         quadSamplesAndAmounts.Add(quadSamples[0], int.MaxValue);
         quadSamplesAndAmounts.Add(quadSamples[1], 2); //max amount diye yazarız. max-min de verilebilir
-        var cellDataSet = MapOrganizer.ToCellData(units.gridSystem.cellRecorderCache.ToHashSet(), quadSamplesAndAmounts);
+        var cellDataSet = MapOrganizer.ToSlotData(units.gridSystem.cellRecorderCache.ToHashSet(), quadSamplesAndAmounts);
         
-        OnCellsReady?.Invoke(activeFloor.Index, cellDataSet);
+        OnSlotsReady?.Invoke(activeFloor.Index, cellDataSet);
         GridMasker.ResetSelectedCells(units.gridSystem.overlayPainter, units.gridSystem.gridData);
 
     }

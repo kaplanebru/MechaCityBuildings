@@ -7,19 +7,19 @@ using UnityEngine;
 public class ArrangementData
 {
     public string Name;
-    public Dictionary<StructureType, List<CellData>> CategorizedBuildings { get; private set; } = new();
-    public ArrangementData(string name, CellData[] savedBuildings)
+    public Dictionary<StructureType, List<SlotData>> CategorizedBuildings { get; private set; } = new();
+    public ArrangementData(string name, SlotData[] savedBuildings)
     {
         Name = name;
         CategorizeBuildings(savedBuildings);
     }
 
-    private void CategorizeBuildings(CellData[] savedBuildings)
+    private void CategorizeBuildings(SlotData[] savedBuildings)
     {
         foreach (var savedBuilding in savedBuildings)
         {
             if(!CategorizedBuildings.ContainsKey(savedBuilding.GetStructureType()))
-                CategorizedBuildings.Add(savedBuilding.GetStructureType(), new List<CellData>());
+                CategorizedBuildings.Add(savedBuilding.GetStructureType(), new List<SlotData>());
             
             var buildingGroup = CategorizedBuildings[savedBuilding.GetStructureType()];
             buildingGroup.Add(savedBuilding);
@@ -38,7 +38,7 @@ public class ArrangementCache
         return arrangements.ContainsKey(name);
     }
 
-    public void Add(string name, CellData[] savedBuildings)
+    public void Add(string name, SlotData[] savedBuildings)
     {
         if (IsNameTaken(name))
         {

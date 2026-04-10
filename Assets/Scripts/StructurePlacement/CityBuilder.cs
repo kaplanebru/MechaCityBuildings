@@ -18,20 +18,20 @@ public class CityBuilder : MonoBehaviour
     
     private void OnEnable()
     {
-        cityDrawer.OnCellsReady += RegisterFloorResidentsAndInstall;
+        cityDrawer.OnSlotsReady += RegisterFloorResidentsAndInstall;
         floorDb.OnFloorClearRequest += ClearResidentsOnFloor;
         floorDb.OnFloorCreated += AddFloorResidentsData;
         floorDb.OnLastFloorRemoved += RemoveLastFloorResidentsData;
     }
     private void OnDisable()
     {
-        cityDrawer.OnCellsReady -= RegisterFloorResidentsAndInstall;
+        cityDrawer.OnSlotsReady -= RegisterFloorResidentsAndInstall;
         floorDb.OnFloorClearRequest -= ClearResidentsOnFloor;
         floorDb.OnFloorCreated -= AddFloorResidentsData;
         floorDb.OnLastFloorRemoved -= RemoveLastFloorResidentsData;
     }
 
-    private void RegisterFloorResidentsAndInstall(int floorIndex, HashSet<CellData> cells)
+    private void RegisterFloorResidentsAndInstall(int floorIndex, HashSet<SlotData> cells)
     {
 #if UNITY_EDITOR
         Undo.RecordObject(floorResidentsDb,"Installment From Cell");

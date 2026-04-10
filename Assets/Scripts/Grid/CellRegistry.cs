@@ -7,9 +7,9 @@ using UnityEngine;
 
 public class CellRegistry
 { 
-    public static HashSet<CellData> GetBoundaries(HashSet<CellData> cellDataSet)
+    public static HashSet<SlotData> GetBoundaries(HashSet<SlotData> cellDataSet)
     {
-        return cellDataSet.Where(cellData => cellData.Type == CellType.Boundary).ToHashSet();
+        return cellDataSet.Where(cellData => cellData.Type == SlotType.Boundary).ToHashSet();
     }
    
 }

@@ -19,10 +19,10 @@ public static class CellConverter
         floorDb.OnDeleteLastFloor -= RestoreBuildingsOnFloor;
     }*/
 
-   public static Vector3 GetWorldPositionFromCellCenter(CellData cellData, GridData gridData)
+   public static Vector3 GetWorldPositionFromCellCenter(SlotData slotData, GridData gridData)
    {
-       float worldX = gridData.OriginWorldTransform.position.x + cellData.Center.x * gridData.MinBuildingCellSize;
-       float worldZ = gridData.OriginWorldTransform.position.z + cellData.Center.y * gridData.MinBuildingCellSize;
+       float worldX = gridData.OriginWorldTransform.position.x + slotData.Center.x * gridData.MinBuildingCellSize;
+       float worldZ = gridData.OriginWorldTransform.position.z + slotData.Center.y * gridData.MinBuildingCellSize;
        
        float worldY = gridData.OriginWorldTransform.position.y;
        return new Vector3(worldX, worldY, worldZ);

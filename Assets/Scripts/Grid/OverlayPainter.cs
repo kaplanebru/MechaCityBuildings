@@ -249,7 +249,7 @@ public sealed class OverlayPainter : MonoBehaviour
     }
 
     /// <summary>
-    /// Call after changing GridData (GridSize, CellSize, OriginWorld).
+    /// Call after changing GridData (GridSize, SlotSize, OriginWorld).
     /// This rebuilds geometry and resets colors.
     /// </summary>
     public void RebuildAll(GridData gridData)

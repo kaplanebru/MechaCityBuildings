@@ -4,24 +4,22 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [Serializable]
-public class CellData
+public class SlotData
 {
-    public Vector2Int CellIndex;
-    public CellType Type;
-    public List<NeighborCellPoint> Neighbors = new();
+    public Vector2Int[] Cells;
+    public SlotType Type;
+    public StructureType StructureType; 
+    public List<NeighborCell> Neighbors = new();
+    public Vector2 Center;
+    
     public Vector2Int OutwardNormal = Vector2Int.zero;
     public Quaternion Rotation = Quaternion.Euler(Vector3.zero);//Quaternion.identity;
-    
-    public StructureType StructureType; 
     public int OrderIndex;
-    public Vector2 Center;
-    public Vector2Int CellSize = new (1, 1);
+    public Vector2Int SlotSize = new (1, 1);
 
-    public CellData(Vector2Int cellIndex)
+    public SlotData(Vector2Int[] cells)
     {
-        CellIndex = cellIndex;
-        Center = CellIndex + Vector2.one/2f;//new Vector2(CellIndex.x + 0.5f, CellIndex.y + 0.5f);
-                                            ////todo: for oonly 1-1
+        Cells = cells;
     }
 
     public StructureType GetStructureType() => StructureType;
@@ -33,19 +31,19 @@ public class CellData
         //4=çevresi kadar neighbor'u olur max
 
         Type = Neighbors.Count < 4
-            ? CellType.Boundary
-            : CellType.Regular;
+            ? SlotType.Boundary
+            : SlotType.Regular;
     }
 
-    public void SetNeighbors(
+    /*public void SetNeighbors(
         int cellUnit,
         HashSet<Vector2Int> allCells)
     {
         Vector2Int[] pendingNeighbors = new Vector2Int[4];
-        pendingNeighbors[0] = CellIndex + Vector2Int.right * cellUnit; //east
-        pendingNeighbors[1] = CellIndex + Vector2Int.up * cellUnit; //north
-        pendingNeighbors[2] = CellIndex + Vector2Int.left * cellUnit; //west
-        pendingNeighbors[3] = CellIndex + Vector2Int.down * cellUnit; //south
+        pendingNeighbors[0] = Cells + Vector2Int.right * cellUnit; //east
+        pendingNeighbors[1] = Cells + Vector2Int.up * cellUnit; //north
+        pendingNeighbors[2] = Cells + Vector2Int.left * cellUnit; //west
+        pendingNeighbors[3] = Cells + Vector2Int.down * cellUnit; //south
 
 
         for (var i = 0; i < pendingNeighbors.Length; i++)
@@ -54,7 +52,7 @@ public class CellData
 
             if(allCells.Contains(pendingNeighbor))
             {
-                Neighbors.Add(new NeighborCellPoint(pendingNeighbor));
+                Neighbors.Add(new NeighborCell(pendingNeighbor));
             }
             else
             {
@@ -63,7 +61,7 @@ public class CellData
         }
 
         SetType();
-    }
+    }*/
 
     private Vector2Int GetNormalByDirection(int i)
     {
@@ -82,7 +80,7 @@ public class CellData
     }
 }
 
-public enum CellType
+public enum SlotType
 {
     Regular,
     Boundary,

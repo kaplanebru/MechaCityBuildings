@@ -35,8 +35,6 @@ public class QuadSearcher
             int index = runningMap.Count - 1;
             while (index >= 0)
             {
-                Debug.Log(index);
-
                 var examinedPoint = runningMap[index];
                 int quadCounter = 0;
                 

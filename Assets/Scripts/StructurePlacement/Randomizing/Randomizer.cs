@@ -13,10 +13,10 @@ public class Randomizer : MonoBehaviour
     private CellOrderRegulator _orderRegulator;
     private Dictionary<StructureType, PendingPlacements> _pendingPlacements = new();
     
-    public void OrderCellsOnFloor(HashSet<CellData> cellDatas, FloorResidentsData floorResidentsData)
+    public void OrderCellsOnFloor(HashSet<SlotData> cellDatas, FloorResidentsData floorResidentsData)
     {
         _orderRegulator = new CellOrderRegulator(cityData.HeightGap);
-       floorResidentsData.OccupiedCells = 
+       floorResidentsData.Slots = 
             _orderRegulator.GetRegulatedPlacements(cellDatas).ToList();
     }
     
@@ -54,7 +54,7 @@ public class Randomizer : MonoBehaviour
     {
         FrequencyData[] frequencyDatas = cityData.RandomizerDataSet.Select(r => r.FrequencyData).ToArray();
         FrequencyToAmountConverter.SetAmountsByRatio
-            (frequencyDatas, floorResidentsData.OccupiedCells.Count);
+            (frequencyDatas, floorResidentsData.Slots.Count);
     }
 
    
@@ -66,7 +66,7 @@ public class Randomizer : MonoBehaviour
         _pendingPlacements = _pendingPlacements.Where(kvp => kvp.Value.Amount != 0)
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-        var cellDataSet = floorResidentsData.OccupiedCells;
+        var cellDataSet = floorResidentsData.Slots;
         foreach (var placementData in cellDataSet)
         {
             if (_pendingPlacements.Count == 0)

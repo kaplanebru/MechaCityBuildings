@@ -11,9 +11,9 @@ public class FloorResidentsDatabase : MonoBehaviour
 
     public FloorResidentsData GetFloor(int floorIndex) => floorResidents[floorIndex];
 
-    public void RegisterCells(int floorIndex, List<CellData> occupiedCells)
+    public void RegisterCells(int floorIndex, List<SlotData> slots)
     {
-        GetFloor(floorIndex).OccupiedCells = occupiedCells.ToList();
+        GetFloor(floorIndex).Slots = slots.ToList();
     }
 
     public void AddFloorResidentsData()
@@ -25,7 +25,7 @@ public class FloorResidentsDatabase : MonoBehaviour
     {
         var floorResidentsData = floorResidents[floorIndex];
 
-        floorResidentsData.OccupiedCells.Clear();
+        floorResidentsData.Slots.Clear();
 
         HashSet<Structure> tempStructures = new(floorResidentsData.Structures);
         floorResidentsData.Structures.Clear();
@@ -50,8 +50,8 @@ public class FloorResidentsDatabase : MonoBehaviour
         if (floorDb.TryGetLowerFloorData(activeFloorIndex, out var lowerFloorData))
         {
             intersectingBuildings = FloorIntersectionMasker.GetIntersectionsUnderFloor(
-                GetFloor(activeFloorIndex).OccupiedCells.Select(cd=>cd.CellIndex).ToHashSet(),
-                GetFloor(lowerFloorData.Index).OccupiedCells.Select(cd=>cd.CellIndex).ToHashSet(),
+                GetFloor(activeFloorIndex).Slots.SelectMany(cd=>cd.Cells).ToHashSet(),
+                GetFloor(lowerFloorData.Index).Slots.SelectMany(cd=>cd.Cells).ToHashSet(),
                 GetStructuresByCell(structuresOnFloor) //placementFloors[floorIndex].Structures;
             );
             return true;
@@ -67,7 +67,7 @@ public class FloorResidentsDatabase : MonoBehaviour
 
         foreach (var structure in structures)
         {
-            structuresByCell.TryAdd(structure.cellMetadata, structure);
+            structuresByCell.TryAdd(structure.slotMetadata, structure);
         }
 
         return structuresByCell;
@@ -75,7 +75,7 @@ public class FloorResidentsDatabase : MonoBehaviour
 
     public void SaveCurrentArrangement(string arrangementName, int floorIndex)
     {
-        arrangementCache.Add(arrangementName, floorResidents[floorIndex].OccupiedCells.ToArray());
+        arrangementCache.Add(arrangementName, floorResidents[floorIndex].Slots.ToArray());
     }
 
 
@@ -87,7 +87,7 @@ public class FloorResidentsDatabase : MonoBehaviour
 
     /*public static void RestoreBuildingsOnFloor(FloorData floorData,GridData gridData)
     {
-        HashSet<Vector2Int> keys = floorData.OccupiedCells.ToHashSet();
+        HashSet<Vector2Int> keys = floorData.Slots.ToHashSet();
         foreach (var key in keys)
         {
             if (floorData.HasStructureOnCell(key, out var item)) continue;
