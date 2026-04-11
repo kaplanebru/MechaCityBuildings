@@ -1,9 +1,5 @@
-using System;
 using UnityEditor;
 using UnityEngine;
-
-
-
 
 [CustomEditor(typeof(Installer), true)]
 [CanEditMultipleObjects]

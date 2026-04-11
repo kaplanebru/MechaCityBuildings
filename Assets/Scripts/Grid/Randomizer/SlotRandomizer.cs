@@ -5,8 +5,9 @@ public class SlotRandomizer : MonoBehaviour
 {
     [SerializeField] private CityData cityData;
     [SerializeField] private StructureTypeDatabase structureTypeDatabase;
+    
 
-    public void MixAndApplyPlacements(FloorResidentsData floorResidentsData) 
+    public void MixAndApplySlots(FloorResidentsData floorResidentsData) 
     {
         ConvertFrequenciesToAmounts(floorResidentsData);
     }

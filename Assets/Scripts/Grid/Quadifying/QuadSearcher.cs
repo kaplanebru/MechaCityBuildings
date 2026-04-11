@@ -21,7 +21,8 @@ public class QuadSearcher
     
     public static QuadOnMap[] SearchQuads(
         Dictionary<StructureTypeData, int> typeInfosAndAmounts,
-        HashSet<Vector2Int> map)
+        HashSet<Vector2Int> map,
+        Dictionary<StructureType, StructureType[]> adjacencyPossibilities)
     {
         List<QuadOnMap> requestedQuads = new();
         List<Vector2Int> runningMap = new();
@@ -33,7 +34,7 @@ public class QuadSearcher
         
         typeInfos = typeInfos.OrderByDescending(ti => ti.QuadSample.data.GetPointAmount).ToArray();
 
-        foreach (var typeInfo in typeInfos)
+        foreach (var typeData in typeInfos)
         {
             int index = runningMap.Count - 1;
             while (index >= 0)
@@ -41,11 +42,11 @@ public class QuadSearcher
                 var examinedPoint = runningMap[index];
                
                 var tempQuadPoints = 
-                    QuadProjector.GetQuadOnGivenPoint(examinedPoint, typeInfo.QuadSample).ToHashSet();
+                    QuadProjector.GetQuadOnGivenPoint(examinedPoint, typeData.QuadSample).ToHashSet();
                 
                 if (QuadIsOnMap(tempQuadPoints, runningMap.ToHashSet()))
                 {
-                    if (!possibilityHandler.IsTypeConvenient(typeInfo.Type, tempQuadPoints.ToArray()))
+                    if (!possibilityHandler.IsTypeConvenient(typeData.Type, tempQuadPoints.ToArray(), adjacencyPossibilities))
                     {
                         index--;
                         continue;
@@ -53,19 +54,19 @@ public class QuadSearcher
                     
                     var newQuad = CreateQuadOnMap(
                         examinedPoint,
-                        typeInfo.QuadSample, 
-                        tempQuadPoints.ToArray()); //TODO.BU TYPELAR possibiliyy holderda STORE EDİLECEK QUADDA DEPİL!!!
+                        typeData.QuadSample, 
+                        tempQuadPoints.ToArray()); 
                     
-                    if(typeInfo.QuadSample.data.GetPointAmount == 4)
+                    if(typeData.QuadSample.data.GetPointAmount == 4)
                         Debug.Log("big quad");
                     
-                    possibilityHandler.UpdateNeighbourPossibilities(newQuad, typeInfo.Type);
+                    possibilityHandler.UpdateNeighbourPossibilities(newQuad, typeData.Type);
                     requestedQuads.Add(newQuad);
                     runningMap.RemoveAll(coord => newQuad.data.Coords.Contains(coord));
                     index -= newQuad.data.Coords.Length;
                     
-                     typeInfosAndAmounts[typeInfo]--;
-                     if (typeInfosAndAmounts[typeInfo] <= 0) break;
+                     typeInfosAndAmounts[typeData]--;
+                     if (typeInfosAndAmounts[typeData] <= 0) break;
                 }
                 else
                 {

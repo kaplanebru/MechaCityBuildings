@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,7 +13,10 @@ public class CityBuilder : MonoBehaviour
     public Installer installer;
     public FloorResidentsDatabase floorResidentsDb;
     public FloorDatabase floorDb;
-    [SerializeField] private CityDrawer cityDrawer;
+    public CityDrawer cityDrawer;
+    
+    
+
     
     private void OnEnable()
     {

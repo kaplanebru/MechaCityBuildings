@@ -9,6 +9,7 @@ public class CityBuilderEditor : Editor
     private CityBuilder t;
     private ArrangementEditorHelper arrangementHelper = new();
     public SavedArrangements savedArrangements;
+
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
@@ -48,4 +49,6 @@ public class CityBuilderEditor : Editor
         if (arrangementHelper == null)
             arrangementHelper = new ArrangementEditorHelper();
     }
+
+   
 }

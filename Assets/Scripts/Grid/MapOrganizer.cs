@@ -4,22 +4,27 @@ using UnityEngine;
 
 public class MapOrganizer
 {
-    public static HashSet<SlotData> ToSlotData(HashSet<Vector2Int> map, Dictionary<StructureTypeData, int> structureTypeDatasAndAmounts)
+    public static HashSet<SlotData> ToSlotData(
+        HashSet<Vector2Int> map,
+        Dictionary<StructureTypeData, int> structureTypeDatasAndAmounts,
+        Dictionary<StructureType, StructureType[]> adjacencyPossibilities)
     {
         List<Vector2Int> mapToAlter = new();
         mapToAlter.AddRange(map);
         Shuffle(mapToAlter);
-        
-        var randomQuads = QuadSearcher.SearchQuads(structureTypeDatasAndAmounts, mapToAlter.ToHashSet());
-        var slotDatas = SlotDataCreator.CreateCellDataFromQuads(randomQuads, map);
-        
+
+        var randomQuads = QuadSearcher.SearchQuads(
+            structureTypeDatasAndAmounts,
+            mapToAlter.ToHashSet(),
+            adjacencyPossibilities);
+        var slotDatas = SlotCreator.CreateCellDataFromQuads(randomQuads, map);
+
         //EliminateQuadCoordsFromSinglePoints(randomQuads, mapToAlter);
         //var singleCellDatas = SlotDataCreator.CreateCellDataFromSinglePoints(mapToAlter.ToHashSet(), map.ToHashSet(), 1);
         //quadCellDatas.UnionWith(singleCellDatas);
         return slotDatas;
     }
 
-    
 
     private static void EliminateQuadCoordsFromSinglePoints(QuadOnMap[] randomQuads, List<Vector2Int> singlePoints)
     {

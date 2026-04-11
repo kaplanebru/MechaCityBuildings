@@ -40,12 +40,12 @@ public class SlotTypePossibilityHandler
         }
     }
 
-    public bool IsTypeConvenient(StructureType givenType, Vector2Int[] coords)
+    public bool IsTypeConvenient(StructureType givenType, Vector2Int[] coords, Dictionary<StructureType, StructureType[]> adjacencyPossibilities)
     {
         if (coords.Length == 1)
         {
             var possibilities = _possibleTypesOfSlot[coords[0]];
-            return possibilities.Contains(givenType) || givenType == StructureType.RightBatiment;
+            return possibilities.Contains(givenType) || adjacencyPossibilities[givenType].Contains(givenType);
             //todo: || sonrası test amaçlı. yanyana gelebilenler olarak eleriz daha sonra
         }
         

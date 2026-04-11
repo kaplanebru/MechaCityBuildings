@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -100,6 +101,7 @@ public class CityDrawerEditor : Editor
                 ClearActiveFloor();
                 userState = UserStates.Drawing;
             }
+            
         }
 
         using (new EditorGUILayout.HorizontalScope())
@@ -115,6 +117,8 @@ public class CityDrawerEditor : Editor
         }
 
         EditorGUILayout.Space(8);
+
+        DrawStructureDispositionMatrix();
 
 
         EditorGUILayout.Space(8);
@@ -152,6 +156,21 @@ public class CityDrawerEditor : Editor
         // Debug için (opsiyonel)
         if (e.type == EventType.MouseDown || e.type == EventType.MouseDrag)
             SceneView.RepaintAll();
+    }
+    
+    public StructureTypeAdjacencyMatrix matrix;
+
+    private void DrawStructureDispositionMatrix()
+    {
+        CacheTargetIfNeeded();
+        if (matrix == null)
+        {
+            Debug.Log("matrix is null ");
+            matrix = new();
+        }
+
+        t.InitiateMatrixIfNeeded();
+        matrix.DisposeStructureTypes(t.structureTypeDatas.Select(s=>s.Type).ToArray(), t.adjacency);
     }
 
     private void CacheTargetIfNeeded()
