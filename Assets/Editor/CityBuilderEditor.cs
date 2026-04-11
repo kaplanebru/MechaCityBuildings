@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,12 +10,15 @@ public class CityBuilderEditor : Editor
     private CityBuilder t;
     private ArrangementEditorHelper arrangementHelper = new();
     public SavedArrangements savedArrangements;
+    public StructureTypeAdjacencyMatrix matrix;
+
 
     public override void OnInspectorGUI()
     {
-        DrawDefaultInspector();
-
+        DrawStructureDispositionMatrix();
+        
         EditorGUILayout.Space(8);
+        
         if (GUILayout.Button("Randomize And Apply"))
         {
             CacheTarget();
@@ -36,6 +40,9 @@ public class CityBuilderEditor : Editor
             CacheArrangementHelper();
             arrangementHelper.ApplyOrRemoveArrangement(savedArrangements);
         }
+        
+        EditorGUILayout.Space(8);
+        DrawDefaultInspector();
     }
 
     private void CacheTarget()
@@ -48,6 +55,19 @@ public class CityBuilderEditor : Editor
     {
         if (arrangementHelper == null)
             arrangementHelper = new ArrangementEditorHelper();
+    }
+    
+    private void DrawStructureDispositionMatrix()
+    {
+        CacheTarget();
+        if (matrix == null)
+        {
+            Debug.Log("matrix is null ");
+            matrix = new();
+        }
+
+        t.InitiateMatrixIfNeeded();
+        matrix.DisposeStructureTypes(t.mapOrganizer.structureTypeDatas.Select(s=>s.Type).ToArray(), t.mapOrganizer.adjacency);
     }
 
    

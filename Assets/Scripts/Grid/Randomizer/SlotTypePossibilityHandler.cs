@@ -6,53 +6,57 @@ using Random = UnityEngine.Random;
 
 public class SlotTypePossibilityHandler
 {
-    private Dictionary<Vector2Int, HashSet<StructureType>> _possibleTypesOfSlot = new();
-    
-    public void Initiate(HashSet<Vector2Int> cells, HashSet<StructureType> allTypesInQuestion)
+    private Dictionary<Vector2Int, HashSet<StructureType>> _possibleTypesBySlots = new();
+    private Dictionary<StructureType, StructureType[]> _adjacencyImpossibilities = new();
+
+    public SlotTypePossibilityHandler( HashSet<Vector2Int> cells,
+        HashSet<StructureType> allTypesInQuestion,
+        Dictionary<StructureType, StructureType[]> adjacencyImpossibilities)
     {
-        _possibleTypesOfSlot = cells.ToDictionary(
+        _possibleTypesBySlots = cells.ToDictionary(
             cell => cell,
             cell => new HashSet<StructureType>(allTypesInQuestion)
         );
+        
+        _adjacencyImpossibilities = adjacencyImpossibilities;
     }
 
     public void UpdateNeighbourPossibilities(QuadOnMap quadOnMap, StructureType currentType)
     {
         foreach (var coord in quadOnMap.data.Coords)
         {
-            _possibleTypesOfSlot.Remove(coord);
+            _possibleTypesBySlots.Remove(coord);
         }
 
         foreach (var neighbor in quadOnMap.data.Neighbors)
         {
-            EliminatePossibilitiesOfGivenCell(neighbor, currentType);
+            EliminatePossibleStructuresOfGivenCell(neighbor, _adjacencyImpossibilities[currentType]);
         }
     }
 
-    private void EliminatePossibilitiesOfGivenCell(Vector2Int cell, params StructureType[] possibilitiesToEliminate)
+    private void EliminatePossibleStructuresOfGivenCell(Vector2Int cell, StructureType[] structureTypesToEliminate)
     {
-        if (_possibleTypesOfSlot.TryGetValue(cell, out var possibleTypes))
+        if (_possibleTypesBySlots.TryGetValue(cell, out var possibleStructureTypes))
         {
-            foreach (var type in possibilitiesToEliminate)
+            foreach (var type in structureTypesToEliminate)
             {
-                possibleTypes.Remove(type);
+                possibleStructureTypes.Remove(type);
             }
         }
     }
 
-    public bool IsTypeConvenient(StructureType givenType, Vector2Int[] coords, Dictionary<StructureType, StructureType[]> adjacencyPossibilities)
+    public bool IsTypeConvenient(StructureType givenType, Vector2Int[] coords)
     {
         if (coords.Length == 1)
         {
-            var possibilities = _possibleTypesOfSlot[coords[0]];
-            return possibilities.Contains(givenType) || adjacencyPossibilities[givenType].Contains(givenType);
-            //todo: || sonrası test amaçlı. yanyana gelebilenler olarak eleriz daha sonra
+            var possibleStructureTypes = _possibleTypesBySlots[coords[0]];
+            return possibleStructureTypes.Contains(givenType);
         }
         
         Dictionary<StructureType, int> frequencyInCoords = new();
         foreach (var coord in coords)
         {
-            foreach (var type in _possibleTypesOfSlot[coord])
+            foreach (var type in _possibleTypesBySlots[coord])
             {
                 if (frequencyInCoords.TryGetValue(type, out int count))
                     frequencyInCoords[type] = count + 1;
@@ -67,48 +71,7 @@ public class SlotTypePossibilityHandler
             .Select(kvp => kvp.Key)
             .ToList();
         
-        return topCandidates.Contains(givenType) || givenType == StructureType.RightBatiment;
-        //todo later: or yanyana olabilirler listesindeyse contains'de olmasa da olur
-
+        return topCandidates.Contains(givenType); // || givenType == StructureType.RightBatiment;
     }
     
-    public StructureType GetHighestPossibilityOnQuad(Vector2Int[] coords)
-    {
-        if (coords.Length == 1)
-        {
-            var possibilities = _possibleTypesOfSlot[coords[0]];
-            return possibilities.ElementAt(Random.Range(0, possibilities.Count));
-        }
-        
-        Dictionary<StructureType, int> frequencyInCoords = new();
-        foreach (var coord in coords)
-        {
-            foreach (var type in _possibleTypesOfSlot[coord])
-            {
-                if (frequencyInCoords.TryGetValue(type, out int count))
-                {
-                    frequencyInCoords[type] = count + 1;
-                }
-                else
-                {
-                    frequencyInCoords[type] = 1;
-                }
-            }
-        }
-        
-        int maxCount = frequencyInCoords.Values.Max();
-        
-        if (maxCount == 0)
-            throw new InvalidOperationException("No possible types found for given coords.");
-
-        var topCandidates = frequencyInCoords
-            .Where(kvp => kvp.Value == maxCount)
-            .Select(kvp => kvp.Key)
-            .ToList();
-        
-
-       return topCandidates.Count == 1
-            ? topCandidates[0]
-            : topCandidates[Random.Range(0, topCandidates.Count)];
-    }
 }

@@ -11,7 +11,11 @@ public class FloorResidentsDatabase : MonoBehaviour
 
     public FloorResidentsData GetFloor(int floorIndex) => floorResidents[floorIndex];
 
-    public void RegisterCells(int floorIndex, List<SlotData> slots)
+    public void RegisterCells(int floorIndex, List<Vector2Int> cells)
+    {
+        GetFloor(floorIndex).Cells = cells;
+    }
+    public void RegisterSlots(int floorIndex, List<SlotData> slots)
     {
         GetFloor(floorIndex).Slots = slots.ToList();
     }

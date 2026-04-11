@@ -118,9 +118,6 @@ public class CityDrawerEditor : Editor
 
         EditorGUILayout.Space(8);
 
-        DrawStructureDispositionMatrix();
-
-
         EditorGUILayout.Space(8);
         DrawDefaultInspector();
     }
@@ -158,20 +155,6 @@ public class CityDrawerEditor : Editor
             SceneView.RepaintAll();
     }
     
-    public StructureTypeAdjacencyMatrix matrix;
-
-    private void DrawStructureDispositionMatrix()
-    {
-        CacheTargetIfNeeded();
-        if (matrix == null)
-        {
-            Debug.Log("matrix is null ");
-            matrix = new();
-        }
-
-        t.InitiateMatrixIfNeeded();
-        matrix.DisposeStructureTypes(t.structureTypeDatas.Select(s=>s.Type).ToArray(), t.adjacency);
-    }
 
     private void CacheTargetIfNeeded()
     {

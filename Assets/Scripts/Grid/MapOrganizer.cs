@@ -1,40 +1,36 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class MapOrganizer
+[ExecuteInEditMode]
+public class MapOrganizer : MonoBehaviour
 {
-    public static HashSet<SlotData> ToSlotData(
-        HashSet<Vector2Int> map,
-        Dictionary<StructureTypeData, int> structureTypeDatasAndAmounts,
-        Dictionary<StructureType, StructureType[]> adjacencyPossibilities)
+    [HideInInspector] public bool[] adjacency;
+    public StructureTypeData[] structureTypeDatas; //TEMP: test
+
+    public HashSet<SlotData> ToSlotData(HashSet<Vector2Int> map)
     {
         List<Vector2Int> mapToAlter = new();
+        var adjacencyImpossibilities =
+            AdjacencyHelper.GetImpossibleAdjacencyDB(structureTypeDatas.Select(s => s.Type).ToArray(), adjacency);
+
+        //TEMPORARY: TEST
+        Dictionary<StructureTypeData, int> structureTypeDatasAndAmounts = new();
+        structureTypeDatasAndAmounts.Add(structureTypeDatas[0], int.MaxValue);
+        structureTypeDatasAndAmounts.Add(structureTypeDatas[1], 2); //averageFrequency
+
+
         mapToAlter.AddRange(map);
         Shuffle(mapToAlter);
 
         var randomQuads = QuadSearcher.SearchQuads(
             structureTypeDatasAndAmounts,
             mapToAlter.ToHashSet(),
-            adjacencyPossibilities);
-        var slotDatas = SlotCreator.CreateCellDataFromQuads(randomQuads, map);
+            adjacencyImpossibilities);
 
-        //EliminateQuadCoordsFromSinglePoints(randomQuads, mapToAlter);
-        //var singleCellDatas = SlotDataCreator.CreateCellDataFromSinglePoints(mapToAlter.ToHashSet(), map.ToHashSet(), 1);
-        //quadCellDatas.UnionWith(singleCellDatas);
-        return slotDatas;
-    }
-
-
-    private static void EliminateQuadCoordsFromSinglePoints(QuadOnMap[] randomQuads, List<Vector2Int> singlePoints)
-    {
-        foreach (var quad in randomQuads)
-        {
-            foreach (var quadPoint in quad.data.Coords)
-            {
-                singlePoints.Remove(quadPoint);
-            }
-        }
+        return SlotCreator.CreateCellDataFromQuads(randomQuads, map);
     }
 
     public static void Shuffle<T>(IList<T> collection) //T[] //IList

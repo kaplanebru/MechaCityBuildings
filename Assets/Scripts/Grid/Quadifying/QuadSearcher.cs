@@ -5,32 +5,19 @@ using UnityEngine.Android;
 
 public class QuadSearcher
 {
-    public QuadSample[] quadSamples;
-
-    public QuadSample SelectSampleBySize(Vector2Int widthHeight)
-    {
-        var sample = quadSamples.FirstOrDefault(wh=>wh.data.WidthHeight == widthHeight);
-        
-        if (sample == null)
-        {
-            Debug.LogError($"{nameof(QuadSearcher)} could not find quad sample {widthHeight}");
-            return null;
-        }
-        return sample;
-    }
-    
     public static QuadOnMap[] SearchQuads(
         Dictionary<StructureTypeData, int> typeInfosAndAmounts,
         HashSet<Vector2Int> map,
-        Dictionary<StructureType, StructureType[]> adjacencyPossibilities)
+        Dictionary<StructureType, StructureType[]> adjacencyImpossibilities)
     {
         List<QuadOnMap> requestedQuads = new();
         List<Vector2Int> runningMap = new();
         runningMap.AddRange(map);
         var typeInfos = typeInfosAndAmounts.Keys.ToArray();
 
-        SlotTypePossibilityHandler possibilityHandler = new();
-        possibilityHandler.Initiate(map, typeInfos.Select(k=>k.Type).ToHashSet());
+        SlotTypePossibilityHandler possibilityHandler = new( map, 
+            typeInfos.Select(k=>k.Type).ToHashSet(),
+            adjacencyImpossibilities);
         
         typeInfos = typeInfos.OrderByDescending(ti => ti.QuadSample.data.GetPointAmount).ToArray();
 
@@ -46,7 +33,7 @@ public class QuadSearcher
                 
                 if (QuadIsOnMap(tempQuadPoints, runningMap.ToHashSet()))
                 {
-                    if (!possibilityHandler.IsTypeConvenient(typeData.Type, tempQuadPoints.ToArray(), adjacencyPossibilities))
+                    if (!possibilityHandler.IsTypeConvenient(typeData.Type, tempQuadPoints.ToArray()))
                     {
                         index--;
                         continue;
