@@ -13,15 +13,15 @@ public class QuadSearcher
         List<QuadOnMap> requestedQuads = new();
         List<Vector2Int> runningMap = new();
         runningMap.AddRange(map);
-        var typeInfos = typeInfosAndAmounts.Keys.ToArray();
+        var typeDatas = typeInfosAndAmounts.Keys.ToArray();
 
         SlotTypePossibilityHandler possibilityHandler = new( map, 
-            typeInfos.Select(k=>k.Type).ToHashSet(),
+            typeDatas.Select(k=>k.Type).ToHashSet(),
             adjacencyImpossibilities);
         
-        typeInfos = typeInfos.OrderByDescending(ti => ti.QuadSample.data.GetPointAmount).ToArray();
+        typeDatas = typeDatas.OrderByDescending(ti => ti.QuadSample.data.GetPointAmount).ToArray();
 
-        foreach (var typeData in typeInfos)
+        foreach (var typeData in typeDatas)
         {
             int index = runningMap.Count - 1;
             while (index >= 0)

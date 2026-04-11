@@ -1,14 +1,14 @@
 using UnityEditor;
 using UnityEngine;
 
-public class StructureTypeAdjacencyMatrix : Editor
+public class MatrixMakerStructureTypeAdjacency : Editor
 {
-    private Vector2 tableScroll;
+    private static Vector2 tableScroll;
 
-    private int Idx(int row, int col, int adjacencySize) => row * adjacencySize + col;
+    private static int Idx(int row, int col, int adjacencySize) => row * adjacencySize + col;
 
     // --- Tablo çizimi ---
-    public void DisposeStructureTypes(StructureType[] selectedStructureTypes, bool[] adjacency)
+    public static void DisposeStructureTypes(StructureType[] selectedStructureTypes, bool[] adjacency)
     {
         int compatibilitySize = selectedStructureTypes.Length;
 
@@ -46,7 +46,7 @@ public class StructureTypeAdjacencyMatrix : Editor
         EditorGUILayout.EndHorizontal();
     }
 
-    private void DrawCompatibilityMatrix(int count, StructureType[] selectedStructureTypes, bool[] adjacency)
+    private static void DrawCompatibilityMatrix(int count, StructureType[] selectedStructureTypes, bool[] adjacency)
     {
         int adjacencySize = selectedStructureTypes.Length;
         float labelW = 110f;

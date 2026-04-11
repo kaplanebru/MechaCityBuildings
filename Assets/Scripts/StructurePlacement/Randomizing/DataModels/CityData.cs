@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "CityData", menuName = "CityBuilder/CityData")]
@@ -22,6 +23,8 @@ public class CityData: ScriptableObject
         }
         return QuotaByHeigt;
     }
+    
+    public StructureType[] GetSelectedStructureTypes()=>RandomizerDataSet.Select(t=>t.Type).ToArray();
 }
 
 [Serializable]

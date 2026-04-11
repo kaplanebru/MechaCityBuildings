@@ -10,7 +10,6 @@ public class CityBuilderEditor : Editor
     private CityBuilder t;
     private ArrangementEditorHelper arrangementHelper = new();
     public SavedArrangements savedArrangements;
-    public StructureTypeAdjacencyMatrix matrix;
 
 
     public override void OnInspectorGUI()
@@ -60,14 +59,9 @@ public class CityBuilderEditor : Editor
     private void DrawStructureDispositionMatrix()
     {
         CacheTarget();
-        if (matrix == null)
-        {
-            Debug.Log("matrix is null ");
-            matrix = new();
-        }
-
-        t.InitiateMatrixIfNeeded();
-        matrix.DisposeStructureTypes(t.mapOrganizer.structureTypeDatas.Select(s=>s.Type).ToArray(), t.mapOrganizer.adjacency);
+        
+        t.RestoreMatrixIfNeeded();
+        MatrixMakerStructureTypeAdjacency.DisposeStructureTypes(t.mapOrganizer.cityData.GetSelectedStructureTypes(), t.mapOrganizer.adjacencyMatrixData);
     }
 
    

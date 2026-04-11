@@ -105,12 +105,12 @@ public class CityBuilder : MonoBehaviour
         floorResidentsDb.RemoveLastFloor();
     }
     
-    public void InitiateMatrixIfNeeded()
+    public void RestoreMatrixIfNeeded()
     {
-        int matrixSize = Mathf.RoundToInt(Mathf.Pow(mapOrganizer.structureTypeDatas.Length, 2));
-        if (mapOrganizer.adjacency == null || mapOrganizer.adjacency.Length != matrixSize)
+        int matrixSize = Mathf.RoundToInt(Mathf.Pow(mapOrganizer.GetSelectedStructureTypeAmount(), 2));
+        if (mapOrganizer.adjacencyMatrixData == null || mapOrganizer.adjacencyMatrixData.Length != matrixSize)
         {
-            mapOrganizer.adjacency = new bool[matrixSize];
+            mapOrganizer.adjacencyMatrixData = new bool[matrixSize];
         }
     }
     public void InstallGivenArrangement()
