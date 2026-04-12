@@ -22,6 +22,7 @@ public class SlotCreator
             slotData.Type = quad.data.Neighbors.Length < quad.Perimeter ? SlotType.Boundary : SlotType.Regular;
             slotData.SlotSize = quad.data.WidthHeight;
             slotData.Center = quad.Center;
+            slotData.StructureType = quad.StructureType;
 
             slotDatas.Add(slotData);
         }

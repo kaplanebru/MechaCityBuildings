@@ -5,22 +5,60 @@ using UnityEngine.Android;
 
 public class QuadSearcher
 {
-    public static QuadOnMap[] SearchQuads(
-        Dictionary<StructureTypeData, int> typeInfosAndAmounts,
+
+    private static bool HasEmptyPoints(List<Vector2Int> runningMap, StructureTypeData[] typeDatas, out HashSet<QuadOnMap> quads)
+    {
+        quads = new ();
+        if (runningMap.Count == 0)
+        {
+            Debug.Log("Map exhausted");
+            return false;
+        }
+
+        typeDatas = typeDatas.Reverse().ToArray();
+        List<StructureType> singularQuadTypes = new();
+        QuadSample singularQuadSample = null;
+
+        foreach (var typeData in typeDatas)
+        {
+            if (typeData.QuadSample.data.GetPointAmount == 1)
+            {
+                singularQuadTypes.Add(typeData.Type);
+                singularQuadSample = typeData.QuadSample;
+            }
+        }
+        
+        if(singularQuadSample == null) return false;
+        
+        foreach (var cell in runningMap)
+        {
+            var newQuad = CreateQuadOnMap(
+                cell,
+                singularQuadSample, 
+                new []{cell},
+                singularQuadTypes[Random.Range(0, singularQuadTypes.Count)]); 
+            
+            quads.Add(newQuad);
+        }
+        
+        return true;
+    }
+    
+    public static HashSet<QuadOnMap> SearchQuads(
+        Dictionary<StructureTypeData, int> typeDatasAndAmounts,
         HashSet<Vector2Int> map,
         Dictionary<StructureType, StructureType[]> adjacencyImpossibilities)
     {
-        List<QuadOnMap> requestedQuads = new();
+        HashSet<QuadOnMap> quads = new();
+        
         List<Vector2Int> runningMap = new();
         runningMap.AddRange(map);
-        var typeDatas = typeInfosAndAmounts.Keys.ToArray();
-
-        SlotTypePossibilityHandler possibilityHandler = new( map, 
-            typeDatas.Select(k=>k.Type).ToHashSet(),
-            adjacencyImpossibilities);
         
+        var typeDatas = typeDatasAndAmounts.Keys.ToArray();
         typeDatas = typeDatas.OrderByDescending(ti => ti.QuadSample.data.GetPointAmount).ToArray();
-
+        
+        SlotTypePossibilityHandler possibilityHandler = new(map, adjacencyImpossibilities);
+        
         foreach (var typeData in typeDatas)
         {
             int index = runningMap.Count - 1;
@@ -42,18 +80,17 @@ public class QuadSearcher
                     var newQuad = CreateQuadOnMap(
                         examinedPoint,
                         typeData.QuadSample, 
-                        tempQuadPoints.ToArray()); 
+                        tempQuadPoints.ToArray(),
+                        typeData.Type); 
                     
-                    if(typeData.QuadSample.data.GetPointAmount == 4)
-                        Debug.Log("big quad");
                     
                     possibilityHandler.UpdateNeighbourPossibilities(newQuad, typeData.Type);
-                    requestedQuads.Add(newQuad);
-                    runningMap.RemoveAll(coord => newQuad.data.Coords.Contains(coord));
+                    quads.Add(newQuad);
+                    runningMap.RemoveAll(tempQuadPoints.Contains);//coord => newQuad.data.Coords.Contains(coord));
                     index -= newQuad.data.Coords.Length;
                     
-                     typeInfosAndAmounts[typeData]--;
-                     if (typeInfosAndAmounts[typeData] <= 0) break;
+                     typeDatasAndAmounts[typeData]--;
+                     if (typeDatasAndAmounts[typeData] <= 0) break;
                 }
                 else
                 {
@@ -62,10 +99,13 @@ public class QuadSearcher
             }
         }
         
-        return requestedQuads.ToArray();
+        if(HasEmptyPoints(runningMap, typeDatas, out var remainingQuads))
+            quads.UnionWith(remainingQuads);
+        
+        return quads;
     }
 
-    private static QuadOnMap CreateQuadOnMap(Vector2Int startPoint, QuadSample quadSample, Vector2Int[] points)
+    private static QuadOnMap CreateQuadOnMap(Vector2Int startPoint, QuadSample quadSample, Vector2Int[] points, StructureType slotType)
     {
         var quad = new QuadOnMap(quadSample.data.WidthHeight);
         quad.Setup(

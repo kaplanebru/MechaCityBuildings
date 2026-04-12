@@ -6,16 +6,15 @@ using Random = UnityEngine.Random;
 
 public class SlotTypePossibilityHandler
 {
-    private Dictionary<Vector2Int, HashSet<StructureType>> _possibleTypesBySlots = new();
+    private Dictionary<Vector2Int, HashSet<StructureType>> _possibleTypesBySlot = new();
     private Dictionary<StructureType, StructureType[]> _adjacencyImpossibilities = new();
 
     public SlotTypePossibilityHandler( HashSet<Vector2Int> cells,
-        HashSet<StructureType> allTypesInQuestion,
         Dictionary<StructureType, StructureType[]> adjacencyImpossibilities)
     {
-        _possibleTypesBySlots = cells.ToDictionary(
+        _possibleTypesBySlot = cells.ToDictionary(
             cell => cell,
-            cell => new HashSet<StructureType>(allTypesInQuestion)
+            cell => new HashSet<StructureType>(adjacencyImpossibilities.Keys.ToArray())
         );
         
         _adjacencyImpossibilities = adjacencyImpossibilities;
@@ -25,7 +24,7 @@ public class SlotTypePossibilityHandler
     {
         foreach (var coord in quadOnMap.data.Coords)
         {
-            _possibleTypesBySlots.Remove(coord);
+            _possibleTypesBySlot.Remove(coord);
         }
 
         foreach (var neighbor in quadOnMap.data.Neighbors)
@@ -34,29 +33,29 @@ public class SlotTypePossibilityHandler
         }
     }
 
-    private void EliminatePossibleStructuresOfGivenCell(Vector2Int cell, StructureType[] structureTypesToEliminate)
+    private void EliminatePossibleStructuresOfGivenCell(Vector2Int cell, StructureType[] typesToEliminate)
     {
-        if (_possibleTypesBySlots.TryGetValue(cell, out var possibleStructureTypes))
+        if (_possibleTypesBySlot.TryGetValue(cell, out var possibleStructureTypes))
         {
-            foreach (var type in structureTypesToEliminate)
+            foreach (var type in typesToEliminate)
             {
                 possibleStructureTypes.Remove(type);
             }
         }
     }
 
-    public bool IsTypeConvenient(StructureType givenType, Vector2Int[] coords)
+    public bool IsTypeConvenient(StructureType examiningType, Vector2Int[] coords)
     {
         if (coords.Length == 1)
         {
-            var possibleStructureTypes = _possibleTypesBySlots[coords[0]];
-            return possibleStructureTypes.Contains(givenType);
+            var possibleStructureTypes = _possibleTypesBySlot[coords[0]];
+            return possibleStructureTypes.Contains(examiningType);
         }
         
         Dictionary<StructureType, int> frequencyInCoords = new();
         foreach (var coord in coords)
         {
-            foreach (var type in _possibleTypesBySlots[coord])
+            foreach (var type in _possibleTypesBySlot[coord])
             {
                 if (frequencyInCoords.TryGetValue(type, out int count))
                     frequencyInCoords[type] = count + 1;
@@ -65,13 +64,18 @@ public class SlotTypePossibilityHandler
             }
         }
         int maxCount = frequencyInCoords.Values.Max();
+
+        if (maxCount == 0)
+        {
+            Debug.LogWarning("No possible structure type found");
+        }
         
         var topCandidates = frequencyInCoords
             .Where(kvp => kvp.Value == maxCount)
             .Select(kvp => kvp.Key)
             .ToList();
         
-        return topCandidates.Contains(givenType); // || givenType == StructureType.RightBatiment;
+        return topCandidates.Contains(examiningType);
     }
     
 }

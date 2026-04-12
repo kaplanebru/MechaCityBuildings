@@ -8,6 +8,7 @@ public class QuadOnMap
     public QuadData data = new();
     public Vector2 Center;
     public int Perimeter;
+    public StructureType StructureType;
 
     public QuadOnMap(Vector2Int widthHeight)
     {

@@ -14,38 +14,41 @@ public class MapOrganizer : MonoBehaviour
 
     public int GetSelectedStructureTypeAmount() => cityData.RandomizerDataSet.Length;
 
-    private IEnumerable<StructureTypeData> GetSelectedStructureTypeDatas()
+    private Dictionary<StructureTypeData, int> GetSelectedStructureTypeDatasAndAmounts()
     {
+        var dict = new Dictionary<StructureTypeData, int>();
         var selectedTypes = cityData.GetSelectedStructureTypes();
-        
+
         foreach (var type in selectedTypes)
         {
-            yield return structureTypeDatabase.GetData(type);
+            if (cityData.TryGetAmountByType(type, out var amount))
+            {
+                dict[structureTypeDatabase.GetData(type)] = amount;
+            }
         }
+        return dict;
     }
     
     public HashSet<SlotData> ToSlotData(HashSet<Vector2Int> map)
     {
         ConvertFrequenciesToAmounts(map.Count);
-        var selectedStructureTypeDatas = GetSelectedStructureTypeDatas().ToArray();
+        var typeDatasAndAmounts = GetSelectedStructureTypeDatasAndAmounts();
         
         var adjacencyImpossibilities =
             AdjacencyHelper.GetImpossibleAdjacencyDB(
-                selectedStructureTypeDatas.Select(s => s.Type).ToArray(), adjacencyMatrixData);
+                typeDatasAndAmounts.
+                    Select(s => s.Key.Type).
+                    ToArray(), adjacencyMatrixData);
 
-        //TEMPORARY: TEST
-        Dictionary<StructureTypeData, int> structureTypeDatasAndAmounts = new();
-        
-        //TODO: her zaman max olamaz, 2 tane quad1x1 varsa mesela. En son max yap. sayılar bitince. random. max.
-        structureTypeDatasAndAmounts.Add(selectedStructureTypeDatas[0], int.MaxValue);
-        structureTypeDatasAndAmounts.Add(selectedStructureTypeDatas[1], cityData.RandomizerDataSet[1].FrequencyData.Amount); //averageFrequency
+        //averageFrequency
+        //int.MaxValue://TODO: her zaman max olamaz, 2 tane quad1x1 varsa mesela. En son max yap. sayılar bitince. random. max.
 
-        return DisposeMap(map, structureTypeDatasAndAmounts, adjacencyImpossibilities);
+        return DisposeMap(map, typeDatasAndAmounts, adjacencyImpossibilities);
     }
 
     private HashSet<SlotData> DisposeMap(
         HashSet<Vector2Int> map,
-        Dictionary<StructureTypeData, int> structureTypeDatasAndAmounts,
+        Dictionary<StructureTypeData, int> typeDatasAndAmounts,
         Dictionary<StructureType, StructureType[]> adjacencyImpossibilities
         )
     {
@@ -54,11 +57,11 @@ public class MapOrganizer : MonoBehaviour
         Shuffle(mapToAlter);
 
         var randomQuads = QuadSearcher.SearchQuads(
-            structureTypeDatasAndAmounts,
+            typeDatasAndAmounts,
             mapToAlter.ToHashSet(),
             adjacencyImpossibilities);
 
-        return SlotCreator.CreateCellDataFromQuads(randomQuads, map);
+        return SlotCreator.CreateCellDataFromQuads(randomQuads.ToArray(), map);
     }
     
     private void ConvertFrequenciesToAmounts(int cellAmount)

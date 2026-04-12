@@ -4,14 +4,25 @@ using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "CityData", menuName = "CityBuilder/CityData")]
-public class CityData: ScriptableObject
+public class CityData : ScriptableObject
 {
     public float HeightGap = 2;
     public JuxtapositionData[] JuxtapositionDataSet;
     //public DistanceData[] HorizontalDistanceBetweenBuildings;
-    
+
     public RandomizerData[] RandomizerDataSet;
 
+    public bool TryGetAmountByType(StructureType structureType, out int amount)
+    {
+        amount = -1;
+        var data = RandomizerDataSet.FirstOrDefault(t => t.Type == structureType);
+        if (data != null)
+        {
+            amount = data.FrequencyData.Amount;
+            return true;
+        }
+        return false;
+    }
 
     private Dictionary<int, int> QuotaByHeigt = new();
 
@@ -19,12 +30,13 @@ public class CityData: ScriptableObject
     {
         foreach (var juxtapositionData in JuxtapositionDataSet)
         {
-            QuotaByHeigt[juxtapositionData.HeightTier] =  juxtapositionData.MaxJuxtapositionQuota;
+            QuotaByHeigt[juxtapositionData.HeightTier] = juxtapositionData.MaxJuxtapositionQuota;
         }
+
         return QuotaByHeigt;
     }
-    
-    public StructureType[] GetSelectedStructureTypes()=>RandomizerDataSet.Select(t=>t.Type).ToArray();
+
+    public StructureType[] GetSelectedStructureTypes() => RandomizerDataSet.Select(t => t.Type).ToArray();
 }
 
 [Serializable]
