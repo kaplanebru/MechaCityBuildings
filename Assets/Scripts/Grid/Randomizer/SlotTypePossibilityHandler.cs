@@ -8,8 +8,7 @@ public class SlotTypePossibilityHandler
 {
     private Dictionary<Vector2Int, HashSet<StructureType>> _typesByCell = new();
     private Dictionary<StructureType, StructureTypeSearchData> _searchDatasByType = new();
-    //private Dictionary<StructureType, StructureType[]> _adjacencyImpossibilities = new();
-
+    private HashSet<Vector2Int> determinedCells = new();
     public SlotTypePossibilityHandler(HashSet<Vector2Int> cells, HashSet<StructureTypeSearchData> searchDatas)
     {
         var allTypes = searchDatas.Select(s => s.Type).ToHashSet();
@@ -26,14 +25,17 @@ public class SlotTypePossibilityHandler
 
     public void UpdateNeighbourPossibilities(QuadOnMap quadOnMap, StructureType quadType)
     {
-        /*foreach (var cell in quadOnMap.data.Coords)
+        foreach (var cell in quadOnMap.data.Coords)
         {
-            _typesByCell.Remove(cell);
-        }*/
+            _typesByCell[cell].Clear();
+            _typesByCell[cell].Add(quadType);
+            determinedCells.Add(cell);
+        }
 
+        if(quadType == StructureType.RightBatiment)
+            Debug.Log("small cell");
         
-        //if(quadType != StructureType.LeftBatiment)
-            //Debug.Log("small cell");
+       
         foreach (var neighbor in quadOnMap.data.Neighbors)
         {
             EliminatePossibleStructuresOfGivenCell(neighbor, _searchDatasByType[quadType]);
@@ -42,26 +44,20 @@ public class SlotTypePossibilityHandler
 
     private void EliminatePossibleStructuresOfGivenCell(Vector2Int neighborCell, StructureTypeSearchData searchData)
     {
-       
-        
-        if (_typesByCell.TryGetValue(neighborCell, out var neighborStructureTypes))
+        if(determinedCells.Contains(neighborCell)) return;
+        if (_typesByCell.TryGetValue(neighborCell, out var neighborCellTypes))
         {
-            if(searchData.AdjacencyImpossibilities.Count == 0)
-            {
-                //Debug.Log("structure type count: " + neighborStructureTypes.Count);
-                return;
-            }
             foreach (var impossibleType in searchData.AdjacencyImpossibilities)
             {
-                neighborStructureTypes.Remove(impossibleType);
+                neighborCellTypes.Remove(impossibleType);
             }
         }
 
-        if(searchData.Type != StructureType.RightBatiment) return;
+        /*if(searchData.Type != StructureType.RightBatiment) return;
         if (_typesByCell.TryGetValue(neighborCell, out var types))        {
             foreach (var type in types)
                 Debug.Log("possible type: " + neighborCell + " " + type);
-        }
+        }*/
     }
 
     public bool IsTypeConvenient(StructureType examiningType, Vector2Int[] cells)
