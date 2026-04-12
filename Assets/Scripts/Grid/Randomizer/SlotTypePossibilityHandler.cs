@@ -6,69 +6,90 @@ using Random = UnityEngine.Random;
 
 public class SlotTypePossibilityHandler
 {
-    private Dictionary<Vector2Int, HashSet<StructureType>> _possibleTypesBySlot = new();
-    private Dictionary<StructureType, StructureType[]> _adjacencyImpossibilities = new();
+    private Dictionary<Vector2Int, HashSet<StructureType>> _typesByCell = new();
+    private Dictionary<StructureType, StructureTypeSearchData> _searchDatasByType = new();
+    //private Dictionary<StructureType, StructureType[]> _adjacencyImpossibilities = new();
 
-    public SlotTypePossibilityHandler( HashSet<Vector2Int> cells,
-        Dictionary<StructureType, StructureType[]> adjacencyImpossibilities)
+    public SlotTypePossibilityHandler(HashSet<Vector2Int> cells, HashSet<StructureTypeSearchData> searchDatas)
     {
-        _possibleTypesBySlot = cells.ToDictionary(
-            cell => cell,
-            cell => new HashSet<StructureType>(adjacencyImpossibilities.Keys.ToArray())
-        );
+        var allTypes = searchDatas.Select(s => s.Type).ToHashSet();
         
-        _adjacencyImpossibilities = adjacencyImpossibilities;
+        _typesByCell = cells.ToDictionary(
+            cell => cell,
+            cell => new HashSet<StructureType>(allTypes));
+
+        foreach (var searchData in searchDatas)
+        {
+            _searchDatasByType.Add(searchData.Type, searchData);
+        }
     }
 
-    public void UpdateNeighbourPossibilities(QuadOnMap quadOnMap, StructureType currentType)
+    public void UpdateNeighbourPossibilities(QuadOnMap quadOnMap, StructureType quadType)
     {
-        foreach (var coord in quadOnMap.data.Coords)
+        /*foreach (var cell in quadOnMap.data.Coords)
         {
-            _possibleTypesBySlot.Remove(coord);
-        }
+            _typesByCell.Remove(cell);
+        }*/
 
+        
+        //if(quadType != StructureType.LeftBatiment)
+            //Debug.Log("small cell");
         foreach (var neighbor in quadOnMap.data.Neighbors)
         {
-            EliminatePossibleStructuresOfGivenCell(neighbor, _adjacencyImpossibilities[currentType]);
+            EliminatePossibleStructuresOfGivenCell(neighbor, _searchDatasByType[quadType]);
         }
     }
 
-    private void EliminatePossibleStructuresOfGivenCell(Vector2Int cell, StructureType[] typesToEliminate)
+    private void EliminatePossibleStructuresOfGivenCell(Vector2Int neighborCell, StructureTypeSearchData searchData)
     {
-        if (_possibleTypesBySlot.TryGetValue(cell, out var possibleStructureTypes))
+       
+        
+        if (_typesByCell.TryGetValue(neighborCell, out var neighborStructureTypes))
         {
-            foreach (var type in typesToEliminate)
+            if(searchData.AdjacencyImpossibilities.Count == 0)
             {
-                possibleStructureTypes.Remove(type);
+                //Debug.Log("structure type count: " + neighborStructureTypes.Count);
+                return;
+            }
+            foreach (var impossibleType in searchData.AdjacencyImpossibilities)
+            {
+                neighborStructureTypes.Remove(impossibleType);
             }
         }
+
+        if(searchData.Type != StructureType.RightBatiment) return;
+        if (_typesByCell.TryGetValue(neighborCell, out var types))        {
+            foreach (var type in types)
+                Debug.Log("possible type: " + neighborCell + " " + type);
+        }
     }
 
-    public bool IsTypeConvenient(StructureType examiningType, Vector2Int[] coords)
+    public bool IsTypeConvenient(StructureType examiningType, Vector2Int[] cells)
     {
-        if (coords.Length == 1)
+        if (cells.Length == 1)
         {
-            var possibleStructureTypes = _possibleTypesBySlot[coords[0]];
+            var possibleStructureTypes = _typesByCell[cells[0]];
             return possibleStructureTypes.Contains(examiningType);
         }
         
         Dictionary<StructureType, int> frequencyInCoords = new();
-        foreach (var coord in coords)
+        foreach (var cell in cells)
         {
-            foreach (var type in _possibleTypesBySlot[coord])
+            foreach (var type in _typesByCell[cell])
             {
                 if (frequencyInCoords.TryGetValue(type, out int count))
                     frequencyInCoords[type] = count + 1;
                 else
-                    frequencyInCoords[type] = 1;
+                    frequencyInCoords[type] = 1; //1
             }
         }
         int maxCount = frequencyInCoords.Values.Max();
 
+       /* Debug.Log(maxCount);
         if (maxCount == 0)
         {
             Debug.LogWarning("No possible structure type found");
-        }
+        }*/
         
         var topCandidates = frequencyInCoords
             .Where(kvp => kvp.Value == maxCount)
