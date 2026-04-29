@@ -9,19 +9,26 @@ public class StructureTypeSearchData
     public StructureType Type;
     public QuadSample QuadSample;
     public int Amount;
-    public HashSet<StructureType> AdjacencyImpossibilities = new();
+    public HashSet<StructureType> ImpossibleStructureTypes = new();
 
     public StructureTypeSearchData(StructureType type, QuadSample quadSample, int amount, HashSet<StructureType> impossibleTypes)
     {
         Type = type;
         QuadSample = quadSample;
         Amount = amount;
-        AdjacencyImpossibilities.UnionWith(impossibleTypes);
+        ImpossibleStructureTypes.UnionWith(impossibleTypes);
+
+        Debug.Log("search  type " + type);
+        
+        foreach (var impossibleType in ImpossibleStructureTypes)
+        {
+            Debug.Log(type + " " +  impossibleType);
+        }
     }
 
     public void RemoveAdjacency(StructureType adjacencyType)
     {
-        AdjacencyImpossibilities.Remove(adjacencyType);
+        ImpossibleStructureTypes.Remove(adjacencyType);
     }
 }
 
@@ -38,36 +45,27 @@ public class MapOrganizer : MonoBehaviour
 
     private List<StructureTypeSearchData> GetSearchData()
     {
-        var searchData = new List<StructureTypeSearchData>();
+        var structureTypeData = new List<StructureTypeSearchData>();
         var selectedTypes = cityData.GetSelectedStructureTypes();
 
         foreach (var type in selectedTypes)
         {
-            Debug.Log(type);
             if (cityData.TryGetAmountByType(type, out var amount))
             {
-                searchData.Add(new StructureTypeSearchData(
+                structureTypeData.Add(new StructureTypeSearchData(
                     type, 
                     structureTypeDatabase.GetData(type).QuadSample, 
                     amount,
                     AdjacencyHelper.GetImpossibleAdjacencyForGivenType(type, selectedTypes, adjacencyMatrixData).ToHashSet()));
             }
         }
-        return searchData;
+        return structureTypeData;
     }
     
     public HashSet<SlotData> ToSlotData(HashSet<Vector2Int> map)
     {
         ConvertFrequenciesToAmounts(map.Count);
         var searchDatas = GetSearchData();
-        
-        /*foreach (var searchData in searchDatas)
-        {
-            foreach (var type in searchData.AdjacencyImpossibilities)
-            {
-                Debug.Log(searchData.Type + " " + type);
-            }
-        }*/
 
         return DisposeMap(map, searchDatas);
     }

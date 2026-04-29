@@ -6,20 +6,20 @@ using Random = UnityEngine.Random;
 
 public class SlotTypePossibilityHandler
 {
-    private Dictionary<Vector2Int, HashSet<StructureType>> _typesByCell = new();
-    private Dictionary<StructureType, StructureTypeSearchData> _searchDatasByType = new();
-    private HashSet<Vector2Int> determinedCells = new();
-    public SlotTypePossibilityHandler(HashSet<Vector2Int> cells, HashSet<StructureTypeSearchData> searchDatas)
+    private Dictionary<Vector2Int, HashSet<StructureType>> _possibleTypesByCell = new();
+    private Dictionary<StructureType, StructureTypeSearchData> _structureTypeDatas = new();
+    private HashSet<Vector2Int> _determinedCells = new();
+    public SlotTypePossibilityHandler(HashSet<Vector2Int> cells, HashSet<StructureTypeSearchData> structureTypeDatas)
     {
-        var allTypes = searchDatas.Select(s => s.Type).ToHashSet();
+        var allTypes = structureTypeDatas.Select(s => s.Type).ToHashSet();
         
-        _typesByCell = cells.ToDictionary(
+        _possibleTypesByCell = cells.ToDictionary(
             cell => cell,
             cell => new HashSet<StructureType>(allTypes));
 
-        foreach (var searchData in searchDatas)
+        foreach (var structureTypeData in structureTypeDatas)
         {
-            _searchDatasByType.Add(searchData.Type, searchData);
+            _structureTypeDatas.Add(structureTypeData.Type, structureTypeData);
         }
     }
 
@@ -27,57 +27,54 @@ public class SlotTypePossibilityHandler
     {
         foreach (var cell in quadOnMap.data.Coords)
         {
-            _typesByCell[cell].Clear();
-            _typesByCell[cell].Add(quadType);
-            determinedCells.Add(cell);
+            _possibleTypesByCell[cell].Clear();
+            _possibleTypesByCell[cell].Add(quadType); 
+            
+            _determinedCells.Add(cell);
         }
-
-        if(quadType == StructureType.RightBatiment)
-            Debug.Log("small cell");
-        
        
         foreach (var neighbor in quadOnMap.data.Neighbors)
         {
-            EliminatePossibleStructuresOfGivenCell(neighbor, _searchDatasByType[quadType]);
+            EliminatePossibleStructuresOfGivenCell(neighbor, _structureTypeDatas[quadType]);
+            //Debug.Log("eliminated neighbor with neighbor type = " + quadOnMap + "possible type: " + _searchDatasByType[quadType].Amount);
         }
     }
 
-    private void EliminatePossibleStructuresOfGivenCell(Vector2Int neighborCell, StructureTypeSearchData searchData)
+    private void EliminatePossibleStructuresOfGivenCell(Vector2Int neighborCell, StructureTypeSearchData structureTypeData)
     {
-        if(determinedCells.Contains(neighborCell)) return;
-        if (_typesByCell.TryGetValue(neighborCell, out var neighborCellTypes))
+        if(_determinedCells.Contains(neighborCell)) return;
+        if (_possibleTypesByCell.TryGetValue(neighborCell, out var neighborCellTypes))
         {
-            foreach (var impossibleType in searchData.AdjacencyImpossibilities)
+            foreach (var impossibleType in structureTypeData.ImpossibleStructureTypes)
             {
                 neighborCellTypes.Remove(impossibleType);
             }
         }
-
-        /*if(searchData.Type != StructureType.RightBatiment) return;
-        if (_typesByCell.TryGetValue(neighborCell, out var types))        {
-            foreach (var type in types)
-                Debug.Log("possible type: " + neighborCell + " " + type);
-        }*/
     }
 
-    public bool IsTypeConvenient(StructureType examiningType, Vector2Int[] cells)
+    public bool IsTypeConvenient(StructureType examiningType, Vector2Int[] quadCells)
     {
-        if (cells.Length == 1)
+        /*if (cells.Length == 1)
         {
-            var possibleStructureTypes = _typesByCell[cells[0]];
+            //what about neighbors?
+            var possibleStructureTypes = _possibleTypesByCell[cells[0]];
             return possibleStructureTypes.Contains(examiningType);
-        }
+        }*/
         
         Dictionary<StructureType, int> frequencyInCoords = new();
-        foreach (var cell in cells)
+        foreach (var quadCell in quadCells)
         {
-            foreach (var type in _typesByCell[cell])
+            if (_possibleTypesByCell.TryGetValue(quadCell, out var possibleTypes))
             {
-                if (frequencyInCoords.TryGetValue(type, out int count))
-                    frequencyInCoords[type] = count + 1;
-                else
-                    frequencyInCoords[type] = 1; //1
+                foreach (var type in _possibleTypesByCell[quadCell])
+                {
+                    if (frequencyInCoords.TryGetValue(type, out int count))
+                        frequencyInCoords[type] = count + 1;
+                    else
+                        frequencyInCoords[type] = 1;
+                }
             }
+           
         }
         int maxCount = frequencyInCoords.Values.Max();
 

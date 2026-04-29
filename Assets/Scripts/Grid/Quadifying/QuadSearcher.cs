@@ -7,7 +7,7 @@ using UnityEngine.Android;
 
 public class QuadSearcher
 {
-    private static HashSet<QuadOnMap> SearchQuadsInGivenType(StructureTypeSearchData searchData, List<Vector2Int> runningMap, SlotTypePossibilityHandler possibilityHandler)
+    private static HashSet<QuadOnMap> SearchQuadsInGivenType(StructureTypeSearchData structureTypeData, List<Vector2Int> runningMap, SlotTypePossibilityHandler possibilityHandler)
     {
         List<Vector2Int> tempMap = new();
         tempMap.AddRange(runningMap);
@@ -20,31 +20,35 @@ public class QuadSearcher
             var examinedPoint = tempMap[index];
 
             var tempQuadPoints =
-                QuadProjector.GetQuadOnGivenPoint(examinedPoint, searchData.QuadSample).ToHashSet();
+                QuadProjector.GetQuadOnGivenPoint(examinedPoint, structureTypeData.QuadSample).ToHashSet();
 
             if (QuadIsOnMap(tempQuadPoints, tempMap))
             {
                 //başka quadlar aradığı için quad sayısından fazla oluyor
-                if (!possibilityHandler.IsTypeConvenient(searchData.Type, tempQuadPoints.ToArray()))
+                //var tempNeighbors = QuadProjector.GetNeighborsOnGivenPoint(examinedPoint, structureTypeData.QuadSample).ToArray();
+                if (!possibilityHandler.IsTypeConvenient(structureTypeData.Type, tempQuadPoints.ToArray())) //tempnEİGHBORS
                 {
                     index++;
-                    tempMap.RemoveAll(tempQuadPoints.Contains);
+                    //tempMap.RemoveAll(tempQuadPoints.Contains);
+                    // belki bu eksik quaddaki pointler başka quad içinde işlevseldir diye temp'leri remove etmedim
+                    //ama remove edilecekleri durumda da index++ olmaması gerekir, point 5. indexteyse remove ettikten
+                    //sonra listedeki 5. index'in elemanı başka bir point olur
                 }
                 else
                 {
                     var newQuad = CreateQuadOnMap(
                         examinedPoint,
-                        searchData.QuadSample,
+                        structureTypeData.QuadSample,
                         tempQuadPoints.ToArray(),
-                        searchData.Type);
+                        structureTypeData.Type);
                     
-                    possibilityHandler.UpdateNeighbourPossibilities(newQuad, searchData.Type);
+                    possibilityHandler.UpdateNeighbourPossibilities(newQuad, structureTypeData.Type);
                     selectedQuads.Add(newQuad);
                     tempMap.RemoveAll(tempQuadPoints.Contains);
-                
-                    index++;
-                    searchData.Amount--;
-                    if (searchData.Amount <= 0) break;
+                    //index++;
+                    
+                    structureTypeData.Amount--;
+                    if (structureTypeData.Amount <= 0) break;
                 }
             }
             else
