@@ -67,4 +67,31 @@ public class QuadSample : ScriptableObject
 
         return neighbors.ToArray();
     }
+
+    public Vector2Int[] GetNeighborEdges()
+    {
+        Vector2Int[] edges = new Vector2Int[4];
+        int column = data.WidthHeight.x;
+        int row = data.WidthHeight.y;
+        
+        int lastColumn = column - 1;
+        int lastRow = row - 1;
+
+        if (data.Coords.Length == 0)
+            Debug.Log("No points found to create edges");
+        
+        var leftUp = Vector2Int.zero;
+        edges[0] = leftUp + new Vector2Int(-1, -1);
+
+        var rightUp = new Vector2Int(lastColumn, 0);
+        edges[1] = rightUp + new Vector2Int(1, -1);
+
+        var leftDown = new Vector2Int(0, lastRow);
+        edges[2] = leftDown + new Vector2Int(-1, 1);
+        
+        var rightDown = new Vector2Int(lastColumn, lastRow);
+        edges[3] = rightDown + new Vector2Int(1, 1);
+        
+        return edges;
+    }
 }
