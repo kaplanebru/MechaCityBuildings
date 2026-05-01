@@ -76,7 +76,7 @@ public class MapOrganizer : MonoBehaviour
     {
         List<Vector2Int> mapToAlter = new();
         mapToAlter.AddRange(map);
-        Shuffle(mapToAlter);
+        //Shuffle(mapToAlter);
 
         var randomQuads = QuadSearcher.SearchQuads(
             searchDatas,

@@ -7,6 +7,9 @@ using UnityEngine.Android;
 
 public class QuadSearcher
 {
+    //todo: listeden çıkarmak yerine quad cell'leri sealed yapabılabilir. if selaed continue.
+    //Acaba randomize edilmese nasıl çalışır?
+    //MAP ORGANİZER 79. SATIR COMMENTLİ
     private static HashSet<QuadOnMap> SearchQuadsInGivenType(StructureTypeSearchData structureTypeData, List<Vector2Int> runningMap, SlotTypePossibilityHandler possibilityHandler)
     {
         List<Vector2Int> tempMap = new();
@@ -25,8 +28,8 @@ public class QuadSearcher
             if (QuadIsOnMap(tempQuadPoints, tempMap))
             {
                 //başka quadlar aradığı için quad sayısından fazla oluyor
-                //var tempNeighbors = QuadProjector.GetNeighborsOnGivenPoint(examinedPoint, structureTypeData.QuadSample).ToArray();
-                if (!possibilityHandler.IsTypeConvenient(structureTypeData.Type, tempQuadPoints.ToArray())) //tempnEİGHBORS
+                var tempNeighbors = QuadProjector.GetNeighborsOnGivenPoint(examinedPoint, structureTypeData.QuadSample).ToArray();
+                if (!possibilityHandler.IsTypeConvenient2(structureTypeData.ImpossibleStructureTypes, tempNeighbors)) //tempnEİGHBORS tempQuadPoints.ToArray()
                 {
                     index++;
                     //tempMap.RemoveAll(tempQuadPoints.Contains);
@@ -59,7 +62,7 @@ public class QuadSearcher
         return selectedQuads;
     }
     public static HashSet<QuadOnMap> SearchQuads(
-            List<StructureTypeSearchData> searchDatas,
+            List<StructureTypeSearchData> structureTypeDatas,
             HashSet<Vector2Int> map)
     {
         HashSet<QuadOnMap> quads = new();
@@ -67,25 +70,21 @@ public class QuadSearcher
         List<Vector2Int> runningMap = new();
         runningMap.AddRange(map);
 
-        searchDatas = searchDatas.OrderByDescending(sd => sd.QuadSample.data.GetPointAmount).ToList();
-        foreach (var searchData in searchDatas)
-        {
-            Debug.Log("search data: " + searchData.Type + " " + searchData.Amount);
-        }
+        structureTypeDatas = structureTypeDatas.OrderByDescending(sd => sd.QuadSample.data.GetPointAmount).ToList();
 
-        SlotTypePossibilityHandler possibilityHandler = new(map, searchDatas.ToHashSet());
+        SlotTypePossibilityHandler possibilityHandler = new(map, structureTypeDatas.ToHashSet());
 
-        foreach (var searchData in searchDatas)
+        foreach (var structureTypeData in structureTypeDatas)
         {
             foreach (var cell in quads.SelectMany(quad => quad.data.Coords))
             {
                 runningMap.Remove(cell);
             }
             
-            quads.UnionWith(SearchQuadsInGivenType(searchData, runningMap, possibilityHandler));
+            quads.UnionWith(SearchQuadsInGivenType(structureTypeData, runningMap, possibilityHandler));
         }
 
-        if(HasEmptyPoints(runningMap, searchDatas, out var remainingQuads))
+        if(HasEmptyPoints(runningMap, structureTypeDatas, out var remainingQuads))
          quads.UnionWith(remainingQuads);
        
         return quads;
