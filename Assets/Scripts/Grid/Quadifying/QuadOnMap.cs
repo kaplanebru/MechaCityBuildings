@@ -15,10 +15,11 @@ public class QuadOnMap
         data.WidthHeight = widthHeight;
     }
 
-    public void Setup(Vector2Int[] points, Vector2Int[] neighbors)
+    public void Setup(Vector2Int[] points, Vector2Int[] neighbors, StructureType structureType)
     {
         data.Coords = points;
         data.Neighbors = neighbors;
+        StructureType = structureType;
         SetCenter();
     }
 

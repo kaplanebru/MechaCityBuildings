@@ -30,8 +30,8 @@ public static class CellConverter
     
     public static Vector3 GetWorldPositionCenterFromCellIndex(int xIndex, int yIndex, GridData gridData)
     {
-        float worldX = gridData.OriginWorldTransform.position.x + (xIndex + 0.5f) * gridData.MinBuildingCellSize;
-        float worldZ = gridData.OriginWorldTransform.position.z + (yIndex + 0.5f) * gridData.MinBuildingCellSize;
+        float worldX = gridData.OriginWorldTransform.position.x + (xIndex + 0.5f) * gridData.MinBuildingCellSize; //(xIndex + 0.5f)
+        float worldZ = gridData.OriginWorldTransform.position.z + (yIndex + 0.5f) * gridData.MinBuildingCellSize; //(yIndex + 0.5f)
 
         float worldY = gridData.OriginWorldTransform.position.y;
         return new Vector3(worldX, worldY, worldZ);

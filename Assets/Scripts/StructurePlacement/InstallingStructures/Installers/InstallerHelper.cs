@@ -3,23 +3,41 @@ using UnityEngine;
 
 public static class InstallerHelper
 {
-    public static Structure[] Install(SlotData[] cellDataSet, Transform parent, StructurePool pool, GridData gridData)
+    public static Structure[] Install(SlotData[] slotDatas, Transform parent, StructurePool pool, GridData gridData)
     {
         List<Structure> structures = new List<Structure>();
-        foreach (var cellData in cellDataSet)
+        foreach (var slotData in slotDatas)
         {
             var structure = pool.GetItem();
             structures.Add(structure);
             
             structure.transform.SetParent(parent);
 
-            Vector3 worldPos = CellConverter.GetWorldPositionFromCellCenter(cellData, gridData);
+            Vector3 worldPos = CellConverter.GetWorldPositionFromCellCenter(slotData, gridData);
                 //GetWorldPositionCenterFromCellIndex(cellData.Cells.x, cellData.Cells.y, gridData);
             
             structure.transform.localPosition = worldPos;
-            structure.transform.localRotation = cellData.Rotation;
-            structure.type = cellData.GetStructureType();
+            structure.transform.localRotation = slotData.Rotation;
+            structure.type = slotData.GetStructureType();
         }
+
+        if (slotDatas[0].StructureType == StructureType.LeftBatiment)
+        {
+            Debug.Log($"center point: {slotDatas[0].Center}");
+            var neighbors = slotDatas[0].Neighbors;
+            Debug.Log($"neighbor count {neighbors.Count}");
+
+            foreach (var neighbor in neighbors)
+            {
+               
+                var worldPos = CellConverter.GetWorldPositionCenterFromCellIndex(neighbor.Coords.x, neighbor.Coords.y, gridData);
+               
+                GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                cube.transform.SetPositionAndRotation(worldPos, Quaternion.identity);
+                Debug.Log(neighbor.Coords);
+            }
+        }
+       
 
         return structures.ToArray();
     }

@@ -8,95 +8,84 @@ using UnityEngine.Android;
 public class QuadSearcher
 {
     //todo: listeden çıkarmak yerine quad cell'leri sealed yapabılabilir. if selaed continue.
-    //Acaba randomize edilmese nasıl çalışır?
-    //MAP ORGANİZER 79. SATIR COMMENTLİ
-    private static HashSet<QuadOnMap> SearchQuadsInGivenType(StructureTypeSearchData structureTypeData, List<Vector2Int> runningMap, SlotTypePossibilityHandler possibilityHandler)
+    //todo: MAP ORGANİZER 79. SATIR COMMENTLİ: Acaba randomize edilmese nasıl çalışır?
+    private static HashSet<QuadOnMap> DiscoveredQuadsInGivenType(
+        StructureTypeSearchData structureTypeData,
+        Dictionary<Vector2Int, bool> examiningMap,
+        SlotTypePossibilityHandler possibilityHandler)
     {
-        List<Vector2Int> tempMap = new();
-        tempMap.AddRange(runningMap);
-        
         HashSet<QuadOnMap> selectedQuads = new();
-        int index = 0;
-            
-        while (index < tempMap.Count)
+        var map = examiningMap.Keys.ToList();
+
+        foreach (var point in map)
         {
-            var examinedPoint = tempMap[index];
-
+            if (examiningMap[point]) continue;
             var tempQuadPoints =
-                QuadProjector.GetQuadOnGivenPoint(examinedPoint, structureTypeData.QuadSample).ToHashSet();
+                QuadProjector.GetQuadOnGivenPoint(point, structureTypeData.QuadSample).ToHashSet();
 
-            if (QuadIsOnMap(tempQuadPoints, tempMap))
+            if (QuadIsOnMap(tempQuadPoints, map))
             {
-                //başka quadlar aradığı için quad sayısından fazla oluyor
-                var tempNeighbors = QuadProjector.GetNeighborsOnGivenPoint(examinedPoint, structureTypeData.QuadSample).ToArray();
-                if (!possibilityHandler.IsTypeConvenient2(structureTypeData.ImpossibleStructureTypes, tempNeighbors)) //tempnEİGHBORS tempQuadPoints.ToArray()
+                var tempNeighbors = QuadProjector.GetNeighborsOnGivenPoint(point, structureTypeData.QuadSample)
+                    .ToArray();
+
+                //Debug.Log($"Before check - type: {structureTypeData.Type}, impossible count: {structureTypeData.ImpossibleStructureTypes.Count}");
+                if (!possibilityHandler.IsTypeConvenient2(structureTypeData.Type, tempNeighbors))
+                    continue;
+                
+                var newQuad = CreateQuadOnMap(
+                    structureTypeData.QuadSample,
+                    tempQuadPoints.ToArray(),
+                    tempNeighbors,
+                    structureTypeData.Type);
+                
+
+                possibilityHandler.UpdateFilledCells(newQuad, structureTypeData.Type);
+                selectedQuads.Add(newQuad);
+
+                foreach (var quadPoint in tempQuadPoints)
                 {
-                    index++;
-                    //tempMap.RemoveAll(tempQuadPoints.Contains);
-                    // belki bu eksik quaddaki pointler başka quad içinde işlevseldir diye temp'leri remove etmedim
-                    //ama remove edilecekleri durumda da index++ olmaması gerekir, point 5. indexteyse remove ettikten
-                    //sonra listedeki 5. index'in elemanı başka bir point olur
+                    examiningMap[quadPoint] = true;
                 }
-                else
-                {
-                    var newQuad = CreateQuadOnMap(
-                        examinedPoint,
-                        structureTypeData.QuadSample,
-                        tempQuadPoints.ToArray(),
-                        structureTypeData.Type);
-                    
-                    possibilityHandler.UpdateNeighbourPossibilities(newQuad, structureTypeData.Type);
-                    selectedQuads.Add(newQuad);
-                    tempMap.RemoveAll(tempQuadPoints.Contains);
-                    //index++;
-                    
-                    structureTypeData.Amount--;
-                    if (structureTypeData.Amount <= 0) break;
-                }
-            }
-            else
-            {
-                index++;
+
+                structureTypeData.Amount--;
+                if (structureTypeData.Amount <= 0) break;
             }
         }
         return selectedQuads;
     }
-    public static HashSet<QuadOnMap> SearchQuads(
-            List<StructureTypeSearchData> structureTypeDatas,
-            HashSet<Vector2Int> map)
-    {
-        HashSet<QuadOnMap> quads = new();
 
-        List<Vector2Int> runningMap = new();
-        runningMap.AddRange(map);
+    public static HashSet<QuadOnMap> SearchQuads(List<StructureTypeSearchData> structureTypeDatas,
+        HashSet<Vector2Int> map)
+    {
+        HashSet<QuadOnMap> discoveredQuads = new();
+        Dictionary<Vector2Int, bool> examiningMap = map.ToDictionary(point => point, point => false);
+
 
         structureTypeDatas = structureTypeDatas.OrderByDescending(sd => sd.QuadSample.data.GetPointAmount).ToList();
-
-        SlotTypePossibilityHandler possibilityHandler = new(map, structureTypeDatas.ToHashSet());
+        SlotTypePossibilityHandler possibilityHandler = new(structureTypeDatas.ToHashSet());
 
         foreach (var structureTypeData in structureTypeDatas)
         {
-            foreach (var cell in quads.SelectMany(quad => quad.data.Coords))
-            {
-                runningMap.Remove(cell);
-            }
-            
-            quads.UnionWith(SearchQuadsInGivenType(structureTypeData, runningMap, possibilityHandler));
+            discoveredQuads.UnionWith(DiscoveredQuadsInGivenType(structureTypeData, examiningMap, possibilityHandler));
+            examiningMap = examiningMap
+                .Where(kvp => !kvp.Value)
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
-        if(HasEmptyPoints(runningMap, structureTypeDatas, out var remainingQuads))
-         quads.UnionWith(remainingQuads);
-       
-        return quads;
+        if (HasEmptyPoints(examiningMap.Keys.ToList(), structureTypeDatas, out var remainingQuads))
+            discoveredQuads.UnionWith(remainingQuads);
+
+        return discoveredQuads;
     }
 
-    private static QuadOnMap CreateQuadOnMap(Vector2Int startPoint, QuadSample quadSample, Vector2Int[] points,
-        StructureType slotType)
+    private static QuadOnMap CreateQuadOnMap(QuadSample quadSample, Vector2Int[] points, Vector2Int[] neighbors,
+        StructureType structureType)
     {
         var quad = new QuadOnMap(quadSample.data.WidthHeight);
         quad.Setup(
             points.ToArray(),
-            QuadProjector.GetNeighborsOnGivenPoint(startPoint, quadSample).ToArray()
+            neighbors,
+            structureType
         );
 
         return quad;
@@ -112,7 +101,7 @@ public class QuadSearcher
 
         return true;
     }
-    
+
     private static bool HasEmptyPoints(List<Vector2Int> runningMap, List<StructureTypeSearchData> searchDatas,
         out HashSet<QuadOnMap> quads)
     {
@@ -137,9 +126,9 @@ public class QuadSearcher
         foreach (var cell in runningMap)
         {
             var newQuad = CreateQuadOnMap(
-                cell,
                 singularQuadSample,
                 new[] { cell },
+                QuadProjector.GetQuadOnGivenPoint(cell, singularQuadSample).ToArray(),
                 singularQuadTypes[Random.Range(0, singularQuadTypes.Count)]);
 
             quads.Add(newQuad);
@@ -147,5 +136,4 @@ public class QuadSearcher
 
         return true;
     }
-
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SlotCreator
 {
-    public static HashSet<SlotData> CreateCellDataFromQuads(QuadOnMap[] randomQuads, HashSet<Vector2Int> map)
+    public static HashSet<SlotData> CreateSlotDataFromQuads(QuadOnMap[] randomQuads, HashSet<Vector2Int> map)
     {
         HashSet<SlotData> slotDatas = new();
 

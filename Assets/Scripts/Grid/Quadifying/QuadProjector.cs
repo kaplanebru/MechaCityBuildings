@@ -9,6 +9,7 @@ public class QuadProjector
     {
         var sampleNeighbors = quadSample.data.Neighbors;
         return sampleNeighbors.Select(sn => sn + point);
+        //neigbor map'te olmayabilir
     }
 
     public static IEnumerable<Vector2Int> GetQuadOnGivenPoint(Vector2Int point, QuadSample quadSample)

@@ -45,26 +45,26 @@ public class QuadSample : ScriptableObject
         int lastColumn = column - 1;
         int lastRow = row - 1;
 
-        HashSet<Vector2Int> edgeNeighbors = new();
+        HashSet<Vector2Int> neighbors = new();
 
         for (int c = 0; c < column; c++)
         {
-            var upper = new Vector2Int(c, 0) + Vector2Int.up;
-            edgeNeighbors.Add(upper);
+            var upper = new Vector2Int(c, 0) + Vector2Int.down;
+            neighbors.Add(upper);
 
-            var lower = new Vector2Int(c, lastRow) + Vector2Int.down;
-            edgeNeighbors.Add(lower);
+            var lower = new Vector2Int(c, lastRow) + Vector2Int.up;
+            neighbors.Add(lower);
         }
 
         for (int r = 0; r < row; r++)
         {
             var left = new Vector2Int(0, r) + Vector2Int.left;
-            edgeNeighbors.Add(left);
+            neighbors.Add(left);
 
             var right = new Vector2Int(lastColumn, r) + Vector2Int.right;
-            edgeNeighbors.Add(right);
+            neighbors.Add(right);
         }
 
-        return edgeNeighbors.ToArray();
+        return neighbors.ToArray();
     }
 }

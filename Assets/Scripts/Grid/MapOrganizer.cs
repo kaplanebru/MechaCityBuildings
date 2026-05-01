@@ -9,26 +9,16 @@ public class StructureTypeSearchData
     public StructureType Type;
     public QuadSample QuadSample;
     public int Amount;
-    public HashSet<StructureType> ImpossibleStructureTypes = new();
+    private HashSet<StructureType> _impossibleStructureTypes = new();
+    public IReadOnlyCollection<StructureType> ImpossibleStructureTypes => _impossibleStructureTypes;
 
     public StructureTypeSearchData(StructureType type, QuadSample quadSample, int amount, HashSet<StructureType> impossibleTypes)
     {
         Type = type;
         QuadSample = quadSample;
         Amount = amount;
-        ImpossibleStructureTypes.UnionWith(impossibleTypes);
-
-        Debug.Log("search  type " + type);
-        
-        foreach (var impossibleType in ImpossibleStructureTypes)
-        {
-            Debug.Log(type + " " +  impossibleType);
-        }
-    }
-
-    public void RemoveAdjacency(StructureType adjacencyType)
-    {
-        ImpossibleStructureTypes.Remove(adjacencyType);
+        _impossibleStructureTypes.UnionWith(impossibleTypes); // ← private field'a yaz
+        //Debug.Log($"{type} impossible types: {string.Join(",", ImpossibleStructureTypes)}");
     }
 }
 
@@ -82,7 +72,7 @@ public class MapOrganizer : MonoBehaviour
             searchDatas,
             mapToAlter.ToHashSet());
 
-        return SlotCreator.CreateCellDataFromQuads(randomQuads.ToArray(), map);
+        return SlotCreator.CreateSlotDataFromQuads(randomQuads.ToArray(), map);
     }
     
     private void ConvertFrequenciesToAmounts(int cellAmount)
