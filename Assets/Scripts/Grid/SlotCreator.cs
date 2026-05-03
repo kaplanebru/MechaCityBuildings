@@ -66,6 +66,9 @@ public class SlotCreator
         
         Vector2Int tangent = new Vector2Int(outwardNormal.y, -outwardNormal.x); //perpendicular
         var forward = new Vector3(tangent.x, 0f, tangent.y);
+        //var forward = new Vector3(outwardNormal.y, 0f, -outwardNormal.x);
+        
+        //TODO: haritanın tersliğini düzelt, ve haritanın tersliğine göre rotation optionları ekle
         
         return forward;
     }
