@@ -35,10 +35,7 @@ public class SlotData
         //4=çevresi kadar neighbor'u olur max
     }
 
-    public void SetForwardDirection(Vector3 direction)
-    {
-        
-    }
+    
 
     /*private void SetOutwardNormal(QuadOnMap quadOnMap)
     {

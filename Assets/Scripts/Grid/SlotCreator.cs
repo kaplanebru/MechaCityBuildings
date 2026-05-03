@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,18 +13,20 @@ public class SlotCreator
         {
             var slotData = new SlotData(quad.data.Coords);
 
+            var missingNeighborSum = Vector2Int.zero;
             foreach (var point in quad.data.Neighbors) //missinglere burdan da bakılabilir
             {
                 if(map.Contains(point))
                     slotData.Neighbors.Add(new NeighborCell(point));
+                else
+                    missingNeighborSum += point;
             }
 
-            slotData.SetType(quad.IsBoundary);
+            slotData.SetType(missingNeighborSum != Vector2Int.zero);
 
-            if (quad.IsBoundary)
-                slotData.Rotation = Quaternion.LookRotation(quad.GetForwardDirection(), Vector3.up);
+            if (slotData.Type == SlotType.Boundary)
+                slotData.Rotation = Quaternion.LookRotation(GetForwardDirection(missingNeighborSum), Vector3.up);
             
-            slotData.SetForwardDirection(quad.GetForwardDirection());
             slotData.SlotSize = quad.data.WidthHeight;
             slotData.Center = quad.Center;
             slotData.StructureType = quad.StructureType;
@@ -32,6 +35,18 @@ public class SlotCreator
         }
         
         return slotDatas;
+    }
+    
+    public static Vector3 GetForwardDirection(Vector2Int missingNeighborSum)
+    {
+        var outwardNormal = new Vector2Int(
+            Math.Sign(missingNeighborSum.x),
+            Math.Sign(missingNeighborSum.y));
+        
+        Vector2Int tangent = new Vector2Int(-outwardNormal.y, outwardNormal.x); //perpendicular
+        Vector3 forward = new Vector3(tangent.x, 0f, tangent.y);
+
+        return forward;
     }
     
     

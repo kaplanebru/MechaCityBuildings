@@ -25,9 +25,7 @@ public class QuadSearcher
 
             if (QuadIsOnMap(tempQuadPoints, map))
             {
-                var neighbors = QuadProjector.GetFilteredNeighborsOnGivenPoint
-                    (point, structureTypeData.QuadSample, map.ToHashSet(), out var missingNeighborSum);
-                
+                var neighbors = QuadProjector.GetNeighborsOnGivenPoint(point, structureTypeData.QuadSample).ToArray();
                 if (!possibilityHandler.IsTypeConvenient2(structureTypeData.Type, neighbors))
                     continue;
                 
@@ -35,8 +33,7 @@ public class QuadSearcher
                     structureTypeData.QuadSample,
                     tempQuadPoints.ToArray(),
                     neighbors,
-                    structureTypeData.Type,
-                    missingNeighborSum);
+                    structureTypeData.Type);
                 
 
                 possibilityHandler.UpdateFilledCells(newQuad, structureTypeData.Type);
@@ -79,14 +76,13 @@ public class QuadSearcher
     }
 
     private static QuadOnMap CreateQuadOnMap(QuadSample quadSample, Vector2Int[] points, Vector2Int[] neighbors,
-        StructureType structureType, Vector2Int missingNeighborSum)
+        StructureType structureType)
     {
         var quad = new QuadOnMap(quadSample.data.WidthHeight);
         quad.Setup(
             points.ToArray(),
             neighbors,
-            structureType,
-            missingNeighborSum
+            structureType
         );
 
         return quad;
@@ -126,15 +122,13 @@ public class QuadSearcher
 
         foreach (var cell in runningMap)
         {
-            var neighbors = QuadProjector.GetFilteredNeighborsOnGivenPoint
-            (cell, singularQuadSample, runningMap.ToHashSet(), out var missingNeighborSum);
+            var neighbors = QuadProjector.GetNeighborsOnGivenPoint(cell, singularQuadSample).ToArray();
             
             var newQuad = CreateQuadOnMap(
                 singularQuadSample,
                 new[] { cell },
                 neighbors,
-                singularQuadTypes[Random.Range(0, singularQuadTypes.Count)],
-                missingNeighborSum);
+                singularQuadTypes[Random.Range(0, singularQuadTypes.Count)]);
 
             quads.Add(newQuad);
         }
