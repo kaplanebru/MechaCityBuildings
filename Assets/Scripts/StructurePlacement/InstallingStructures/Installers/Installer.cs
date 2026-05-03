@@ -18,27 +18,27 @@ public class Installer : MonoBehaviour
     private Dictionary<StructureType, List<SlotData>> _slotDatasByType = new();
     [SerializeField] private GridData gridData;
     public StructurePool[] pools;
-    
+
     public FloorResidentsData floorToInstall;
-    
+
     public void InstallStructures(FloorData floorData, FloorResidentsData floorResidentsData)
     {
         ClassifyPlacementDatasOnFloor(floorResidentsData);
         InstallStructuresFromMultiplePools(floorData.Root);
     }
-    
+
     private void InstallStructuresFromMultiplePools(Transform floorRoot)
     {
-        List<Structure> structuresByType = new ();
+        List<Structure> structuresByType = new();
         foreach (var pool in pools)
         {
             structuresByType.AddRange(InstallStructuresFromPool(pool, floorRoot));
         }
-        
+
         floorToInstall.Structures = structuresByType;
     }
-    
-    private Structure[]  InstallStructuresFromPool(StructurePool pool, Transform floorRoot)
+
+    private Structure[] InstallStructuresFromPool(StructurePool pool, Transform floorRoot)
     {
         RestorePoolIfNeeded(pool);
         _slotDatasByType.TryGetValue(pool.poolData.StructureType, out List<SlotData> slotDatas);
@@ -52,16 +52,16 @@ public class Installer : MonoBehaviour
         }
 
         var structuresByType = InstallerHelper.Install(
-            slotDatas.ToArray(), 
-            floorRoot, 
+            slotDatas.ToArray(),
+            floorRoot,
             pool,
             gridData);
-        
+
         InstallerHelper.SealCellMetadataToStructure(structuresByType, gridData);
 
         return structuresByType;
     }
-    
+
     private void ClassifyPlacementDatasOnFloor(FloorResidentsData floorResidentsData)
     {
         floorToInstall = floorResidentsData;
@@ -77,7 +77,7 @@ public class Installer : MonoBehaviour
             .ToDictionary(g =>
                 g.Key, g => g.ToList());
     }
-    
+
     public void InitiatePools()
     {
         //todo destroy immediate
@@ -86,11 +86,11 @@ public class Installer : MonoBehaviour
             pool.InitializePool();
         }
     }
-    
+
     private void RestorePoolIfNeeded(StructurePool pool)
     {
         pool.CheckPoolActivity();
-        if (!pool.IsInitialized()) 
+        if (!pool.IsInitialized())
             pool.InitializePool();
         else
         {
@@ -103,15 +103,16 @@ public class Installer : MonoBehaviour
 
     public void ReleaseItemsToPool(HashSet<Structure> structures)
     {
-       if (structures == null || structures.Count == 0) return;
-       
+        if (structures == null || structures.Count == 0)
+            return;
+
         foreach (var pool in pools)
         {
             pool.ReleaseItemsToPool(structures.Where
                 (s => s.type == pool.poolData.StructureType).ToArray());
         }
     }
-    
+
     public void ClearStructures(HashSet<Structure> structures)
     {
         ReleaseItemsToPool(structures);

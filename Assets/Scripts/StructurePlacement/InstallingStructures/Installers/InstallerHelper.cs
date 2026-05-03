@@ -21,24 +21,7 @@ public static class InstallerHelper
             structure.type = slotData.GetStructureType();
         }
 
-        if (slotDatas[0].StructureType == StructureType.LeftBatiment)
-        {
-            Debug.Log($"center point: {slotDatas[0].Center}");
-            var neighbors = slotDatas[0].Neighbors;
-            Debug.Log($"neighbor count {neighbors.Count}");
-
-            foreach (var neighbor in neighbors)
-            {
-               
-                var worldPos = CellConverter.GetWorldPositionCenterFromCellIndex(neighbor.Coords.x, neighbor.Coords.y, gridData);
-               
-                GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                cube.transform.SetPositionAndRotation(worldPos, Quaternion.identity);
-                Debug.Log(neighbor.Coords);
-            }
-        }
-       
-
+        //DebugTheHelper(slotDatas, gridData);
         return structures.ToArray();
     }
 
@@ -53,6 +36,21 @@ public static class InstallerHelper
             
             //todo: ya da structure positionunu convert ederiz direkt
             //todo: cells[0]
+        }
+    }
+
+    private static void DebugTheHelper(SlotData[] slotDatas, GridData gridData)
+    {
+        if (slotDatas[0].StructureType == StructureType.LeftBatiment)
+        {
+            var neighbors = slotDatas[0].Neighbors;
+            foreach (var neighbor in neighbors)
+            {
+                var worldPos = CellConverter.GetWorldPositionCenterFromCellIndex(neighbor.Coords.x, neighbor.Coords.y, gridData);
+               
+                GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                cube.transform.SetPositionAndRotation(worldPos, Quaternion.identity);
+            }
         }
     }
 }
