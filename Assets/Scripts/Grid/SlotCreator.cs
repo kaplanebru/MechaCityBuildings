@@ -12,14 +12,18 @@ public class SlotCreator
         {
             var slotData = new SlotData(quad.data.Coords);
 
-            foreach (var point in quad.data.Neighbors)
+            foreach (var point in quad.data.Neighbors) //missinglere burdan da bakılabilir
             {
                 if(map.Contains(point))
                     slotData.Neighbors.Add(new NeighborCell(point));
             }
 
-            //çevresi kadar neighbor'u olur max
-            slotData.Type = quad.data.Neighbors.Length < quad.Perimeter ? SlotType.Boundary : SlotType.Regular;
+            slotData.SetType(quad.IsBoundary);
+
+            if (quad.IsBoundary)
+                slotData.Rotation = Quaternion.LookRotation(quad.GetForwardDirection(), Vector3.up);
+            
+            slotData.SetForwardDirection(quad.GetForwardDirection());
             slotData.SlotSize = quad.data.WidthHeight;
             slotData.Center = quad.Center;
             slotData.StructureType = quad.StructureType;
@@ -27,29 +31,28 @@ public class SlotCreator
             slotDatas.Add(slotData);
         }
         
-        //FindOrientationsForSingleCells(singleCellDatas.ToHashSet());
-        
         return slotDatas;
     }
     
     
-    private static void FindOrientationsForSingleCells(HashSet<SlotData> cellDataSet)
+    private static void FindOrientationsForSlots(HashSet<SlotData> slotDatas)
     {
-        var boundaryCells = CellRegistry.GetBoundaries(cellDataSet);
+        var boundarySlots = CellRegistry.GetBoundaries(slotDatas);
 
-        foreach (var boundaryCell in boundaryCells)
+        foreach (var boundarySlot in boundarySlots)
         {
-            if (boundaryCell.OutwardNormal == Vector2Int.zero)
+            if (boundarySlot.OutwardNormal == Vector2Int.zero)
             {
+                Debug.LogWarning("OutwardNormal is zero");
                 continue;
             }
             
             Vector2Int tangent = new Vector2Int(
-                -boundaryCell.OutwardNormal.y, 
-                boundaryCell.OutwardNormal.x); //perpendicular
+                -boundarySlot.OutwardNormal.y, 
+                boundarySlot.OutwardNormal.x); //perpendicular
             
             Vector3 forward = new Vector3(tangent.x, 0f, tangent.y);
-            boundaryCell.Rotation = Quaternion.LookRotation(forward, Vector3.up);
+            boundarySlot.Rotation = Quaternion.LookRotation(forward, Vector3.up);
         }
     }
 

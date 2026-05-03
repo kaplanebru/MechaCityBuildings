@@ -14,7 +14,7 @@ public static class InstallerHelper
             structure.transform.SetParent(parent);
 
             Vector3 worldPos = CellConverter.GetWorldPositionFromCellCenter(slotData, gridData);
-                //GetWorldPositionCenterFromCellIndex(cellData.Cells.x, cellData.Cells.y, gridData);
+            //GetWorldPositionCenterFromCellIndex(cellData.Cells.x, cellData.Cells.y, gridData);
             
             structure.transform.localPosition = worldPos;
             structure.transform.localRotation = slotData.Rotation;

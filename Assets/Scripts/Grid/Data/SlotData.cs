@@ -26,14 +26,25 @@ public class SlotData
     public void ApplyStructureType(StructureType type) => StructureType = type;
     public void SetOrderIndex(int orderIndex) => OrderIndex = orderIndex;
 
-    private void SetType()
+    public void SetType(bool isBoundary)
     {
+        Type = isBoundary ? SlotType.Boundary : SlotType.Regular;
+        //Type = Neighbors.Count < perimeter
+            //? SlotType.Boundary
+            //: SlotType.Regular; may need perimeter/cell unit/*
         //4=çevresi kadar neighbor'u olur max
-
-        Type = Neighbors.Count < 4
-            ? SlotType.Boundary
-            : SlotType.Regular;
     }
+
+    public void SetForwardDirection(Vector3 direction)
+    {
+        
+    }
+
+    /*private void SetOutwardNormal(QuadOnMap quadOnMap)
+    {
+
+        //QuadProjector.GetNeighborsOnGivenPoint(quadOnMap.data.Coords[0])
+    }*/
 
     /*public void SetNeighbors(
         int cellUnit,
@@ -63,7 +74,7 @@ public class SlotData
         SetType();
     }*/
 
-    private Vector2Int GetNormalByDirection(int i)
+    /*private Vector2Int GetNormalByDirection(int i)
     {
         return i switch
         {
@@ -77,7 +88,7 @@ public class SlotData
             ,
             _ => Vector2Int.zero
         };
-    }
+    }*/
 }
 
 public enum SlotType
