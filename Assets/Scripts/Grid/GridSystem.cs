@@ -27,6 +27,8 @@ public class GridSystem : MonoBehaviour
         AdaptGridByMeshAndCellSize(); //if map changes or cell size changes
         GridMasker.SetGridWithinCells(gridData, cellRecorderCache);
 
+        gridData.OriginWorldTransform = originWorldTransform;
+        //ReloadGrid();
         overlayPainter.RebuildAll(gridData);
     }
 
