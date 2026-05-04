@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2648b48460bb14478a83bb6440cf9dab, type: 3}
   m_Name: StructureType
   m_EditorClassIdentifier: 
-  Id: 0
-  Name: Right Batiment
+  Name: RightBatiment
   Type: 0
   QuadSample: {fileID: 11400000, guid: e19238f609a3d4237a691a254cfd8487, type: 2}
   HeightTier: 1
