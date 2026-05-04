@@ -12,7 +12,7 @@ public class QuadSearcher
     private static HashSet<QuadOnMap> DiscoveredQuadsInGivenType(
         StructureTypeSearchData structureTypeData,
         Dictionary<Vector2Int, bool> examiningMap,
-        SlotTypePossibilityHandler possibilityHandler)
+        SlotNeighborConvenienceHandler possibilityHandler)
     {
         HashSet<QuadOnMap> selectedQuads = new();
         var map = examiningMap.Keys.ToList();
@@ -59,7 +59,7 @@ public class QuadSearcher
 
 
         structureTypeDatas = structureTypeDatas.OrderByDescending(sd => sd.QuadSample.data.GetPointAmount).ToList();
-        SlotTypePossibilityHandler possibilityHandler = new(structureTypeDatas.ToHashSet());
+        SlotNeighborConvenienceHandler possibilityHandler = new(structureTypeDatas.ToHashSet());
 
         foreach (var structureTypeData in structureTypeDatas)
         {

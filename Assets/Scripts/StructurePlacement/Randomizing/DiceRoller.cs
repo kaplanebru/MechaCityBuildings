@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class DiceRoller
 {
-    public static StructureType RollDices(PendingPlacements[] pendingReplacements)
+    /*public static StructureType RollDices(PendingPlacements[] pendingReplacements)
     {
         if (pendingReplacements.Length == 1)
             return pendingReplacements.First().Type;
@@ -31,7 +31,7 @@ public static class DiceRoller
         
         Debug.LogError("RollDices don't match");
         return pendingReplacements.First().Type;
-    }
+    }*/
     
    /* public class DiceData
     {

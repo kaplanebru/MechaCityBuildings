@@ -4,16 +4,16 @@ using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-public class SlotTypePossibilityHandler
+public class SlotNeighborConvenienceHandler
 {
-    private Dictionary<StructureType, StructureTypeSearchData> impossibilitiesByStructureType = new();
+    private Dictionary<StructureType, StructureTypeSearchData> inconvenientsByStructureType = new();
     private Dictionary<Vector2Int, StructureType> _filledCells = new();
 
-    public SlotTypePossibilityHandler(HashSet<StructureTypeSearchData> structureTypeDatas)
+    public SlotNeighborConvenienceHandler(HashSet<StructureTypeSearchData> structureTypeDatas)
     {
         foreach (var structureTypeData in structureTypeDatas)
         {
-            impossibilitiesByStructureType.Add(structureTypeData.Type, structureTypeData);
+            inconvenientsByStructureType.Add(structureTypeData.Type, structureTypeData);
         }
     }
 
@@ -39,14 +39,14 @@ public class SlotTypePossibilityHandler
             {
                 //Debug.Log($"Neighbor {neighbor} has type {determinedCellType}, impossibleTypes: {string.Join(",", impossibleTypes)}");
                 // Şu an yerleştirilen tip, komşunun impossible listesinde mi?
-                var impossibleTypes = impossibilitiesByStructureType[currentType].ImpossibleStructureTypes;
-                if (impossibleTypes.Contains(filledCellType))
+                var inconvenientTypes = inconvenientsByStructureType[currentType].ImpossibleStructureTypes;
+                if (inconvenientTypes.Contains(filledCellType))
                     return false;
 
                 // Komşu, şu an yerleştirilen tipi impossible olarak görüyor mu?
-                var neighborImpossibleTypes =
-                    impossibilitiesByStructureType[filledCellType].ImpossibleStructureTypes;
-                if (neighborImpossibleTypes.Contains(currentType))
+                var neighborInconvenientTypes =
+                    inconvenientsByStructureType[filledCellType].ImpossibleStructureTypes;
+                if (neighborInconvenientTypes.Contains(currentType))
                     return false;
             }
         }

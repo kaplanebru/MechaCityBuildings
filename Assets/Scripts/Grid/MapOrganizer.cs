@@ -28,7 +28,7 @@ public class MapOrganizer : MonoBehaviour
 {
     [HideInInspector] public bool[] adjacencyMatrixData;
     public CityData cityData;
-    [SerializeField] private StructureTypeDatabase structureTypeDatabase;
+    [SerializeField] private StructureDatabase structureDatabase;
     
 
     public int GetSelectedStructureTypeAmount() => cityData.RandomizerDataSet.Length;
@@ -44,7 +44,7 @@ public class MapOrganizer : MonoBehaviour
             {
                 structureTypeData.Add(new StructureTypeSearchData(
                     type, 
-                    structureTypeDatabase.GetData(type).QuadSample, 
+                    structureDatabase.GetData(type).QuadSample, 
                     amount,
                     AdjacencyHelper.GetImpossibleAdjacencyForGivenType(type, selectedTypes, adjacencyMatrixData).ToHashSet()));
             }

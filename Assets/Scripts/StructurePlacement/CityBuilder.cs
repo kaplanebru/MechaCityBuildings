@@ -10,7 +10,6 @@ using UnityEditor;
 public class CityBuilder : MonoBehaviour
 {
     public MapOrganizer mapOrganizer;
-    public Randomizer randomizer;
     public Installer installer;
     public FloorResidentsDatabase floorResidentsDb;
     public FloorDatabase floorDb;
@@ -50,27 +49,6 @@ public class CityBuilder : MonoBehaviour
 #endif
     }
 
-    private void RegisterFloorResidentsAndInstall(int floorIndex, HashSet<SlotData> slots)
-    {
-#if UNITY_EDITOR
-        Undo.RecordObject(floorResidentsDb,"Installment From Cell");
-        Undo.RecordObject(installer, "Installment From Cell");
-
-        FloorResidentsData floorResidentsData = floorResidentsDb.GetFloor(floorIndex);
-        
-        floorResidentsDb.RegisterSlots(floorIndex, slots.ToList());
-        randomizer.OrderCellsOnFloor(slots, floorResidentsData);
-        //randomizer.MixAndApplyPlacements(floorResidentsData);
-        installer.InstallStructures(floorDb.GetFloorData(floorIndex), floorResidentsData);
-
-        EditorUtility.SetDirty(floorResidentsDb);
-        EditorUtility.SetDirty(installer);
-
-        //if (!Application.isPlaying)
-            //UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(gameObject.scene);
-#endif
-    }
-
     public void RandomizeAndInstallTotalZone()
     {
 #if UNITY_EDITOR
@@ -80,7 +58,7 @@ public class CityBuilder : MonoBehaviour
 
         foreach (var floorData in floorDb.FloorDatas)
         {
-            randomizer.MixAndApplyPlacements(floorResidentsDb.GetFloor(floorData.Index));
+            //TODO: RANDOMIZE
             installer.InstallStructures(floorData, floorResidentsDb.GetFloor(floorData.Index));
         }
         

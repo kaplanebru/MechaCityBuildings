@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ReplacementData", menuName = "Scriptable Objects/ReplacementData")]
-public class StructureTypeData : ScriptableObject
+public class StructureData : ScriptableObject
 {
     public int Id;
     public string Name;

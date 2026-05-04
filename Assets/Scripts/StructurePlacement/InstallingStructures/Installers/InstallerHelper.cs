@@ -46,7 +46,7 @@ public static class InstallerHelper
             var neighbors = slotDatas[0].Neighbors;
             foreach (var neighbor in neighbors)
             {
-                var worldPos = CellConverter.GetWorldPositionCenterFromCellIndex(neighbor.Coords.x, neighbor.Coords.y, gridData);
+                var worldPos = CellConverter.GetWorldPositionCenterFromCellIndex(neighbor.x, neighbor.y, gridData);
                
                 GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 cube.transform.SetPositionAndRotation(worldPos, Quaternion.identity);

@@ -3,34 +3,6 @@ using System.Collections.Generic;
 
 public class AdjacencyHelper
 {
-    public static bool CanBeAdjacent(
-        StructureType a,
-        StructureType b,
-        StructureType[] selectedStructureTypes,
-        bool[] adjacency)
-    {
-        int row = Array.IndexOf(selectedStructureTypes, a);
-        int col = Array.IndexOf(selectedStructureTypes, b);
-
-        if (row < 0 || col < 0) return false;
-
-        return adjacency[row * selectedStructureTypes.Length + col];
-    }
-
-    public static IEnumerable<StructureType> GetAdjacencyForGivenType(StructureType a,
-        StructureType[] selectedStructureTypes, bool[] adjacencyData)
-    {
-        int size = selectedStructureTypes.Length;
-        int row = Array.IndexOf(selectedStructureTypes, a);
-        
-
-        for (int col = 0; col < size; col++)
-        {
-            if (adjacencyData[row * size + col])
-                yield return selectedStructureTypes[col];
-        }
-    }
-    
     public static IEnumerable<StructureType> GetImpossibleAdjacencyForGivenType(StructureType a,
         StructureType[] selectedStructureTypes, bool[] adjacencyData)
     {
@@ -89,5 +61,33 @@ public class AdjacencyHelper
         }
 
         return db;
+    }
+    
+    public static bool CanBeAdjacent(
+        StructureType a,
+        StructureType b,
+        StructureType[] selectedStructureTypes,
+        bool[] adjacency)
+    {
+        int row = Array.IndexOf(selectedStructureTypes, a);
+        int col = Array.IndexOf(selectedStructureTypes, b);
+
+        if (row < 0 || col < 0) return false;
+
+        return adjacency[row * selectedStructureTypes.Length + col];
+    }
+
+    public static IEnumerable<StructureType> GetAdjacencyForGivenType(StructureType a,
+        StructureType[] selectedStructureTypes, bool[] adjacencyData)
+    {
+        int size = selectedStructureTypes.Length;
+        int row = Array.IndexOf(selectedStructureTypes, a);
+        
+
+        for (int col = 0; col < size; col++)
+        {
+            if (adjacencyData[row * size + col])
+                yield return selectedStructureTypes[col];
+        }
     }
 }

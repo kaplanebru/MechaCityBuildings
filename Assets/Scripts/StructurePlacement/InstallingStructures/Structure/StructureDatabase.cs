@@ -6,17 +6,17 @@ using UnityEngine;
 public class StructureDataByType
 {
     public StructureType Type;
-    public StructureTypeData typeData;
+    public StructureData data;
 }
 
 [CreateAssetMenu(fileName = "ReplacementDataBase", menuName = "Scriptable Objects/ReplacementDataBase")]
-public class StructureTypeDatabase : ScriptableObject
+public class StructureDatabase : ScriptableObject
 {
     [SerializeField] private List<StructureDataByType> datas = new();
-    private static Dictionary<StructureType, StructureTypeData> _datasByType = new ();
+    private static Dictionary<StructureType, StructureData> _datasByType = new ();
     private static Dictionary<StructureType, int> _heightTierByType = new ();
 
-    public StructureTypeData GetData(StructureType type)
+    public StructureData GetData(StructureType type)
     {
         EnsureBuilt();
         _datasByType.TryGetValue(type, out var data);
@@ -43,7 +43,7 @@ public class StructureTypeDatabase : ScriptableObject
 
         foreach (var d in datas)
         {
-            if (d.typeData == null)
+            if (d.data == null)
             {
                 Debug.LogWarning($"Rebuilding {GetType().Name} due to null data");
                 return;
@@ -55,14 +55,14 @@ public class StructureTypeDatabase : ScriptableObject
                 return;
             }
 
-            if (d.typeData.Type != d.Type)
+            if (d.data.Type != d.Type)
             {
                 Debug.LogWarning("Data type doesn't match the type");
                 return;
             }
 
-            _datasByType[d.Type] = d.typeData;
-            _heightTierByType[d.Type] = d.typeData.HeightTier;
+            _datasByType[d.Type] = d.data;
+            _heightTierByType[d.Type] = d.data.HeightTier;
         }
     }
 

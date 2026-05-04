@@ -9,7 +9,7 @@ public class SlotData
     public Vector2Int[] Cells;
     public SlotType Type;
     public StructureType StructureType; 
-    public List<NeighborCell> Neighbors = new();
+    public List<Vector2Int> Neighbors = new();
     public Vector2 Center;
     
     public Vector2Int OutwardNormal = Vector2Int.zero;

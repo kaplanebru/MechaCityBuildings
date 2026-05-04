@@ -39,7 +39,7 @@ public class SlotCreator
         foreach (var point in quad.data.Neighbors) //missinglere burdan da bakılabilir
         {
             if (map.Contains(point))
-                slotData.Neighbors.Add(new NeighborCell(point));
+                slotData.Neighbors.Add(point);
             else
             {
                 var pointCenter = new Vector2(point.x + 0.5f, point.y + 0.5f);
