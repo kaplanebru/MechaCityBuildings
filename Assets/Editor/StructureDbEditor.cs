@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -7,67 +8,24 @@ using UnityEngine;
 public class StructureDbEditor : Editor
 {
     private StructureDatabase t;
-    private int cachedCount;
-    private HashSet<StructureData> cachedData = new ();
-
-    private void OnEnable()
-    {
-        RestoreCache();
-        cachedCount = t.datas?.Count ?? 0;
-
-        Undo.postprocessModifications += OnPostprocessModifications;
-    }
-    
-    private UndoPropertyModification[] OnPostprocessModifications(UndoPropertyModification[] modifications)
-    {
-        RestoreCache();
-        if (t.datas == null) return modifications;
-
-        int currentCount = t.datas.Count;
-        if (currentCount != cachedCount)
-        {
-            RegenerateEnum();
-            cachedCount = currentCount;
-        }
-        /*if (currentCount > cachedCount)
-        {
-            foreach (var data in t.datas)
-            {
-                if (!cachedData.Contains(data))
-                {
-                    cachedData.Add(data);
-                    //var newElement = t.datas[currentCount - 1];
-                    OnElementAdded(data);
-                    cachedCount = currentCount;
-                    break;
-                }
-            }
-        }
-        else if(currentCount < cachedCount)
-        {
-            foreach (var data in cachedData)
-            {
-                if (!t.datas.Contains(data))
-                {
-                    cachedData.Remove(data);
-                    OnElementRemoved(data);
-                    cachedCount = currentCount;
-                    break;
-                }
-            }
-        }*/
-
-        return modifications;
-    }
-    
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
         EditorGUILayout.Space();
         if (GUILayout.Button("Apply Changes"))
         {
+            RestoreCache();
             RegenerateEnum();
-            cachedCount = t.datas?.Count ?? 0;
+        }
+    }
+
+    private void RestoreStructureDatasByEnums()
+    {
+        var values = Enum.GetValues(typeof(StructureType));
+        for (var i = 0; i < t.datas.Count; i++)
+        {
+            var data = t.datas[i];
+            data.Type = (StructureType)values.GetValue(i);
         }
     }
     
@@ -80,6 +38,8 @@ public class StructureDbEditor : Editor
         enumValues.Add("Undefined");
 
         GenerateEnumFile("StructureType", enumValues, "Assets/Scripts/GeneratedEnums/StructureType.cs");
+        AssetDatabase.Refresh();
+        EditorApplication.delayCall += RestoreStructureDatasByEnums;
         Debug.Log($"StructureType enum regenerated: {string.Join(", ", enumValues)}");
     }
 
@@ -113,10 +73,4 @@ public class StructureDbEditor : Editor
         if (t == null)
             t = target as StructureDatabase;
     }
-    
-    private void OnDisable()
-    {
-        Undo.postprocessModifications -= OnPostprocessModifications;
-    }
-    
 }
