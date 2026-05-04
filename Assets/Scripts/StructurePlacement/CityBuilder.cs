@@ -18,14 +18,14 @@ public class CityBuilder : MonoBehaviour
     private void OnEnable()
     {
         cityDrawer.OnCellsReady += RegisterMapOnFloorAndInstall;
-        floorDb.OnFloorClearRequest += ClearResidentsOnFloor;
+        floorDb.OnFloorClearRequest += ClearStructuresOnFloor;
         floorDb.OnFloorCreated += AddFloorResidentsData;
         floorDb.OnLastFloorRemoved += RemoveLastFloorResidentsData;
     }
     private void OnDisable()
     {
         cityDrawer.OnCellsReady -= RegisterMapOnFloorAndInstall;
-        floorDb.OnFloorClearRequest -= ClearResidentsOnFloor;
+        floorDb.OnFloorClearRequest -= ClearStructuresOnFloor;
         floorDb.OnFloorCreated -= AddFloorResidentsData;
         floorDb.OnLastFloorRemoved -= RemoveLastFloorResidentsData;
     }
@@ -38,8 +38,7 @@ public class CityBuilder : MonoBehaviour
 
         floorResidentsDb.RegisterCells(floorIndex, cells.ToList());
         
-        //TODO: frequency thing here
-        var slotDataSet = mapOrganizer.ToSlotData(cells);//todo can register slotdata but who cares, maybe for optimization?
+        var slotDataSet = mapOrganizer.ToSlotData(cells);
         floorResidentsDb.RegisterSlots(floorIndex, slotDataSet.ToList());
         
         installer.InstallStructures(floorDb.GetFloorData(floorIndex), floorResidentsDb.GetFloor(floorIndex));
@@ -58,7 +57,15 @@ public class CityBuilder : MonoBehaviour
 
         foreach (var floorData in floorDb.FloorDatas)
         {
-            //TODO: RANDOMIZE
+            var floorIndex = floorData.Index;
+            var floorResidents = floorResidentsDb.GetFloor(floorIndex);
+            var cells = floorResidents.Cells.ToHashSet();
+            
+            ClearStructuresOnFloor(floorIndex); 
+            //dont call clear floor from city drawer at first
+            //ya da zaten grid silinmiş oluyor buna gerek yok
+            
+            floorResidentsDb.RegisterSlots(floorIndex, mapOrganizer.ToSlotData(cells).ToList());
             installer.InstallStructures(floorData, floorResidentsDb.GetFloor(floorData.Index));
         }
         
@@ -71,7 +78,7 @@ public class CityBuilder : MonoBehaviour
     {
         floorResidentsDb.AddFloorResidentsData();
     }
-    private void ClearResidentsOnFloor(int floorIndex)
+    private void ClearStructuresOnFloor(int floorIndex)
     {
         var structures = floorResidentsDb.ClearResidents(floorIndex);
         installer.ClearStructures(structures);

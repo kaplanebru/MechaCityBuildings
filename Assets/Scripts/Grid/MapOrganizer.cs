@@ -33,7 +33,7 @@ public class MapOrganizer : MonoBehaviour
 
     public int GetSelectedStructureTypeAmount() => cityData.RandomizerDataSet.Length;
 
-    private List<StructureTypeSearchData> GetSearchData()
+    private List<StructureTypeSearchData> GetStructureTypeDatas()
     {
         var structureTypeData = new List<StructureTypeSearchData>();
         var selectedTypes = cityData.GetSelectedStructureTypes();
@@ -55,21 +55,21 @@ public class MapOrganizer : MonoBehaviour
     public HashSet<SlotData> ToSlotData(HashSet<Vector2Int> map)
     {
         ConvertFrequenciesToAmounts(map.Count);
-        var searchDatas = GetSearchData();
+        var structureTypeDatas = GetStructureTypeDatas();
 
-        return DisposeMap(map, searchDatas);
+        return DisposeMapByShuffle(map, structureTypeDatas);
     }
 
-    private HashSet<SlotData> DisposeMap(
+    private HashSet<SlotData> DisposeMapByShuffle(
         HashSet<Vector2Int> map,
-        List<StructureTypeSearchData> searchDatas)
+        List<StructureTypeSearchData> structureTypeDatas)
     {
         List<Vector2Int> mapToAlter = new();
         mapToAlter.AddRange(map);
-        //Shuffle(mapToAlter);
+        Shuffle(mapToAlter);
 
         var randomQuads = QuadSearcher.SearchQuads(
-            searchDatas,
+            structureTypeDatas,
             mapToAlter.ToHashSet());
 
         return SlotCreator.CreateSlotDataFromQuads(randomQuads.ToArray(), map);
