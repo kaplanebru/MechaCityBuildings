@@ -2,19 +2,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public class StructureDataByType
-{
-    public StructureType Type;
-    public StructureData data;
-}
+
 
 [CreateAssetMenu(fileName = "ReplacementDataBase", menuName = "Scriptable Objects/ReplacementDataBase")]
 public class StructureDatabase : ScriptableObject
 {
-    [SerializeField] private List<StructureDataByType> datas = new();
+    public List<StructureData> datas = new();
     private static Dictionary<StructureType, StructureData> _datasByType = new ();
-    private static Dictionary<StructureType, int> _heightTierByType = new ();
 
     public StructureData GetData(StructureType type)
     {
@@ -23,46 +17,32 @@ public class StructureDatabase : ScriptableObject
         return data;
     }
 
-    public int GetHeightTierByType(StructureType type)
-    {
-        EnsureBuilt();
-        return _heightTierByType[type];
-    }
+   
 
     private void EnsureBuilt()
     {
-        if (_datasByType.Count == datas.Count && 
-            _heightTierByType.Count == datas.Count) return;
+        if (_datasByType.Count == datas.Count) return;
         Rebuild();
     }
 
     private void Rebuild()
     {
         _datasByType.Clear();
-        _heightTierByType.Clear();
-
-        foreach (var d in datas)
+        foreach (var data in datas)
         {
-            if (d.data == null)
+            if (data == null)
             {
                 Debug.LogWarning($"Rebuilding {GetType().Name} due to null data");
                 return;
             }
 
-            if (_datasByType.ContainsKey(d.Type))
+            if (_datasByType.ContainsKey(data.Type))
             {
-                Debug.LogWarning($"Duplicate replacement type: {d.Type}");
+                Debug.LogWarning($"Duplicate replacement type: {data.Type}");
                 return;
             }
-
-            if (d.data.Type != d.Type)
-            {
-                Debug.LogWarning("Data type doesn't match the type");
-                return;
-            }
-
-            _datasByType[d.Type] = d.data;
-            _heightTierByType[d.Type] = d.data.HeightTier;
+            
+            _datasByType.Add(data.Type, data);
         }
     }
 

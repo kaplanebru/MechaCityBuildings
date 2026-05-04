@@ -3,14 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum StructureType
-{
-    RightBatiment,
-    LeftBatiment,
-    Stairs,
-    VariedBatiment,
-    Undefined
-}
+
 
 [ExecuteInEditMode]
 public class Installer : MonoBehaviour

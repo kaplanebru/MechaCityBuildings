@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StructureType 1
   m_EditorClassIdentifier: 
   Id: 1
-  Name: Left
+  Name: Left Batiment
   Type: 1
   QuadSample: {fileID: 11400000, guid: fff60aaad246744f78bd1e0eb6b7d9f5, type: 2}
   HeightTier: 0

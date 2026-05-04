@@ -13,7 +13,5 @@ MonoBehaviour:
   m_Name: StructureTypeData
   m_EditorClassIdentifier: 
   datas:
-  - Type: 0
-    data: {fileID: 11400000, guid: 8a179f640f0924556a3d649dc1532146, type: 2}
-  - Type: 1
-    data: {fileID: 11400000, guid: 0e0aac9c489634664b64c3f1283ce40b, type: 2}
+  - {fileID: 11400000, guid: 8a179f640f0924556a3d649dc1532146, type: 2}
+  - {fileID: 11400000, guid: 0e0aac9c489634664b64c3f1283ce40b, type: 2}
