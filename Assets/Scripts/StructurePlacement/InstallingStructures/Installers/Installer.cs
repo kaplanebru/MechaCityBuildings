@@ -14,9 +14,9 @@ public class Installer : MonoBehaviour
 
     public FloorResidentsData floorToInstall;
 
-    public void InstallStructures(FloorData floorData, FloorResidentsData floorResidentsData)
+    public void InstallStructures(FloorData floorData, FloorResidentsData floorResidentsData, List<SlotData> slots)
     {
-        ClassifyPlacementDatasOnFloor(floorResidentsData);
+        ClassifyPlacementDatasOnFloor(floorResidentsData, slots);
         InstallStructuresFromMultiplePools(floorData.Root);
     }
 
@@ -28,7 +28,8 @@ public class Installer : MonoBehaviour
             structuresByType.AddRange(InstallStructuresFromPool(pool, floorRoot));
         }
 
-        floorToInstall.Structures = structuresByType;
+        //floorToInstall.Structures = structuresByType;
+        floorToInstall.RegisterStructures(structuresByType);
     }
 
     private Structure[] InstallStructuresFromPool(StructurePool pool, Transform floorRoot)
@@ -55,20 +56,24 @@ public class Installer : MonoBehaviour
         return structuresByType;
     }
 
-    private void ClassifyPlacementDatasOnFloor(FloorResidentsData floorResidentsData)
+    private void ClassifyPlacementDatasOnFloor(FloorResidentsData floorResidentsData, List<SlotData> slots)
     {
         floorToInstall = floorResidentsData;
-        if (floorToInstall.Slots.Count == 0)
+        /*if (floorToInstall.Slots.Count == 0)
         {
             Debug.Log("No placement dataset found");
             return;
-        }
+        }*/
 
         _slotDatasByType.Clear();
-        _slotDatasByType = floorToInstall.Slots
+        _slotDatasByType = slots
             .GroupBy(p => p.GetStructureType())
             .ToDictionary(g =>
                 g.Key, g => g.ToList());
+        /*_slotDatasByType = floorToInstall.Slots
+            .GroupBy(p => p.GetStructureType())
+            .ToDictionary(g =>
+                g.Key, g => g.ToList());*/
     }
 
     public void InitiatePools()

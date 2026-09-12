@@ -8,6 +8,11 @@ public class FloorResidentsData
     public List<Vector2Int> Cells = new();
     public List<SlotData> Slots = new(); //aynı düzenin tekrarı için gerekecektir, save disposition için
     public List<Structure> Structures = new();
+    
+    public void RegisterStructures(List<Structure> structures) => Structures.AddRange(structures);
+    public void RegisterCells(List<Vector2Int> cells)=>  Cells.AddRange(cells);
+    public void RegisterSlots(List<SlotData> slots) => Slots.AddRange(slots);
+   
 }
 
 

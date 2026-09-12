@@ -10,18 +10,20 @@ public class FloorResidentsDatabase : MonoBehaviour
 
     public FloorResidentsData GetFloor(int floorIndex) => floorResidents[floorIndex];
 
-    public void RegisterCells(int floorIndex, List<Vector2Int> cells)
+    public void RegisterCellsForFloor(int floorIndex, List<Vector2Int> cells)
     {
-        GetFloor(floorIndex).Cells = cells;
-        //GetFloor(floorIndex).Cells.AddRange(cells);
+        //GetFloor(floorIndex).Cells = cells;
+        GetFloor(floorIndex).RegisterCells(cells);
 
     }
-    public void RegisterSlots(int floorIndex, List<SlotData> slots)
+    public void RegisterSlotsForFloor(int floorIndex, List<SlotData> slots)
     {
-        GetFloor(floorIndex).Slots.Clear();
-        GetFloor(floorIndex).Slots = slots.ToList();
-        //GetFloor(floorIndex).Slots.AddRange(slots);
-        //Debug.Log( GetFloor(floorIndex).Slots.Count);
+        //GetFloor(floorIndex).Slots.Clear();
+        //GetFloor(floorIndex).Slots = slots.ToList();
+        Debug.Log($"previous slots {GetFloor(floorIndex).Slots.Count}");
+        Debug.Log("new slot amount =  " + slots.Count);
+        GetFloor(floorIndex).RegisterSlots(slots);
+        Debug.Log( GetFloor(floorIndex).Slots.Count);
     }
 
     public void AddFloorResidentsData()
