@@ -85,13 +85,13 @@ public class Installer : MonoBehaviour
         pool.CheckPoolActivity();
         if (!pool.IsInitialized())
             pool.InitializePool();
-        else
+        /*else
         {
             if (floorToInstall.Structures != null)
             {
                 ReleaseItemsToPool(floorToInstall.Structures.ToHashSet()); //dunno
             }
-        }
+        }*/
     }
 
     public void ReleaseItemsToPool(HashSet<Structure> structures)

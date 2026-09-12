@@ -64,9 +64,10 @@ public class CityBuilder : MonoBehaviour
             var floorResidents = floorResidentsDb.GetFloor(floorIndex);
             var cells = floorResidents.Cells.ToHashSet();
             
-            ClearStructuresOnFloor(floorIndex); 
-            //dont call clear floor from city drawer at first
-            //ya da zaten grid silinmiş oluyor buna gerek yok
+            //ClearStructuresOnFloor(floorIndex); 
+            var structures = floorResidentsDb.ClearStructuresKeepCells(floorIndex);
+            installer.ClearStructures(structures);
+            
             
             floorResidentsDb.RegisterSlots(floorIndex, mapOrganizer.ToSlotData(cells).ToList());
             installer.InstallStructures(floorData, floorResidentsDb.GetFloor(floorData.Index));

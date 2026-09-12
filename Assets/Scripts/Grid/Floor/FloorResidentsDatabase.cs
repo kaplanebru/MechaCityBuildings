@@ -13,11 +13,15 @@ public class FloorResidentsDatabase : MonoBehaviour
     public void RegisterCells(int floorIndex, List<Vector2Int> cells)
     {
         GetFloor(floorIndex).Cells = cells;
+        //GetFloor(floorIndex).Cells.AddRange(cells);
+
     }
     public void RegisterSlots(int floorIndex, List<SlotData> slots)
     {
         GetFloor(floorIndex).Slots.Clear();
         GetFloor(floorIndex).Slots = slots.ToList();
+        //GetFloor(floorIndex).Slots.AddRange(slots);
+        //Debug.Log( GetFloor(floorIndex).Slots.Count);
     }
 
     public void AddFloorResidentsData()
@@ -25,11 +29,22 @@ public class FloorResidentsDatabase : MonoBehaviour
         floorResidents.Add(new FloorResidentsData());
     }
 
+    public HashSet<Structure> ClearStructuresKeepCells(int floorIndex)
+    {
+        var floorResidentsData = floorResidents[floorIndex];
+        
+        floorResidentsData.Slots.Clear();
+        HashSet<Structure> tempStructures = new(floorResidentsData.Structures);
+        floorResidentsData.Structures.Clear();
+        return tempStructures;
+    }
+
     public HashSet<Structure> ClearResidents(int floorIndex)
     {
         var floorResidentsData = floorResidents[floorIndex];
 
         floorResidentsData.Slots.Clear();
+        floorResidentsData.Cells.Clear();
 
         HashSet<Structure> tempStructures = new(floorResidentsData.Structures);
         floorResidentsData.Structures.Clear();

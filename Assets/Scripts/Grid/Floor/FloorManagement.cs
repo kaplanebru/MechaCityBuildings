@@ -69,13 +69,15 @@ public static class FloorManagement
         RestoreCacheIfNeeded(db);
         var activeFloor = db.GetActiveFloorData();
         db.OnFloorClearRequest?.Invoke(activeFloor.Index);
+        db.SetActiveFloor(activeFloor.Index);
     }
 
     private static void ClearLastFloor(FloorDatabase db)
     {
         var lastFloor = db.GetLastFloorData();
-        var safeLastFloorMinus = lastFloor.Index > 0 ? lastFloor.Index-1 : 0;
-        db.OnFloorClearRequest?.Invoke(safeLastFloorMinus);
+        db.OnFloorClearRequest?.Invoke(lastFloor.Index);
+        db.SetActiveFloor(lastFloor.Index);
+
     }
 
     public static void DeleteLastFloor(FloorDatabase db)
