@@ -42,13 +42,25 @@ public class CityBuilder : MonoBehaviour
         floorResidentsDb.RegisterCellsForFloor(floorIndex, cells.ToList());
         
         var slotDataSet = mapOrganizer.ToSlotData(cells);
+        var floorResidents = floorResidentsDb.GetFloor(floorIndex);
+        
+        PreventDuplicates(floorResidents, slotDataSet);
         floorResidentsDb.RegisterSlotsForFloor(floorIndex, slotDataSet.ToList());
         
-        installer.InstallStructures(floorDb.GetFloorData(floorIndex), floorResidentsDb.GetFloor(floorIndex), slotDataSet.ToList());
+        installer.InstallStructures(floorDb.GetFloorData(floorIndex), floorResidents, slotDataSet.ToList());
         
         EditorUtility.SetDirty(floorResidentsDb);
         EditorUtility.SetDirty(installer);
 #endif
+    }
+
+    private void PreventDuplicates(FloorResidentsData floorResidents, HashSet<SlotData> slotDataSet)
+    {
+        foreach (var slot in floorResidents.Slots)
+        {
+            if (slotDataSet.Contains(slot))
+                slotDataSet.Remove(slot);
+        }
     }
 
     public void RandomizeAndInstallTotalZone()
@@ -67,10 +79,8 @@ public class CityBuilder : MonoBehaviour
             var structures = floorResidentsDb.ClearStructuresKeepCells(floorIndex);
             installer.ClearStructures(structures);
             
-            
             floorResidentsDb.RegisterSlotsForFloor(floorIndex, mapOrganizer.ToSlotData(cells).ToList());
-            var floor = floorResidentsDb.GetFloor(floorData.Index);
-            installer.InstallStructures(floorData, floor, floor.Slots);
+            installer.InstallStructures(floorData, floorResidentsDb.GetFloor(floorData.Index));
         }
         
         EditorUtility.SetDirty(floorResidentsDb);
@@ -115,8 +125,7 @@ public class CityBuilder : MonoBehaviour
         for (var i = 0; i < floorResidentsDb.floorResidents.Count; i++)
         {
             floorResidentsDb.RegisterSlotsForFloor(i, dispositionData.SlotsByFloor[i]);
-            var floor = floorResidentsDb.GetFloor(i);
-            installer.InstallStructures(floorDb.GetFloorData(i), floor, floor.Slots);
+            installer.InstallStructures(floorDb.GetFloorData(i), floorResidentsDb.GetFloor(i));
         }
         
         EditorUtility.SetDirty(floorResidentsDb);

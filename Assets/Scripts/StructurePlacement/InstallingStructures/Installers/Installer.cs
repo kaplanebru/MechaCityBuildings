@@ -14,8 +14,9 @@ public class Installer : MonoBehaviour
 
     public FloorResidentsData floorToInstall;
 
-    public void InstallStructures(FloorData floorData, FloorResidentsData floorResidentsData, List<SlotData> slots)
+    public void InstallStructures(FloorData floorData, FloorResidentsData floorResidentsData, List<SlotData> slots = null)
     {
+        slots ??= floorResidentsData.Slots;
         ClassifyPlacementDatasOnFloor(floorResidentsData, slots);
         InstallStructuresFromMultiplePools(floorData.Root);
     }
