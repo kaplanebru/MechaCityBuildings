@@ -56,7 +56,8 @@ public class MapOrganizer : MonoBehaviour
     {
         ConvertFrequenciesToAmounts(map.Count);
         var structureTypeDatas = GetStructureTypeDatas();
-
+        
+        //structure types with same quad's should be searched together, and then get distributed
         return DisposeMapByShuffle(map, structureTypeDatas);
     }
 

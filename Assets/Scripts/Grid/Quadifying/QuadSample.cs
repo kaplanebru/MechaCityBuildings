@@ -9,7 +9,8 @@ using UnityEngine;
 public class QuadSample : ScriptableObject
 {
     public QuadData data;
-    
+
+    public int GetMultitude => data.GetPointAmount;
 
     public void Generate()
     {
