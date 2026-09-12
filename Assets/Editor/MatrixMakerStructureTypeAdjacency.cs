@@ -73,19 +73,32 @@ public class MatrixMakerStructureTypeAdjacency : Editor
     /// "Wall_Top" -> "W\na\nl\nl\n|\nT\no\np" : harfleri yukarıdan aşağıya dizer.
     /// Yatay karakterler (_ - –) dikeye döndükleri için "|" ile değiştirilir.
     /// </summary>
-    private static string StackVertical(string s)
+    private static string StackVertical(string stringName)
     {
-        var sb = new System.Text.StringBuilder(s.Length * 2);
-        for (int i = 0; i < s.Length; i++)
+        var sb = new System.Text.StringBuilder(stringName.Length * 2);
+        
+        
+        for (int i = 3; i < stringName.Length; i++)
         {
             if (i > 0) sb.Append('\n');
  
-            char c = s[i];
-            if (c == '_' || c == '-' || c == '–')
-                c = ':'; //|
+            char c = stringName[i];
+            //if (c == '_' || c == '-' || c == '–')
+                //c = ':'; //|
  
             sb.Append(c);
         }
+
+        sb.Append('\n');
+        sb.Append(":");
+        sb.Append('\n');
+
+        for (int i = 0; i < 2; i++)
+        {
+            sb.Append(stringName[i]);
+
+        }
+        
         return sb.ToString();
     }
  
