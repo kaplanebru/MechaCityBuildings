@@ -7,7 +7,6 @@ using UnityEngine;
 public class FloorResidentsDatabase : MonoBehaviour
 {
     public List<FloorResidentsData> floorResidents = new List<FloorResidentsData>();
-    private DispositionRecorder _dispositionRecorder = new();
 
     public FloorResidentsData GetFloor(int floorIndex) => floorResidents[floorIndex];
 
@@ -78,20 +77,7 @@ public class FloorResidentsDatabase : MonoBehaviour
         return structuresByCell;
     }
 
-    public void SaveCurrentArrangement(string dispositionName)
-    {
-        //TODO: dictionart kaydedemiyor zaten
-        List<List<SlotData>> slotDatasList = floorResidents.Select(floorResidentData => floorResidentData.Slots).ToList();
-        DispositionData dispositionData = new DispositionData(dispositionName, slotDatasList);
-        _dispositionRecorder.Add(dispositionData);
-    }
-
-
-    public void ResurrectArrangement(string arrangementName)
-    {
-        _dispositionRecorder.ResurrectArrangement(arrangementName);
-    }
-
+    
 
     /*public static void RestoreBuildingsOnFloor(FloorData floorData,GridData gridData)
     {

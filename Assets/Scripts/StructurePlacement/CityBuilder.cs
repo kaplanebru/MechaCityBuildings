@@ -14,6 +14,9 @@ public class CityBuilder : MonoBehaviour
     public FloorResidentsDatabase floorResidentsDb;
     public FloorDatabase floorDb;
     public CityDrawer cityDrawer;
+    public DispositionDb dispositionDb;
+
+
 
     private void OnEnable()
     {
@@ -86,7 +89,6 @@ public class CityBuilder : MonoBehaviour
     
     private void RemoveLastFloorResidentsData()
     {
-        //ClearResidentsOnFloor(floorDb.GetFloorCount()-1); already cleared on delete call
         floorResidentsDb.RemoveLastFloor();
     }
     
@@ -98,10 +100,26 @@ public class CityBuilder : MonoBehaviour
             mapOrganizer.adjacencyMatrixData = new bool[matrixSize];
         }
     }
-    public void InstallGivenArrangement()
+    
+    public DispositionData SaveCurrentDisposition(string dispositionName)
     {
-        //placement data with placement floors
-        //do we also need floor data (maybe later)
+        var slotDatasList = floorResidentsDb.floorResidents.Select(floorResidentData => floorResidentData.Slots).ToList();
+        return new DispositionData(dispositionName, slotDatasList);
     }
+
+
+    public void ResurrectDisposition(DispositionData dispositionData)
+    {
+        //TODO: DELETE ALL FLOORS
+        for (var i = 0; i < floorResidentsDb.floorResidents.Count; i++)
+        {
+            floorResidentsDb.RegisterSlots(i, dispositionData.SlotsByFloor[i]);
+            installer.InstallStructures(floorDb.GetFloorData(i), floorResidentsDb.GetFloor(i));
+        }
+        
+        EditorUtility.SetDirty(floorResidentsDb);
+        EditorUtility.SetDirty(installer);
+    }
+
     
 }

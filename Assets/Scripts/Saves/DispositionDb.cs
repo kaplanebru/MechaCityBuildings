@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Arrangement", menuName = "CityBuilder/New Arrangement")]
-public class SavedDispositionDb : ScriptableObject
+[CreateAssetMenu(fileName = "DispositionDB", menuName = "CityBuilder/DispositionDB")]
+public class DispositionDb : ScriptableObject
 {
     public List<DispositionData> Dataset = new();
     public string[] Names;
@@ -17,11 +17,22 @@ public class SavedDispositionDb : ScriptableObject
         return data != null;
     }
 
-    public void RemoveArrangement(DispositionData data)
+    public void AddDisposition(DispositionData data)
+    {
+        Dataset.Add(data);
+        RefreshNames();
+    }
+    public void RemoveDisposition(DispositionData data)
     {
         Dataset.Remove(data);
         RefreshNames();
     }
+    
+    public bool IsNameTaken(string dispositionName)
+    {
+        return Dataset.Any(d => d.Name == dispositionName);
+    }
+
 
     private void RefreshNames()
     {
@@ -30,14 +41,5 @@ public class SavedDispositionDb : ScriptableObject
         {
             Names[i] = Dataset[i].Name;
         }
-    }
-
-    public void AddArrangement(string arrangementName)
-    {
-        var arrangement = new DispositionData(arrangementName, null);
-        //TODO: not null
-
-        Dataset.Add(arrangement);
-        RefreshNames();
     }
 }

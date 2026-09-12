@@ -107,6 +107,16 @@ public static class FloorManagement
         return true;
     }
 
+    public static void DeleteEveryFloor(FloorDatabase db)
+    {
+        RestoreCacheIfNeeded(db);
+
+        foreach (var floor in db.FloorDatas)
+        {
+            //todo
+        }
+    }
+
     public static void SwitchActiveFloor(int floorIndex, FloorDatabase db)
     {
         RestoreCacheIfNeeded(db);

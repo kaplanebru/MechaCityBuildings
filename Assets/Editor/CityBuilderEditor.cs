@@ -9,36 +9,36 @@ public class CityBuilderEditor : Editor
 {
     private CityBuilder t;
     private DispositionEditorHelper _dispositionHelper = new();
-    public SavedDispositionDb savedDispositionDb;
-
-
+    private string _newDispositionName;
+    
     public override void OnInspectorGUI()
     {
         DrawStructureDispositionMatrix();
-        
+        CacheTarget();
+        CacheDispositionEditorHelper();
+
         EditorGUILayout.Space(8);
-        
+
         if (GUILayout.Button("Randomize And Apply"))
         {
-            CacheTarget();
             t.RandomizeAndInstallTotalZone();
         }
 
         EditorGUILayout.Space(8);
-        if (GUILayout.Button("Add Arrangement"))
+        
+        using (new EditorGUILayout.HorizontalScope())
         {
-            CacheArrangementHelper();
-            _dispositionHelper.AddDisposition(savedDispositionDb);
+            _newDispositionName = EditorGUILayout.TextField(
+                new GUIContent("New Disposition Name"),
+                _newDispositionName
+            );
+            SaveDisposition();
         }
-
-        CacheArrangementHelper();
 
         EditorGUILayout.Space(8);
-        if (GUILayout.Button("Load or Remove Arrangement"))
-        {
-            CacheArrangementHelper();
-            _dispositionHelper.ApplyOrRemoveArrangement(savedDispositionDb);
-        }
+        
+        ApplyOrRemoveDisposition();
+        
         
         EditorGUILayout.Space(8);
         DrawDefaultInspector();
@@ -50,19 +50,65 @@ public class CityBuilderEditor : Editor
             t = (CityBuilder)target; // Works for subclasses too
     }
 
-    private void CacheArrangementHelper()
+    private void CacheDispositionEditorHelper()
     {
         if (_dispositionHelper == null)
             _dispositionHelper = new DispositionEditorHelper();
     }
+
+    private void SaveDisposition()
+    {
+        if (GUILayout.Button("Save", GUILayout.Width(80)))
+        {
+            if (t.dispositionDb.IsNameTaken(_newDispositionName))
+            {
+                Debug.LogWarning($"Name {_newDispositionName} is already taken");
+            }
+            else
+            {
+                var disposition = t.SaveCurrentDisposition(_newDispositionName);
+                t.dispositionDb.AddDisposition(disposition);
+                EditorUtility.SetDirty(t.dispositionDb);
+            }
+        }
+    }
     
+    public void ApplyOrRemoveDisposition()
+    {
+        string selectedName = _dispositionHelper.ShowDispositions(t.dispositionDb);
+
+        using (new EditorGUI.DisabledScope(string.IsNullOrEmpty(selectedName)))
+        {
+            if (GUILayout.Button("Resurrect Disposition"))
+            {
+                if (t.dispositionDb.TryGetDataByName(selectedName, out var dispositionData))
+                {
+                    //todo: clear first
+                    FloorManagement.DeleteEveryFloor(t.floorDb);
+                    t.ResurrectDisposition(dispositionData);
+
+                    //if (!Application.isPlaying)
+                    //UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(gameObject.scene);
+                }
+            }
+
+            if (GUILayout.Button("Remove Disposition"))
+            {
+                if (t.dispositionDb.TryGetDataByName(selectedName, out var dispositionData))
+                {
+                    t.dispositionDb.RemoveDisposition(dispositionData);
+                    EditorUtility.SetDirty(t.dispositionDb);
+                }
+            }
+        }
+    }
+
     private void DrawStructureDispositionMatrix()
     {
         CacheTarget();
-        
-        t.RestoreMatrixIfNeeded();
-        MatrixMakerStructureTypeAdjacency.DisposeStructureTypes(t.mapOrganizer.cityData.GetSelectedStructureTypes(), t.mapOrganizer.adjacencyMatrixData);
-    }
 
-   
+        t.RestoreMatrixIfNeeded();
+        MatrixMakerStructureTypeAdjacency.DisposeStructureTypes(t.mapOrganizer.cityData.GetSelectedStructureTypes(),
+            t.mapOrganizer.adjacencyMatrixData);
+    }
 }
