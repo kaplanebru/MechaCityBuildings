@@ -13,15 +13,10 @@ MonoBehaviour:
   m_Name: CityData
   m_EditorClassIdentifier: 
   HeightGap: 2
-  JuxtapositionDataSet:
-  - HeightTier: 0
-    MaxJuxtapositionQuota: 2
-  - HeightTier: 1
-    MaxJuxtapositionQuota: 2
   RandomizerDataSet:
   - Type: 0
     FrequencyData:
-      Frequency: 95
+      Frequency: 20
   - Type: 1
     FrequencyData:
-      Frequency: 64
+      Frequency: 90
