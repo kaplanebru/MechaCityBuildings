@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: S3_1x1
   m_EditorClassIdentifier: 
   Name: S3_1x1
-  Type: 2
+  Type: 3
   QuadSample: {fileID: 11400000, guid: e19238f609a3d4237a691a254cfd8487, type: 2}
   Color: {r: 0, g: 0, b: 0, a: 0}
