@@ -24,6 +24,7 @@ public class SlotNeighborConvenienceHandler
             if (_filledCells.ContainsKey(cell))
             {
                 Debug.Log($"Filled cell repetition: {_filledCells[cell]}");
+                continue;
             }
 
             _filledCells.Add(cell, quadType);

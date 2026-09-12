@@ -41,7 +41,7 @@ public static class InstallerHelper
 
     private static void DebugTheHelper(SlotData[] slotDatas, GridData gridData)
     {
-        if (slotDatas[0].StructureType == StructureType.LeftBatiment)
+        /*if (slotDatas[0].StructureType == StructureType.LeftBatiment)
         {
             var neighbors = slotDatas[0].Neighbors;
             foreach (var neighbor in neighbors)
@@ -51,6 +51,6 @@ public static class InstallerHelper
                 GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 cube.transform.SetPositionAndRotation(worldPos, Quaternion.identity);
             }
-        }
+        }*/
     }
 }

@@ -17,6 +17,13 @@ public class StructureDatabase : ScriptableObject
         return data;
     }
 
+    public void CreateEnums(int amount = 10)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            
+        }
+    }
    
 
     private void EnsureBuilt()
