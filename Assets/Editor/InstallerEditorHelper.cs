@@ -22,23 +22,17 @@ public static class InstallerEditorHelper
 
     public static void RefreshPools(Installer t)
     {
-        DeleteAllChildrenInEditor(t.transform);
 
         foreach (var pool in t.pools)
         {
             DeleteAllChildrenInEditor(pool.transform);
             pool.ClearPool();
         }
-    }
 
-    /*public static void ReleaseItemsToPool(Installer t)
-    {
-        int floorCount = t.placementDatabase.GetPlacementFloorCount();
-        for (int i = 0; i < floorCount; i++)
-        {
-            t.ReleaseItemsToPool(i);
-        }
-    }*/
+        //DeleteAllChildrenInEditor(t.transform);
+        //t.pools = null;
+
+    }
 
     public static void SetSceneDirty(Installer t)
     {

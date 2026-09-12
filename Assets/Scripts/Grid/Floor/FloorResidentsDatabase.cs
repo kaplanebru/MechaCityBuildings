@@ -12,7 +12,6 @@ public class FloorResidentsDatabase : MonoBehaviour
 
     public void RegisterCellsForFloor(int floorIndex, List<Vector2Int> cells)
     {
-        //GetFloor(floorIndex).Cells = cells;
         GetFloor(floorIndex).RegisterCells(cells);
 
     }

@@ -12,7 +12,7 @@ public class Installer : MonoBehaviour
     [SerializeField] private GridData gridData;
     public StructurePool[] pools;
 
-    public FloorResidentsData floorToInstall;
+    public FloorResidentsData floorToInstall; //TODO MAKE THIS PRIVATE
 
     public void InstallStructures(FloorData floorData, FloorResidentsData floorResidentsData, List<SlotData> slots = null)
     {
@@ -29,7 +29,6 @@ public class Installer : MonoBehaviour
             structuresByType.AddRange(InstallStructuresFromPool(pool, floorRoot));
         }
 
-        //floorToInstall.Structures = structuresByType;
         floorToInstall.RegisterStructures(structuresByType);
     }
 
@@ -60,21 +59,12 @@ public class Installer : MonoBehaviour
     private void ClassifyPlacementDatasOnFloor(FloorResidentsData floorResidentsData, List<SlotData> slots)
     {
         floorToInstall = floorResidentsData;
-        /*if (floorToInstall.Slots.Count == 0)
-        {
-            Debug.Log("No placement dataset found");
-            return;
-        }*/
 
         _slotDatasByType.Clear();
         _slotDatasByType = slots
             .GroupBy(p => p.GetStructureType())
             .ToDictionary(g =>
                 g.Key, g => g.ToList());
-        /*_slotDatasByType = floorToInstall.Slots
-            .GroupBy(p => p.GetStructureType())
-            .ToDictionary(g =>
-                g.Key, g => g.ToList());*/
     }
 
     public void InitiatePools()
@@ -100,7 +90,7 @@ public class Installer : MonoBehaviour
         }*/
     }
 
-    public void ReleaseItemsToPool(HashSet<Structure> structures)
+    private void ReleaseItemsToPool(HashSet<Structure> structures)
     {
         if (structures == null || structures.Count == 0)
             return;
@@ -111,6 +101,7 @@ public class Installer : MonoBehaviour
                 (s => s.type == pool.poolData.StructureType).ToArray());
         }
     }
+    
 
     public void ClearStructures(HashSet<Structure> structures)
     {

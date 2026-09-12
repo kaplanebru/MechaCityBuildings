@@ -23,6 +23,27 @@ public class CityBuilderEditor : Editor
         {
             t.RandomizeAndInstallTotalZone();
         }
+        EditorGUILayout.Space(8);
+        
+        if (GUILayout.Button("Initiate Pools"))
+        {
+            CacheTarget();
+            t.installer.InitiatePools();
+            
+            EditorUtility.SetDirty(t);
+        }
+
+        if (GUILayout.Button("Reset Everything"))
+        {
+            CacheTarget();
+            ResetEverything();
+        }
+
+        if (GUILayout.Button("Reset Everything and POOLS"))
+        {
+            ResetEverything();
+            InstallerEditorHelper.RefreshPools(t.installer);
+        }
 
         EditorGUILayout.Space(8);
         
@@ -48,6 +69,16 @@ public class CityBuilderEditor : Editor
     {
         if (t == null)
             t = (CityBuilder)target; // Works for subclasses too
+    }
+
+    private void ResetEverything()
+    {
+        var count = t.floorDb.GetFloorCount();
+        for (int i = 0; i < count; i++)
+        {
+            t.ClearFloorResidentsData(i);
+        }
+        t.floorDb.SetActiveFloor(0);
     }
 
     private void CacheDispositionEditorHelper()

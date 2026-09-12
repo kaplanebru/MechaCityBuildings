@@ -92,10 +92,20 @@ public class CityBuilder : MonoBehaviour
     {
         floorResidentsDb.AddFloorResidentsData();
     }
-    private void ClearStructuresOnFloor(int floorIndex)
+    public void ClearStructuresOnFloor(int floorIndex)
     {
         var structures = floorResidentsDb.ClearResidents(floorIndex);
         installer.ClearStructures(structures);
+    }
+
+    public void ClearFloorResidentsData(int floorIndex)
+    {
+        ClearStructuresOnFloor(floorIndex);
+        floorResidentsDb.ClearResidents(floorIndex);
+        if (floorIndex > 0)
+        {
+            floorDb.OnFloorClearRequest?.Invoke(floorIndex);
+        }
     }
     
     private void RemoveLastFloorResidentsData()
