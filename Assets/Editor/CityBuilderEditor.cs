@@ -8,8 +8,8 @@ using UnityEngine;
 public class CityBuilderEditor : Editor
 {
     private CityBuilder t;
-    private ArrangementEditorHelper arrangementHelper = new();
-    public SavedArrangements savedArrangements;
+    private DispositionEditorHelper _dispositionHelper = new();
+    public SavedDispositionDb savedDispositionDb;
 
 
     public override void OnInspectorGUI()
@@ -28,7 +28,7 @@ public class CityBuilderEditor : Editor
         if (GUILayout.Button("Add Arrangement"))
         {
             CacheArrangementHelper();
-            arrangementHelper.AddArrangement(savedArrangements);
+            _dispositionHelper.AddDisposition(savedDispositionDb);
         }
 
         CacheArrangementHelper();
@@ -37,7 +37,7 @@ public class CityBuilderEditor : Editor
         if (GUILayout.Button("Load or Remove Arrangement"))
         {
             CacheArrangementHelper();
-            arrangementHelper.ApplyOrRemoveArrangement(savedArrangements);
+            _dispositionHelper.ApplyOrRemoveArrangement(savedDispositionDb);
         }
         
         EditorGUILayout.Space(8);
@@ -52,8 +52,8 @@ public class CityBuilderEditor : Editor
 
     private void CacheArrangementHelper()
     {
-        if (arrangementHelper == null)
-            arrangementHelper = new ArrangementEditorHelper();
+        if (_dispositionHelper == null)
+            _dispositionHelper = new DispositionEditorHelper();
     }
     
     private void DrawStructureDispositionMatrix()

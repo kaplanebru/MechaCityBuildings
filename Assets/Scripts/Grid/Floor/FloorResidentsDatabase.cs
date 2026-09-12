@@ -7,7 +7,7 @@ using UnityEngine;
 public class FloorResidentsDatabase : MonoBehaviour
 {
     public List<FloorResidentsData> floorResidents = new List<FloorResidentsData>();
-    private ArrangementCache arrangementCache = new();
+    private DispositionRecorder _dispositionRecorder = new();
 
     public FloorResidentsData GetFloor(int floorIndex) => floorResidents[floorIndex];
 
@@ -78,15 +78,18 @@ public class FloorResidentsDatabase : MonoBehaviour
         return structuresByCell;
     }
 
-    public void SaveCurrentArrangement(string arrangementName, int floorIndex)
+    public void SaveCurrentArrangement(string dispositionName)
     {
-        arrangementCache.Add(arrangementName, floorResidents[floorIndex].Slots.ToArray());
+        //TODO: dictionart kaydedemiyor zaten
+        List<List<SlotData>> slotDatasList = floorResidents.Select(floorResidentData => floorResidentData.Slots).ToList();
+        DispositionData dispositionData = new DispositionData(dispositionName, slotDatasList);
+        _dispositionRecorder.Add(dispositionData);
     }
 
 
     public void ResurrectArrangement(string arrangementName)
     {
-        arrangementCache.ResurrectArrangement(arrangementName);
+        _dispositionRecorder.ResurrectArrangement(arrangementName);
     }
 
 

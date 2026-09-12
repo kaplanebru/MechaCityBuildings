@@ -3,12 +3,12 @@ using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Arrangement", menuName = "CityBuilder/New Arrangement")]
-public class SavedArrangements : ScriptableObject
+public class SavedDispositionDb : ScriptableObject
 {
-    public List<ArrangementData> Dataset = new();
+    public List<DispositionData> Dataset = new();
     public string[] Names;
 
-    public bool TryGetDataByName(string selectedName, out ArrangementData data)
+    public bool TryGetDataByName(string selectedName, out DispositionData data)
     {
         data = null;
         if (!Names.Contains(selectedName)) return false;
@@ -17,7 +17,7 @@ public class SavedArrangements : ScriptableObject
         return data != null;
     }
 
-    public void RemoveArrangement(ArrangementData data)
+    public void RemoveArrangement(DispositionData data)
     {
         Dataset.Remove(data);
         RefreshNames();
@@ -34,7 +34,7 @@ public class SavedArrangements : ScriptableObject
 
     public void AddArrangement(string arrangementName)
     {
-        var arrangement = new ArrangementData(arrangementName, null);
+        var arrangement = new DispositionData(arrangementName, null);
         //TODO: not null
 
         Dataset.Add(arrangement);
