@@ -17,10 +17,7 @@ public class FloorResidentsDatabase : MonoBehaviour
     }
     public void RegisterSlotsForFloor(int floorIndex, List<SlotData> slots)
     {
-        Debug.Log($"previous slots {GetFloor(floorIndex).Slots.Count}");
-        Debug.Log("new slot amount =  " + slots.Count);
         GetFloor(floorIndex).RegisterSlots(slots);
-        Debug.Log( GetFloor(floorIndex).Slots.Count);
     }
 
     public void AddFloorResidentsData()

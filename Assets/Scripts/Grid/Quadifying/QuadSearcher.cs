@@ -63,7 +63,11 @@ public class QuadSearcher
 
         foreach (var structureTypeData in structureTypeDatas)
         {
-            discoveredQuads.UnionWith(DiscoveredQuadsInGivenType(structureTypeData, examiningMap, possibilityHandler));
+            var found = DiscoveredQuadsInGivenType(structureTypeData, examiningMap, possibilityHandler);
+            int before = discoveredQuads.Count;
+            discoveredQuads.UnionWith(found);
+            Debug.Log($"{structureTypeData.Type}: found={found.Count} before={before} after={discoveredQuads.Count}");
+
             examiningMap = examiningMap
                 .Where(kvp => !kvp.Value)
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
@@ -71,7 +75,7 @@ public class QuadSearcher
 
         if (HasEmptyPoints(examiningMap.Keys.ToList(), structureTypeDatas, out var remainingQuads))
             discoveredQuads.UnionWith(remainingQuads);
-
+        
         return discoveredQuads;
     }
 
