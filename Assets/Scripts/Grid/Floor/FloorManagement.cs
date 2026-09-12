@@ -74,7 +74,8 @@ public static class FloorManagement
     private static void ClearLastFloor(FloorDatabase db)
     {
         var lastFloor = db.GetLastFloorData();
-        db.OnFloorClearRequest?.Invoke(lastFloor.Index);
+        var safeLastFloorMinus = lastFloor.Index > 0 ? lastFloor.Index-1 : 0;
+        db.OnFloorClearRequest?.Invoke(safeLastFloorMinus);
     }
 
     public static void DeleteLastFloor(FloorDatabase db)

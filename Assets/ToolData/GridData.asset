@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: GridData
   m_EditorClassIdentifier: 
   MinBuildingCellSize: 3
-  AverageBuildingHeight: 5
+  AverageBuildingHeight: 4
   OriginWorldTransform: {fileID: 0}
   AdaptiveGridSize: {x: 33, y: 16}
