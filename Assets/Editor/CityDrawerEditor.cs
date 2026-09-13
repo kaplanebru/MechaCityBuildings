@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(CityDrawer))]
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class CityDrawerEditor : Editor
 {
     protected CityDrawer t;
@@ -30,14 +30,6 @@ public class CityDrawerEditor : Editor
     {
         EditorGUILayout.Space(8);
 
-        if (GUILayout.Button("Debug"))
-        {
-            FloorManagement.DebugFM(t.units.floorDatabase);
-            userState = UserStates.Drawing;
-        }
-
-        EditorGUILayout.Space(8);
-
         UserPrefEditorHelper.SetGridPreferencesFields(t.units.gridSystem.gridData,
             RecalculateGrid,
             t.UpdateAverageStructureHeight,
@@ -53,11 +45,12 @@ public class CityDrawerEditor : Editor
             RecalculateGrid();
         }
 
-        EditorGUILayout.Space(8);
+        EditorGUILayout.Space(4);
 
+        GUI.backgroundColor = Color.yellow;
         using (new EditorGUILayout.HorizontalScope())
         {
-            if (GUILayout.Button("Painting State"))
+            if (GUILayout.Button("Painting State", GUILayout.Height(25)))
             {
                 CacheTargetIfNeeded();
                 t.units.gridSystem.ReloadGrid(); //TODO: overlay de reload olmalı
@@ -65,15 +58,20 @@ public class CityDrawerEditor : Editor
                 userState = UserStates.Drawing;
             }
 
+            GUI.backgroundColor = Color.cyan;
             //TODO: add null check: if no painting - return
-            if (GUILayout.Button("Construct Buildings On Paint"))
+            if (GUILayout.Button("CONSTRUCT Buildings On Paint", GUILayout.Height(25)))
             {
                 CacheTargetIfNeeded();
                 userState = UserStates.Construction;
                 t.ConstructionRequest();
             }
+
+            GUI.backgroundColor = Color.white;
         }
 
+        EditorGUILayout.Space(8);
+        GUILayout.Label("Floor Settings", EditorStyles.boldLabel);
 
         using (new EditorGUILayout.HorizontalScope())
         {
@@ -88,11 +86,7 @@ public class CityDrawerEditor : Editor
             if (GUILayout.Button("Delete Last Floor"))
             {
                 CacheTargetIfNeeded();
-
-                //todo: clear last floor
                 FloorManagement.DeleteLastFloor(t.units.floorDatabase);
-          
-
                 userState = UserStates.Drawing;
             }
 
@@ -101,7 +95,6 @@ public class CityDrawerEditor : Editor
                 ClearActiveFloor();
                 userState = UserStates.Drawing;
             }
-            
         }
 
         using (new EditorGUILayout.HorizontalScope())
@@ -117,8 +110,15 @@ public class CityDrawerEditor : Editor
         }
 
         EditorGUILayout.Space(8);
-
         EditorGUILayout.Space(8);
+
+        /*if (GUILayout.Button("Debug"))
+        {
+            FloorManagement.DebugFM(t.units.floorDatabase);
+            userState = UserStates.Drawing;
+        }
+
+        EditorGUILayout.Space(8);*/
         DrawDefaultInspector();
     }
 
@@ -154,7 +154,7 @@ public class CityDrawerEditor : Editor
         if (e.type == EventType.MouseDown || e.type == EventType.MouseDrag)
             SceneView.RepaintAll();
     }
-    
+
 
     private void CacheTargetIfNeeded()
     {

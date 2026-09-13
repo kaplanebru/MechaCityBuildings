@@ -101,7 +101,6 @@ public class Installer : MonoBehaviour
                 (s => s.type == pool.poolData.StructureType).ToArray());
         }
     }
-    
 
     public void ClearStructures(HashSet<Structure> structures)
     {

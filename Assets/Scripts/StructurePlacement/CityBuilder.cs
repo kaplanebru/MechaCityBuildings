@@ -49,38 +49,43 @@ public class CityBuilder : MonoBehaviour
 #endif
     }
 
-    private void PreventDuplicates(FloorResidentsData floorResidents, HashSet<SlotData> slotDataSet)
+    public void RandomizeSelectedFloor(int floorIndex)
     {
-        foreach (var slot in floorResidents.Slots)
+        int floorAmount = units.FloorDb.FloorDatas.Count;
+        if (floorIndex > floorAmount || floorIndex < 0)
         {
-            if (slotDataSet.Contains(slot))
-                slotDataSet.Remove(slot);
+            Debug.LogWarning("Selected floor index is out of range.");
+            return;
         }
-    }
-
-    public void RandomizeAndInstallTotalZone()
-    {
-#if UNITY_EDITOR
         
-        Undo.RecordObject(units.FloorResidentsDb,"Installment From Cell");
-        Undo.RecordObject(units.Installer, "Installment From Cell");
+#if UNITY_EDITOR
 
-        foreach (var floorData in units.FloorDb.FloorDatas)
-        {
-            var floorIndex = floorData.Index;
-            var floorResidents = units.FloorResidentsDb.GetFloor(floorIndex);
-            var cells = floorResidents.Cells.ToHashSet();
+        Undo.RecordObject(units.FloorResidentsDb,"Installment From Cell" + floorIndex);
+        Undo.RecordObject(units.Installer, "Installment From Cell"  + floorIndex);
+        
+        var floorData = units.FloorDb.GetFloorData(floorIndex);
+        var floorResidents = units.FloorResidentsDb.GetFloor(floorIndex);
+        var cells = floorResidents.Cells.ToHashSet();
             
-            var structures = units.FloorResidentsDb.ClearStructuresKeepCells(floorIndex);
-            units.Installer.ClearStructures(structures);
+        var structures = units.FloorResidentsDb.ClearStructuresKeepCells(floorIndex);
+        units.Installer.ClearStructures(structures);
             
-            units.FloorResidentsDb.RegisterSlotsForFloor(floorIndex, units.MapOrganizer.ToSlotData(cells, cityData).ToList());
-            units.Installer.InstallStructures(floorData, units.FloorResidentsDb.GetFloor(floorData.Index));
-        }
+        units.FloorResidentsDb.RegisterSlotsForFloor(floorIndex, units.MapOrganizer.ToSlotData(cells, cityData).ToList());
+        units.Installer.InstallStructures(floorData, units.FloorResidentsDb.GetFloor(floorData.Index));
         
         EditorUtility.SetDirty(units.FloorResidentsDb);
         EditorUtility.SetDirty(units.Installer);
 #endif
+        
+    }
+    
+    public void RandomizeAndInstallTotalZone()
+    {
+        foreach (var floorData in units.FloorDb.FloorDatas)
+        {
+            var floorIndex = floorData.Index;
+            RandomizeSelectedFloor(floorIndex);
+        }
     }
     
     private void AddFloorResidentsData()
@@ -114,6 +119,14 @@ public class CityBuilder : MonoBehaviour
         if (cityData.matrix == null || cityData.matrix.Length != matrixSize)
         {
             cityData.matrix = new bool[matrixSize];
+        }
+    }
+    private void PreventDuplicates(FloorResidentsData floorResidents, HashSet<SlotData> slotDataSet)
+    {
+        foreach (var slot in floorResidents.Slots)
+        {
+            if (slotDataSet.Contains(slot))
+                slotDataSet.Remove(slot);
         }
     }
 }

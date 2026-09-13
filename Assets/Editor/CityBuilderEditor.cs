@@ -9,6 +9,8 @@ public class CityBuilderEditor : Editor
 {
     private CityBuilder t;
     private string _newDispositionName;
+    private int floorIndex;
+
     
     public override void OnInspectorGUI()
     {
@@ -19,12 +21,27 @@ public class CityBuilderEditor : Editor
 
         EditorGUILayout.Space(8);
 
-        if (GUILayout.Button("RANDOMIZE And APPLY", GUILayout.Height(20)))
+        GUI.backgroundColor = Color.cyan;
+
+        if (GUILayout.Button("RANDOMIZE ALL Floors Together", GUILayout.Height(25)))
         {
             t.RandomizeAndInstallTotalZone();
         }
+        EditorGUILayout.Space(4);
+        
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("RANDOMIZE Selected Floor", GUILayout.Height(25)))
+            {
+                t.RandomizeSelectedFloor(floorIndex);
+            }
+            
+            floorIndex = EditorGUILayout.IntField(floorIndex); //todo enum field
+        }
         EditorGUILayout.Space(8);
         
+        GUI.backgroundColor = Color.white;
+
         GUILayout.Label("Pool Settings", EditorStyles.boldLabel);
         
         if (GUILayout.Button("Initiate Pools"))
