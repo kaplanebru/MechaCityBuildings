@@ -13,7 +13,7 @@ public class InstallerEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        GUILayout.Label("Pool Creator", EditorStyles.boldLabel);
+        GUILayout.Label("Structure Pool Settings", EditorStyles.boldLabel);
         EditorGUILayout.Space(8);
 
         CreatePool();
@@ -79,10 +79,11 @@ public class InstallerEditor : Editor
         t.AddNewPool(newPool);
     }
 
-    private int selectedPoolIndex = -1;
+    private int selectedPoolIndex; // = -1;
 
     private void DeletePool()
     {
+        //TODO: MUST DELETE FLOOR RESIDENTS AS WELL? ON SCENE ELEMENTS CANT BE RELEASED WHEN DELETED. WHEN RELEASING IF WE PUT A DELETE IF NO POOL OPTION IT MIGHT WORK 
         CacheTarget();
         using (new EditorGUILayout.HorizontalScope())
         {

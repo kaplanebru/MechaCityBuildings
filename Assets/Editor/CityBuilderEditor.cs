@@ -44,13 +44,6 @@ public class CityBuilderEditor : Editor
 
         GUILayout.Label("Pool Settings", EditorStyles.boldLabel);
         
-        if (GUILayout.Button("Initiate Pools"))
-        {
-            CacheTarget();
-            t.units.Installer.InitiatePools();
-            
-            EditorUtility.SetDirty(t);
-        }
 
         if (GUILayout.Button("Reset Everything"))
         {
