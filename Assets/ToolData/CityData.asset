@@ -16,7 +16,7 @@ MonoBehaviour:
   RandomizerDataSet:
   - Type: 0
     FrequencyData:
-      Frequency: 30
+      Frequency: 8
   - Type: 1
     FrequencyData:
       Frequency: 30
