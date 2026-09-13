@@ -61,7 +61,7 @@ public class CityBuilderEditor : Editor
         if (GUILayout.Button("Reset Everything and POOLS"))
         {
             ResetEverything();
-            InstallerEditorHelper.RefreshPools(t.units.Installer);
+            //RefreshPools(t.units.Installer);
         }
 
         EditorGUILayout.Space(8);

@@ -10,7 +10,8 @@ public class Installer : MonoBehaviour
 {
     private Dictionary<StructureType, List<SlotData>> _slotDatasByType = new();
     [SerializeField] private GridData gridData;
-    public StructurePool[] pools;
+    public Transform root;
+    public List<StructurePool> pools = new();
 
     public FloorResidentsData floorToInstall; //TODO MAKE THIS PRIVATE
 
@@ -105,5 +106,10 @@ public class Installer : MonoBehaviour
     public void ClearStructures(HashSet<Structure> structures)
     {
         ReleaseItemsToPool(structures);
+    }
+
+    public void AddNewPool(StructurePool pool)
+    {
+        pools.Add(pool);
     }
 }
