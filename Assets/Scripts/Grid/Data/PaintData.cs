@@ -8,7 +8,7 @@ public class PaintData: ScriptableObject
 
     [Header("Brush")]
     [Min(0f)]
-    public int BrushRadius = 1;
+    public int BrushRadius = 2;
     
     [Tooltip("Hold left mouse button to paint.")]
     public bool PaintWithLeftMouse = true;

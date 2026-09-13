@@ -11,6 +11,6 @@ public class DistanceData
 [Serializable]
 public class FrequencyData
 {
-    [Range(0, 100)] public int Frequency;
+    [Range(0, 100)] public int Frequency = 30;
     public int Amount { get; set; }
 }

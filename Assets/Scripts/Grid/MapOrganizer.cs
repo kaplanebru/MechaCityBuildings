@@ -12,7 +12,8 @@ public class StructureTypeSearchData
     private HashSet<StructureType> _impossibleStructureTypes = new();
     public IReadOnlyCollection<StructureType> ImpossibleStructureTypes => _impossibleStructureTypes;
 
-    public StructureTypeSearchData(StructureType type, QuadSample quadSample, int amount, HashSet<StructureType> impossibleTypes)
+    public StructureTypeSearchData(StructureType type, QuadSample quadSample, int amount,
+        HashSet<StructureType> impossibleTypes)
     {
         Type = type;
         QuadSample = quadSample;
@@ -22,41 +23,41 @@ public class StructureTypeSearchData
     }
 }
 
-
 [ExecuteInEditMode]
 public class MapOrganizer : MonoBehaviour
 {
-    [HideInInspector] public bool[] adjacencyMatrixData;
-    public CityData cityData;
+    private CityData _currentCityData;
     [SerializeField] private StructureDatabase structureDatabase;
+
+    public void SetCurrentCityData(CityData cityData) => _currentCityData = cityData;
     
-
-    public int GetSelectedStructureTypeAmount() => cityData.RandomizerDataSet.Length;
-
     private List<StructureTypeSearchData> GetStructureTypeDatas()
     {
         var structureTypeData = new List<StructureTypeSearchData>();
-        var selectedTypes = cityData.GetSelectedStructureTypes();
+        var selectedTypes = _currentCityData.GetSelectedStructureTypes();
 
         foreach (var type in selectedTypes)
         {
-            if (cityData.TryGetAmountByType(type, out var amount))
+            if (_currentCityData.TryGetAmountByType(type, out var amount))
             {
                 structureTypeData.Add(new StructureTypeSearchData(
-                    type, 
-                    structureDatabase.GetData(type).QuadSample, 
+                    type,
+                    structureDatabase.GetData(type).QuadSample,
                     amount,
-                    AdjacencyHelper.GetImpossibleAdjacencyForGivenType(type, selectedTypes, adjacencyMatrixData).ToHashSet()));
+                    AdjacencyHelper.GetImpossibleAdjacencyForGivenType(type, selectedTypes, _currentCityData.matrix)
+                        .ToHashSet()));
             }
         }
+
         return structureTypeData;
     }
-    
-    public HashSet<SlotData> ToSlotData(HashSet<Vector2Int> map)
+
+    public HashSet<SlotData> ToSlotData(HashSet<Vector2Int> map, CityData cityData)
     {
+        SetCurrentCityData(cityData);
         ConvertFrequenciesToAmounts(map.Count);
         var structureTypeDatas = GetStructureTypeDatas();
-        
+
         //structure types with same quad's should be searched together, and then get distributed
         return DisposeMapByShuffle(map, structureTypeDatas);
     }
@@ -75,10 +76,10 @@ public class MapOrganizer : MonoBehaviour
 
         return SlotCreator.CreateSlotDataFromQuads(randomQuads.ToArray(), map);
     }
-    
+
     private void ConvertFrequenciesToAmounts(int cellAmount)
     {
-        FrequencyData[] frequencyDatas = cityData.RandomizerDataSet.Select(r => r.FrequencyData).ToArray();
+        FrequencyData[] frequencyDatas = _currentCityData.RandomizerDataSet.Select(r => r.FrequencyData).ToArray();
         FrequencyToAmountConverter.SetAmountsByRatio
             (frequencyDatas, cellAmount);
     }

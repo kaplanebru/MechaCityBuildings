@@ -8,17 +8,16 @@ public class MatrixMakerStructureTypeAdjacency : Editor
  
     private static int Idx(int row, int col, int adjacencySize) => row * adjacencySize + col;
  
-    // --- Tablo çizimi ---
     public static void DisposeStructureTypes(StructureType[] selectedStructureTypes, bool[] adjacency)
     {
         int count = selectedStructureTypes.Length;
  
-        // Eski (asimetrik) verileri tek seferde hizala.
         EnsureSymmetric(count, adjacency);
  
-        EditorGUILayout.HelpBox("Set possible adjacency between structure types",
-            MessageType.None);
+     
         GUILayout.Label("Structure Types Adjacency Disposition", EditorStyles.boldLabel);
+        EditorGUILayout.HelpBox("Sets adjacency between structure types",
+            MessageType.None);
         EditorGUILayout.Space();
  
         tableScroll = EditorGUILayout.BeginScrollView(tableScroll);
@@ -27,20 +26,20 @@ public class MatrixMakerStructureTypeAdjacency : Editor
  
         EditorGUILayout.Space();
  
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Clear All", GUILayout.Height(16)))
+        EditorGUILayout.BeginVertical();
+        if (GUILayout.Button("Clear All", GUILayout.Width(70), GUILayout.Height(16)))
         {
             for (int i = 0; i < adjacency.Length; i++)
                 adjacency[i] = false;
         }
  
-        if (GUILayout.Button("Select All", GUILayout.Height(16)))
+        if (GUILayout.Button("Select All", GUILayout.Width(70),GUILayout.Height(16)))
         {
             for (int i = 0; i < adjacency.Length; i++)
                 adjacency[i] = true;
         }
  
-        if (GUILayout.Button("Diagonal Only (Same Type)", GUILayout.Height(16)))
+        if (GUILayout.Button("Diagonal Only (Same Type)", GUILayout.Width(170),GUILayout.Height(16)))
         {
             for (int i = 0; i < adjacency.Length; i++)
                 adjacency[i] = false;
@@ -48,14 +47,11 @@ public class MatrixMakerStructureTypeAdjacency : Editor
                 adjacency[Idx(i, i, count)] = true;
         }
  
-        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndVertical();
+        
+        EditorGUILayout.Space(4);
     }
- 
-    /// <summary>
-    /// adjacency dizisi hâlâ n*n olarak saklanır ama anlamı simetriktir:
-    /// UI her çifti yalnızca bir kez gösterir, her yazma işlemi aynanır.
-    /// Bu metot eski/asimetrik verileri OR'layarak tutarlı hâle getirir.
-    /// </summary>
+    
     private static void EnsureSymmetric(int count, bool[] adjacency)
     {
         if (adjacency == null || adjacency.Length < count * count) return;
@@ -108,9 +104,7 @@ public class MatrixMakerStructureTypeAdjacency : Editor
         float cellW  = 34f;
         float cellH  = 28f;
  
-        // ── Başlık satırı (ters sırada: son tip solda), harfler dikey ──
-        // Sütunlar tersten dizildiği için satır 0 tam dolu başlar,
-        // her satır sağdan bir hücre kaybeder; başlıklar yine de hizalı kalır.
+      
         const int maxHeaderChars = 14;
  
         GUIStyle headerStyle = new GUIStyle(EditorStyles.miniLabel)
@@ -145,7 +139,6 @@ public class MatrixMakerStructureTypeAdjacency : Editor
  
         EditorGUILayout.EndHorizontal();
  
-        // ── Veri satırları ─────────────────────────────────────────────
         GUIStyle rowLabelStyle = new GUIStyle(EditorStyles.label)
         {
             fontSize  = 11,
@@ -172,7 +165,6 @@ public class MatrixMakerStructureTypeAdjacency : Editor
  
             // Soldan sağa: col = count-1 ... row  (yani üst üçgen, ters sırada).
             // Satır 0 tam dolu, her satır bir hücre kısalır.
-            // Köşegeni de dışlamak istersen: slot < count - 1 - row yap.
             for (int slot = 0; slot <= count - 1 - row; slot++)
             {
                 int  col      = count - 1 - slot;

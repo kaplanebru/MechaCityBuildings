@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CityData", menuName = "CityBuilder/CityData")]
-public class CityData : ScriptableObject
+[Serializable]
+public class CityData
 {
-    public float HeightGap = 2;
-
-
     public RandomizerData[] RandomizerDataSet;
+    [HideInInspector] public bool[] matrix;
+
+    public StructureType[] GetSelectedStructureTypes() => RandomizerDataSet.Select(t => t.Type).ToArray();
 
     public bool TryGetAmountByType(StructureType structureType, out int amount)
     {
@@ -20,10 +20,13 @@ public class CityData : ScriptableObject
             amount = data.FrequencyData.Amount;
             return true;
         }
+
         return false;
     }
-
-
-    public StructureType[] GetSelectedStructureTypes() => RandomizerDataSet.Select(t => t.Type).ToArray();
+    
+    void Reset()
+    {
+        matrix = new bool[RandomizerDataSet.Length];
+        Array.Fill(matrix, true);  
+    }
 }
-
