@@ -64,6 +64,7 @@ public static class FloorManagement
         CreateFloor(db.ActiveFloorIndex + 1, db);
     }
 
+    public static int GetActiveFloor(FloorDatabase db) => db.ActiveFloorIndex;
     public static void ClearActiveFloor(FloorDatabase db)
     {
         RestoreCacheIfNeeded(db);

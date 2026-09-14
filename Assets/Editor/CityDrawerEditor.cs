@@ -96,9 +96,15 @@ public class CityDrawerEditor : Editor
                 userState = UserStates.Drawing;
             }
         }
+        
+        
 
         using (new EditorGUILayout.HorizontalScope())
         {
+            CacheTargetIfNeeded();
+            EditorGUILayout.LabelField("Active Floor: "+ t.units.floorDatabase.ActiveFloorIndex, EditorStyles.whiteLargeLabel);
+           
+            
             if (GUILayout.Button("Switch Active Floor To"))
             {
                 CacheTargetIfNeeded();
