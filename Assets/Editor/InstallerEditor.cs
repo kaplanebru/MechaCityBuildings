@@ -29,6 +29,7 @@ public class InstallerEditor : Editor
         if (GUILayout.Button("Reset Everything and POOLS"))
         {
             CacheTarget();
+            //Release
             //ResetEverything(); //todo
             RefreshPools();
         }
@@ -83,7 +84,6 @@ public class InstallerEditor : Editor
 
     private void DeletePool()
     {
-        //TODO: MUST DELETE FLOOR RESIDENTS AS WELL? ON SCENE ELEMENTS CANT BE RELEASED WHEN DELETED. WHEN RELEASING IF WE PUT A DELETE IF NO POOL OPTION IT MIGHT WORK 
         CacheTarget();
         using (new EditorGUILayout.HorizontalScope())
         {
@@ -95,7 +95,13 @@ public class InstallerEditor : Editor
                 if (selectedPoolIndex >= 0 && selectedPoolIndex < t.pools.Count)
                 {
                     var pool = t.pools[selectedPoolIndex];
-                    t.pools.RemoveAt(selectedPoolIndex);
+                    Debug.Log("pool removed" + pool.poolData.StructureType);
+
+                    
+                    t.OnStructureRemovalRequest?.Invoke(pool.poolData.StructureType);
+
+                    t.pools.Remove(pool);
+                    Debug.Log("pools count: " + t.pools.Count);
                     Undo.DestroyObjectImmediate(pool.gameObject);
                     
                     selectedPoolIndex--;

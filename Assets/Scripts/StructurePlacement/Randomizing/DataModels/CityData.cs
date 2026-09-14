@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class CityData
 {
-    public RandomizerData[] RandomizerDataSet;
+    public List<RandomizerData> RandomizerDataSet = new();
     [HideInInspector] public bool[] matrix;
 
     public StructureType[] GetSelectedStructureTypes() => RandomizerDataSet.Select(t => t.Type).ToArray();
@@ -23,10 +23,15 @@ public class CityData
 
         return false;
     }
-    
-    void Reset()
+
+    public void RemoveStructureType(StructureType structureType)
     {
-        matrix = new bool[RandomizerDataSet.Length];
+        RandomizerDataSet.Remove(RandomizerDataSet.FirstOrDefault(t => t.Type == structureType));
+    }
+    private void Reset()
+    {
+        matrix = new bool[RandomizerDataSet.Count];
         Array.Fill(matrix, true);  
     }
+    
 }

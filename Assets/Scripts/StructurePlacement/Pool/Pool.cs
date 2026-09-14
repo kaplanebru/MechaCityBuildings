@@ -69,7 +69,8 @@ public abstract class Pool<T> : MonoBehaviour where T : Component
 
     public void ReleaseItemsToPool(T[] items)
     {
-        if (items.Length == 0) return;
+        if (items.Length == 0)
+            return;
 
         foreach (T item in items)
         {

@@ -8,6 +8,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Installer : MonoBehaviour
 {
+    public Action<StructureType> OnStructureRemovalRequest;
     private Dictionary<StructureType, List<SlotData>> _slotDatasByType = new();
     [SerializeField] private GridData gridData;
     public Transform root;
@@ -91,21 +92,27 @@ public class Installer : MonoBehaviour
         }*/
     }
 
-    private void ReleaseItemsToPool(HashSet<Structure> structures)
+    private void ReleaseItemsToPool(HashSet<Structure> mixedStructures)
     {
-        if (structures == null || structures.Count == 0)
+        if (mixedStructures == null || mixedStructures.Count == 0)
+        {
+            Debug.LogWarning("structures null or empty");
             return;
+        }
 
+        Debug.Log("pool count: " + pools.Count);
         foreach (var pool in pools)
         {
-            pool.ReleaseItemsToPool(structures.Where
-                (s => s.type == pool.poolData.StructureType).ToArray());
+            var items = mixedStructures.Where
+                (s => s.type == pool.poolData.StructureType).ToArray();
+            
+            pool.ReleaseItemsToPool(items);
         }
     }
 
-    public void ClearStructures(HashSet<Structure> structures)
+    public void ClearStructuresPhysically(HashSet<Structure> mixedStructures)
     {
-        ReleaseItemsToPool(structures);
+        ReleaseItemsToPool(mixedStructures);
     }
 
     public void AddNewPool(StructurePool pool)

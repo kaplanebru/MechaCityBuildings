@@ -32,7 +32,7 @@ public static class InstallerHelper
             var cellIndex = CellConverter.
                 GetCellIndexFromWorldPosition(structure.transform.position, gridData);
             
-            structure.slotMetadata = cellIndex;
+            structure.cellMetaData = cellIndex;
             
             //todo: ya da structure positionunu convert ederiz direkt
             //todo: cells[0]
