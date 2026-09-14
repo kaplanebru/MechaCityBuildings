@@ -11,7 +11,8 @@ public class MatrixMakerStructureTypeAdjacency : Editor
     public static void DisposeStructureTypes(StructureType[] selectedStructureTypes, bool[] adjacency)
     {
         int count = selectedStructureTypes.Length;
- 
+        InitializeAdjacency(adjacency, count, true); 
+
         EnsureSymmetric(count, adjacency);
  
      
@@ -50,6 +51,16 @@ public class MatrixMakerStructureTypeAdjacency : Editor
         EditorGUILayout.EndVertical();
         
         EditorGUILayout.Space(4);
+    }
+    
+    private static void InitializeAdjacency(bool[] adjacency, int count, bool value = true)
+    {
+        if (adjacency == null || adjacency.Length != count * count)
+        {
+            System.Array.Resize(ref adjacency, count * count);
+            for (int i = 0; i < adjacency.Length; i++)
+                adjacency[i] = true; // Set all to true on creation/resize only
+        }
     }
     
     private static void EnsureSymmetric(int count, bool[] adjacency)
