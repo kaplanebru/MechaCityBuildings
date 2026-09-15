@@ -17,14 +17,17 @@ public class StructureDatabase : ScriptableObject
         return data;
     }
 
-    public void CreateEnums(int amount = 10)
+
+    public void AddData(StructureData data)
     {
-        for (int i = 0; i < amount; i++)
-        {
-            
-        }
+        datas.Add(data);
+        Rebuild();
     }
-   
+
+    public bool HasDataByType(StructureType type)
+    {
+        return _datasByType.ContainsKey(type);
+    }
 
     private void EnsureBuilt()
     {
