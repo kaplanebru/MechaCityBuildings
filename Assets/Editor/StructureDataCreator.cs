@@ -13,7 +13,8 @@ public class StructureDataCreator : EditorWindow
     private const string StructuresPath = ToolDataRoot + "/StructureDatas";
     private const string QuadsPath = ToolDataRoot + "/Quads";
 
-    [SerializeField] private StructureType structureType;
+    // [SerializeField] private StructureType structureType;
+    [SerializeField] private string structureTypeName;
     [SerializeField] private QuadSample quadSample;
     [SerializeField] private Vector2Int quadDimensions = new Vector2Int(0, 0);
 
@@ -54,11 +55,12 @@ public class StructureDataCreator : EditorWindow
             EditorGUILayout.HelpBox($"No StructureDatabase found under {ToolDataRoot}.", MessageType.Error);
             return;
         }
-        
+
         EditorGUILayout.LabelField("To Create Structure Data", EditorStyles.whiteBoldLabel);
         EditorGUILayout.Space(8);
 
-        structureType = (StructureType)EditorGUILayout.EnumPopup("Structure Type", structureType);
+        //structureType = (StructureType)EditorGUILayout.EnumPopup("Structure Type", structureType);
+        structureTypeName = EditorGUILayout.TextField("Structure Type", structureTypeName);
         quadSample = (QuadSample)EditorGUILayout.ObjectField("Quad Sample", quadSample, typeof(QuadSample), false);
 
         using (new EditorGUI.DisabledScope(quadSample == null))
@@ -86,32 +88,19 @@ public class StructureDataCreator : EditorWindow
             return;
         }
 
-        if (Db.HasDataByType(structureType))
+        /*if (Db.HasDataByType(structureType))
         {
             Debug.LogWarning($"Database already has data for {structureType}.\nPlease try another structure type.");
             return;
-        }
+        }*/
 
-        EnsureFolder(StructuresPath);
-
-        Vector2Int size = quadSample.data.WidthHeight;
-
-        StructureData structureData = CreateInstance<StructureData>();
-        structureData.Type = structureType;
-        structureData.QuadSample = quadSample;
-
-        // Quad size baked into the name, so "S1 / Sn" reads as e.g. "Wall_3x2_StructureData".
-        string path = AssetDatabase.GenerateUniqueAssetPath(
-            $"{StructuresPath}/{structureType}_{size.x}x{size.y}_StructureData.asset");
-
-        AssetDatabase.CreateAsset(structureData, path);
-
-        Db.AddData(structureData);
-        EditorUtility.SetDirty(Db); // otherwise the db change is lost on reload
-        AssetDatabase.SaveAssets();
-
-        EditorGUIUtility.PingObject(structureData);
-        Debug.Log($"Created structure data: {path}");
+        //EnsureFolder(StructuresPath);
+        
+        StructureTypeEditorHelper.AddDataAndRegenerateEnum(Db, structureTypeName, quadSample);
+       
+        
+        //EditorGUIUtility.PingObject(structureData);
+        //Debug.Log($"Created structure data: {path}");
     }
 
 

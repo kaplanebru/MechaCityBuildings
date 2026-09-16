@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 
-[CreateAssetMenu(fileName = "ReplacementDataBase", menuName = "Scriptable Objects/ReplacementDataBase")]
+[CreateAssetMenu(fileName = "StructureDataBase", menuName = "Scriptable Objects/StructureDataBase")]
 public class StructureDatabase : ScriptableObject
 {
     public List<StructureData> datas = new();

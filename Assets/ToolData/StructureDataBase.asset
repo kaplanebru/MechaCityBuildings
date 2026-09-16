@@ -7,12 +7,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5cb2a8a6e160404f8d81b687b8a1f566, type: 3}
-  m_Name: StructureTypeDB
+  m_Name: StructureDataBase
   m_EditorClassIdentifier: 
   datas:
   - {fileID: 11400000, guid: 8a179f640f0924556a3d649dc1532146, type: 2}
   - {fileID: 11400000, guid: b28de7c80e33f436b9f9db4854e00606, type: 2}
-  - {fileID: 11400000, guid: 0e0aac9c489634664b64c3f1283ce40b, type: 2}
+  - {fileID: 11400000, guid: 1e5fd7aef720f4ab296922df46ee7f69, type: 2}
