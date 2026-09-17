@@ -28,8 +28,7 @@ public class MapOrganizer : MonoBehaviour
 {
     private CityData _currentCityData;
     [SerializeField] private StructureDatabase structureDatabase;
-
-    public void SetCurrentCityData(CityData cityData) => _currentCityData = cityData;
+    
     
     private List<StructureTypeSearchData> GetStructureTypeDatas()
     {
@@ -54,11 +53,11 @@ public class MapOrganizer : MonoBehaviour
 
     public HashSet<SlotData> ToSlotData(HashSet<Vector2Int> map, CityData cityData)
     {
-        SetCurrentCityData(cityData);
+        _currentCityData = cityData;
+        
         ConvertFrequenciesToAmounts(map.Count);
         var structureTypeDatas = GetStructureTypeDatas();
-
-        //structure types with same quad's should be searched together, and then get distributed
+        
         return DisposeMapByShuffle(map, structureTypeDatas);
     }
 
@@ -79,9 +78,16 @@ public class MapOrganizer : MonoBehaviour
 
     private void ConvertFrequenciesToAmounts(int cellAmount)
     {
-        FrequencyData[] frequencyDatas = _currentCityData.RandomizerDataSet.Select(r => r.FrequencyData).ToArray();
-        FrequencyToAmountConverter.SetAmountsByRatio
-            (frequencyDatas, cellAmount);
+        FrequencyData[] frequencyDatas = _currentCityData.RandomizerDataSet.
+            Select(r => r.FrequencyData).
+            ToArray();
+        
+        FrequencyToAmountConverter.SetAmountsByRatio(frequencyDatas, cellAmount);
+    }
+
+    public void MatchRandomizerWithPool(ref CityData cityData, HashSet<StructureType> activeTypes)
+    {
+        cityData.RandomizerDataSet = cityData.RandomizerDataSet.Where(r => activeTypes.Contains(r.Type)).ToList();
     }
 
     public static void Shuffle<T>(IList<T> collection) //T[] //IList

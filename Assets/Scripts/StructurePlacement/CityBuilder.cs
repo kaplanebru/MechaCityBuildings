@@ -128,28 +128,29 @@ public class CityBuilder : MonoBehaviour
 
         if (cityData.matrix == null)
         {
-            Debug.LogWarning("MATRIX NULL");
+            Debug.LogWarning("MATRIX IS NULL");
             cityData.matrix = new bool[matrixSize];
         }
     }
 
     private HashSet<SlotData> CellToSlotData(HashSet<Vector2Int> cells)
     {
-        HashSet<StructureType> cityTypes = cityData.GetStructureTypes().ToHashSet();
-
+        HashSet<StructureType> cityTypes = cityData.GetStructureTypes();
+        var activeTypes = new HashSet<StructureType>();
+        
         var pools = units.Installer.pools;
         HashSet<StructureType> poolTypes = new();
         pools.ForEach(pool => poolTypes.Add(pool.poolData.StructureType));
 
-
         foreach (var cityType in cityTypes)
         {
-            if (!poolTypes.Contains(cityType))
+            if (poolTypes.Contains(cityType))
             {
-                cityData.RemoveStructureType(cityType);
+                activeTypes.Add(cityType);
             }
         }
-
+        
+        units.MapOrganizer.MatchRandomizerWithPool(ref cityData, activeTypes);
         return units.MapOrganizer.ToSlotData(cells, cityData);
     }
 
