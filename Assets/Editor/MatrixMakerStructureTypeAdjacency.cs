@@ -6,13 +6,15 @@ public class MatrixMakerStructureTypeAdjacency : Editor
     private static Vector2 tableScroll;
 
     private static int Idx(int row, int col, int adjacencySize) => row * adjacencySize + col;
+    private static int previousTypesLength;
+    private static bool[] cachedAdjacency = null;
 
-    public static void DisposeStructureTypes(StructureType[] selectedStructureTypes, bool[] adjacency)
+    public static void DisposeStructureTypes(StructureType[] cityDataStructureTypes, bool[] adjacency)
     {
-        int count = selectedStructureTypes.Length;
-        InitializeAdjacency(adjacency, count, true);
+        int structureTypesLength = cityDataStructureTypes.Length;
+        SetAdjacencyDataOnChange(adjacency, structureTypesLength);
 
-        EnsureSymmetric(count, adjacency);
+        EnsureSymmetric(structureTypesLength, adjacency);
 
 
         GUILayout.Label("Structure Types Adjacency Disposition", EditorStyles.boldLabel);
@@ -21,7 +23,7 @@ public class MatrixMakerStructureTypeAdjacency : Editor
         EditorGUILayout.Space();
 
         tableScroll = EditorGUILayout.BeginScrollView(tableScroll);
-        DrawCompatibilityMatrix(count, selectedStructureTypes, adjacency);
+        DrawCompatibilityMatrix(structureTypesLength, cityDataStructureTypes, adjacency);
         EditorGUILayout.EndScrollView();
 
         EditorGUILayout.Space();
@@ -43,8 +45,8 @@ public class MatrixMakerStructureTypeAdjacency : Editor
         {
             for (int i = 0; i < adjacency.Length; i++)
                 adjacency[i] = false;
-            for (int i = 0; i < count; i++)
-                adjacency[Idx(i, i, count)] = true;
+            for (int i = 0; i < structureTypesLength; i++)
+                adjacency[Idx(i, i, structureTypesLength)] = true;
         }
 
         EditorGUILayout.EndVertical();
@@ -52,14 +54,65 @@ public class MatrixMakerStructureTypeAdjacency : Editor
         EditorGUILayout.Space(4);
     }
 
-    private static void InitializeAdjacency(bool[] adjacency, int count, bool value = true)
+    private static void SetAdjacencyDataOnChange(bool[] adjacencyData, int structureTypesLength, bool value = true)
     {
-        if (adjacency == null || adjacency.Length != count * count)
+        if (adjacencyData == null ||
+            previousTypesLength != structureTypesLength) // or on type change even the numbers are same
         {
-            System.Array.Resize(ref adjacency, count * count);
-            for (int i = 0; i < adjacency.Length; i++)
-                adjacency[i] = true; // Set all to true on creation/resize only
+            if (adjacencyData == null)
+                Debug.LogWarning("Adjacency data array is null");
+
+            if (previousTypesLength == 0)
+            {
+                MakeTriviaOnEmptyCache(adjacencyData);
+            }
+
+            if (previousTypesLength != structureTypesLength)
+                Debug.Log("previous type: " + previousTypesLength + " " + "current: " + structureTypesLength +
+                          " adjacency array size mismatch");
+
+            System.Array.Resize(ref adjacencyData, structureTypesLength * structureTypesLength);
+
+            int minTypeCount = cachedAdjacency.Length < adjacencyData.Length
+                ? cachedAdjacency.Length
+                : adjacencyData.Length;
+            for (int i = 0; i < minTypeCount; i++)
+            {
+                adjacencyData[i] = cachedAdjacency[i];
+            }
+
+            previousTypesLength = structureTypesLength;
+            CacheAdjacency(adjacencyData);
         }
+    }
+
+    private static void CacheAdjacency(bool[] adjacency)
+    {
+        foreach (var item in adjacency)
+        {
+            Debug.Log("new adj " + item);
+        }
+        
+        foreach (var item in cachedAdjacency)
+        {
+            Debug.Log("prew adj " + item);
+        }
+
+        
+        if (adjacency.Length != cachedAdjacency.Length)
+            cachedAdjacency = new bool[adjacency.Length];
+
+        for (var i = 0; i < adjacency.Length; i++)
+        {
+            cachedAdjacency[i] = adjacency[i];
+        }
+    }
+
+    private static void MakeTriviaOnEmptyCache(bool[] adjacency)
+    {
+        cachedAdjacency = new bool[adjacency.Length];
+        for (var i = 0; i < adjacency.Length; i++)
+            cachedAdjacency[i] = adjacency[i]; //true;
     }
 
     private static void EnsureSymmetric(int count, bool[] adjacency)
@@ -74,16 +127,17 @@ public class MatrixMakerStructureTypeAdjacency : Editor
             adjacency[Idx(col, row, count)] = value;
         }
     }
+
     private static string GetRowLabel(string structureName)
     {
         // "S1_1x2" -> "1x2 S1"
         int underscoreIdx = structureName.IndexOf('_');
         if (underscoreIdx < 0) return structureName;
 
-        string gridPart = structureName.Substring(underscoreIdx + 1);  // 1x2
-        string namePart = structureName.Substring(0, underscoreIdx);   // S1
+        string gridPart = structureName.Substring(underscoreIdx + 1); // 1x2
+        string namePart = structureName.Substring(0, underscoreIdx); // S1
 
-        return "(" +gridPart + ")"+ "  " + namePart;
+        return "(" + gridPart + ")" + "  " + namePart;
     }
 
     private static string StackVertical(string structureName)
@@ -92,8 +146,8 @@ public class MatrixMakerStructureTypeAdjacency : Editor
         int underscoreIdx = structureName.IndexOf('_');
         if (underscoreIdx < 0) return structureName;
 
-        string gridPart = structureName.Substring(underscoreIdx + 1);  // 1x2
-        string namePart = structureName.Substring(0, underscoreIdx);   // S1
+        string gridPart = structureName.Substring(underscoreIdx + 1); // 1x2
+        string namePart = structureName.Substring(0, underscoreIdx); // S1
 
         var sb = new System.Text.StringBuilder();
         for (int i = 0; i < gridPart.Length; i++)
@@ -101,13 +155,14 @@ public class MatrixMakerStructureTypeAdjacency : Editor
             sb.Append(gridPart[i]);
             sb.Append('\n');
         }
-        sb.Append('\n');      // boşluk satırı
+
+        sb.Append('\n'); // boşluk satırı
         sb.Append(namePart);
 
         return sb.ToString();
     }
-   
-    private static void DrawCompatibilityMatrix(int count, StructureType[] selectedStructureTypes, bool[] adjacency)
+
+    private static void DrawCompatibilityMatrix(int count, StructureType[] structureTypes, bool[] adjacency)
     {
         float labelW = 60f;
         float cellW = 34f;
@@ -126,7 +181,7 @@ public class MatrixMakerStructureTypeAdjacency : Editor
         int longest = 1;
         for (int i = 0; i < count; i++)
             longest = Mathf.Max(longest,
-                Mathf.Min(selectedStructureTypes[i].ToString().Length, maxHeaderChars));
+                Mathf.Min(structureTypes[i].ToString().Length, maxHeaderChars));
 
         float headerH = longest * lineH + 4f;
 
@@ -136,7 +191,7 @@ public class MatrixMakerStructureTypeAdjacency : Editor
         for (int slot = 0; slot < count; slot++)
         {
             int col = count - 1 - slot;
-            string colLabel = selectedStructureTypes[col].ToString();
+            string colLabel = structureTypes[col].ToString();
             string clipped = colLabel.Length > maxHeaderChars
                 ? colLabel.Substring(0, maxHeaderChars - 1) + "…"
                 : colLabel;
@@ -156,7 +211,7 @@ public class MatrixMakerStructureTypeAdjacency : Editor
 
         for (int row = 0; row < count; row++)
         {
-            string fullName = selectedStructureTypes[row].ToString();
+            string fullName = structureTypes[row].ToString();
             string rowLabel = GetRowLabel(fullName);
             string shortRow = rowLabel.Length > 13 ? rowLabel.Substring(0, 12) + "…" : rowLabel;
 
@@ -187,7 +242,7 @@ public class MatrixMakerStructureTypeAdjacency : Editor
                 }
 
                 GUI.Label(cellRect, new GUIContent(string.Empty,
-                    $"{selectedStructureTypes[row]} ↔ {selectedStructureTypes[col]}"));
+                    $"{structureTypes[row]} ↔ {structureTypes[col]}"));
 
                 Rect toggleRect = new Rect(
                     cellRect.x + (cellRect.width - 16f) / 2f,

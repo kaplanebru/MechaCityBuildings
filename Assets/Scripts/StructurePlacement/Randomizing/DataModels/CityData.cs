@@ -9,7 +9,7 @@ public class CityData
     public List<RandomizerData> RandomizerDataSet = new();
     [HideInInspector] public bool[] matrix;
 
-    public StructureType[] GetSelectedStructureTypes() => RandomizerDataSet.Select(t => t.Type).ToArray();
+    public HashSet<StructureType> GetStructureTypes() => RandomizerDataSet.Select(t => t.Type).ToHashSet();
 
     public bool TryGetAmountByType(StructureType structureType, out int amount)
     {

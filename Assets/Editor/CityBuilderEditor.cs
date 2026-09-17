@@ -81,8 +81,9 @@ public class CityBuilderEditor : Editor
     {
         CacheTarget();
 
-        t.RestoreMatrixIfNeeded();
-        MatrixMakerStructureTypeAdjacency.DisposeStructureTypes(t.cityData.GetSelectedStructureTypes(),
-            t.cityData.matrix);
+        t.RestoreMatrixSizeIfNeeded();
+        MatrixMakerStructureTypeAdjacency.DisposeStructureTypes(t.cityData.GetStructureTypes().ToArray(),t.cityData.matrix);
+        var structureTypesFromPools = t.units.Installer.GetStructureTypesFromPools().ToHashSet();
+        //MatrixMakerStructureTypeAdjacency.DisposeStructureTypes(structureTypesFromPools.ToArray(), t.cityData.matrix);
     }
 }

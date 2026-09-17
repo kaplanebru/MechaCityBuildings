@@ -34,7 +34,7 @@ public class MapOrganizer : MonoBehaviour
     private List<StructureTypeSearchData> GetStructureTypeDatas()
     {
         var structureTypeData = new List<StructureTypeSearchData>();
-        var selectedTypes = _currentCityData.GetSelectedStructureTypes();
+        var selectedTypes = _currentCityData.GetStructureTypes();
 
         foreach (var type in selectedTypes)
         {
@@ -44,7 +44,7 @@ public class MapOrganizer : MonoBehaviour
                     type,
                     structureDatabase.GetData(type).QuadSample,
                     amount,
-                    AdjacencyHelper.GetImpossibleAdjacencyForGivenType(type, selectedTypes, _currentCityData.matrix)
+                    AdjacencyHelper.GetImpossibleAdjacencyForGivenType(type, selectedTypes.ToArray(), _currentCityData.matrix)
                         .ToHashSet()));
             }
         }

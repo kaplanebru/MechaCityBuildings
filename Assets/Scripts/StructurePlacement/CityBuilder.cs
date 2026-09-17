@@ -119,9 +119,10 @@ public class CityBuilder : MonoBehaviour
         units.FloorResidentsDb.RemoveLastFloor();
     }
     
-    public void RestoreMatrixIfNeeded()
+    public void RestoreMatrixSizeIfNeeded()
     {
-        int matrixSize = Mathf.RoundToInt(Mathf.Pow(cityData.RandomizerDataSet.Count, 2));
+        var typesCount = cityData.GetStructureTypes().Count;
+        int matrixSize = Mathf.RoundToInt(Mathf.Pow(typesCount, 2));
 
         if (cityData.matrix == null || cityData.matrix.Length != matrixSize)
         {
@@ -131,7 +132,7 @@ public class CityBuilder : MonoBehaviour
 
     private HashSet<SlotData> CellToSlotData(HashSet<Vector2Int> cells)
     {
-        HashSet<StructureType> cityTypes = cityData.GetSelectedStructureTypes().ToHashSet();
+        HashSet<StructureType> cityTypes = cityData.GetStructureTypes().ToHashSet();
         
         var pools = units.Installer.pools;
         HashSet<StructureType> poolTypes = new();

@@ -16,6 +16,13 @@ public class Installer : MonoBehaviour
 
     public FloorResidentsData floorToInstall; //TODO MAKE THIS PRIVATE
 
+    public IEnumerable<StructureType> GetStructureTypesFromPools()
+    {
+        foreach (var pool in pools)
+        {
+            yield return pool.poolData.StructureType;
+        }
+    }
     public void InstallStructures(FloorData floorData, FloorResidentsData floorResidentsData, List<SlotData> slots = null)
     {
         slots ??= floorResidentsData.Slots;
