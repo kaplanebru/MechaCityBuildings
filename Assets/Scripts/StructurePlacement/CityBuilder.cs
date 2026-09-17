@@ -38,10 +38,11 @@ public class CityBuilder : MonoBehaviour
         Undo.RecordObject(units.FloorResidentsDb, "Map On Floor");
         Undo.RecordObject(units.Installer, "Installment From Slot");
 
-        var slotDataSet = CellToSlotData(cells);
-        //var slotDataSet = units.MapOrganizer.ToSlotData(cells, cityData);
+        if (!TryCellToSlotData(cells,
+                out var slotDataSet)) //var slotDataSet = units.MapOrganizer.ToSlotData(cells, cityData);
+            return;
+        
         units.FloorResidentsDb.RegisterCellsForFloor(floorIndex, cells.ToList());
-
         var floorResidents = units.FloorResidentsDb.GetFloor(floorIndex);
 
         PreventDuplicates(floorResidents, slotDataSet);
@@ -67,13 +68,13 @@ public class CityBuilder : MonoBehaviour
         Undo.RecordObject(units.FloorResidentsDb, "Installment From Cell" + floorIndex);
         Undo.RecordObject(units.Installer, "Installment From Cell" + floorIndex);
 
-        var floorData = units.FloorDb.GetFloorData(floorIndex);
         var floorResidents = units.FloorResidentsDb.GetFloor(floorIndex);
         var cells = floorResidents.Cells.ToHashSet();
 
-        var slotDataSet = CellToSlotData(cells);
-
-
+        if(!TryCellToSlotData(cells, out var slotDataSet)) //var slotDataSet = TryCellToSlotData(cells);
+            return;
+        
+        var floorData = units.FloorDb.GetFloorData(floorIndex);
         var structures = units.FloorResidentsDb.ClearStructuresDataKeepCells(floorIndex);
         units.Installer.ClearStructuresPhysically(structures);
 
@@ -133,25 +134,28 @@ public class CityBuilder : MonoBehaviour
         }
     }
 
-    private HashSet<SlotData> CellToSlotData(HashSet<Vector2Int> cells)
+    private bool TryCellToSlotData(HashSet<Vector2Int> cells, out HashSet<SlotData> slotDataSet)
     {
         HashSet<StructureType> cityTypes = cityData.GetStructureTypes();
-        var activeTypes = new HashSet<StructureType>();
-        
         var pools = units.Installer.pools;
+        slotDataSet = null;
+        
         HashSet<StructureType> poolTypes = new();
         pools.ForEach(pool => poolTypes.Add(pool.poolData.StructureType));
 
         foreach (var cityType in cityTypes)
         {
-            if (poolTypes.Contains(cityType))
+            if (!poolTypes.Contains(cityType))
             {
-                activeTypes.Add(cityType);
+                Debug.LogWarning(cityType + " structure type can't be found in any pool");
+                return false;
+                //cityData.RemoveStructureType(cityType);
             }
         }
         
-        units.MapOrganizer.MatchRandomizerWithPool(ref cityData, activeTypes);
-        return units.MapOrganizer.ToSlotData(cells, cityData);
+        //units.MapOrganizer.MatchRandomizerWithPool(ref cityData, activeTypes);
+        slotDataSet = units.MapOrganizer.ToSlotData(cells, cityData);
+        return true;
     }
 
     private void PreventDuplicates(FloorResidentsData floorResidents, HashSet<SlotData> slotDataSet)
