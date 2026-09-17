@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -5,25 +6,24 @@ public class MatrixMakerStructureTypeAdjacency : Editor
 {
     private static Vector2 tableScroll;
 
-    private static int Idx(int row, int col, int adjacencySize) => row * adjacencySize + col;
+    private static int Idx(int row, int col, int matrixSize) => row * matrixSize + col;
     private static int previousTypesLength;
-    private static bool[] cachedAdjacency = null;
+    private static bool[] cachedMatrix = null;
 
-    public static void DisposeStructureTypes(StructureType[] cityDataStructureTypes, ref bool[] adjacency)
+    public static void DisposeStructureTypes(StructureType[] cityDataStructureTypes, ref bool[] matrix)
     {
         int structureTypesLength = cityDataStructureTypes.Length;
-        SetAdjacencyDataOnChange(ref adjacency, structureTypesLength);
-
-        EnsureSymmetric(structureTypesLength, adjacency);
-
-
+        EnsureMatrixSize(ref matrix, structureTypesLength);
+        //SetMatrixDataOnChange(ref matrix, structureTypesLength);
+        EnsureSymmetric(structureTypesLength, matrix);
+        
         GUILayout.Label("Structure Types Adjacency Disposition", EditorStyles.boldLabel);
         EditorGUILayout.HelpBox("Sets adjacency between structure types",
             MessageType.None);
         EditorGUILayout.Space();
 
         tableScroll = EditorGUILayout.BeginScrollView(tableScroll);
-        DrawCompatibilityMatrix(structureTypesLength, cityDataStructureTypes, adjacency);
+        DrawCompatibilityMatrix(structureTypesLength, cityDataStructureTypes, matrix);
         EditorGUILayout.EndScrollView();
 
         EditorGUILayout.Space();
@@ -31,47 +31,66 @@ public class MatrixMakerStructureTypeAdjacency : Editor
         EditorGUILayout.BeginVertical();
         if (GUILayout.Button("Clear All", GUILayout.Width(70), GUILayout.Height(16)))
         {
-            for (int i = 0; i < adjacency.Length; i++)
-                adjacency[i] = false;
+            for (int i = 0; i < matrix.Length; i++)
+                matrix[i] = false;
         }
 
         if (GUILayout.Button("Select All", GUILayout.Width(70), GUILayout.Height(16)))
         {
-            for (int i = 0; i < adjacency.Length; i++)
-                adjacency[i] = true;
+            for (int i = 0; i < matrix.Length; i++)
+                matrix[i] = true;
         }
 
         if (GUILayout.Button("Diagonal Only (Same Type)", GUILayout.Width(170), GUILayout.Height(16)))
         {
-            for (int i = 0; i < adjacency.Length; i++)
-                adjacency[i] = false;
+            for (int i = 0; i < matrix.Length; i++)
+                matrix[i] = false;
             for (int i = 0; i < structureTypesLength; i++)
-                adjacency[Idx(i, i, structureTypesLength)] = true;
+                matrix[Idx(i, i, structureTypesLength)] = true;
         }
 
         EditorGUILayout.EndVertical();
         EditorGUILayout.Space(4);
     }
 
-    private static void SetAdjacencyDataOnChange(ref bool[] adjacencyData, int structureTypesLength, bool value = true)
+    private static void EnsureMatrixSize(ref bool[] matrix, int n)
     {
-        if (adjacencyData == null || previousTypesLength != structureTypesLength) // or on type change even the numbers are same
+        int needed = n * n;
+        if (matrix != null && matrix.Length == needed) return;
+
+        bool[] next = new bool[needed];
+
+        if (matrix != null && matrix.Length > 0)
         {
-            if (adjacencyData == null)
-                Debug.LogWarning("Adjacency data array is null");
+            int oldN = Mathf.RoundToInt(Mathf.Sqrt(matrix.Length));
+            if (oldN * oldN == matrix.Length)          // bozuk veri değilse
+            {
+                int min = Mathf.Min(oldN, n);
+                for (int r = 0; r < min; r++)
+                    Array.Copy(matrix, r * oldN, next, r * n, min);
+            }
+        }
+
+        matrix = next;
+    }
+    
+    private static void SetMatrixDataOnChange(ref bool[] matrix, int structureTypesLength, bool value = true)
+    {
+        if (matrix == null || previousTypesLength != structureTypesLength)
+        {
+            if (matrix == null)
+                Debug.LogWarning("Matrix data array is null");
             
             if(previousTypesLength != 0)
-                adjacencyData = RestoreAdjacencyFromCache(structureTypesLength);
+                matrix = RestoreMatrixFromCache(structureTypesLength);
             
             previousTypesLength = structureTypesLength;
         }
         
-        //On Change
-        CacheAdjacency(adjacencyData);
-
+        CacheMatrix(matrix);
     }
 
-    private static bool[] RestoreAdjacencyFromCache(int newCount)
+    private static bool[] RestoreMatrixFromCache(int newCount)
     {
         bool[] restored = new bool[newCount * newCount];
         int oldCount = previousTypesLength;
@@ -79,32 +98,32 @@ public class MatrixMakerStructureTypeAdjacency : Editor
         int min = Mathf.Min(oldCount, newCount);
         for (int r = 0; r < min; r++)
         for (int c = 0; c < min; c++)
-            restored[r * newCount + c] = cachedAdjacency[r * oldCount + c];
+            restored[r * newCount + c] = cachedMatrix[r * oldCount + c];
 
         return restored;
     }
 
-    private static void CacheAdjacency(bool[] adjacency)
+    private static void CacheMatrix(bool[] matrix)
     {
-        cachedAdjacency = new bool[adjacency.Length];
+        cachedMatrix = new bool[matrix.Length];
 
-        for (var i = 0; i < adjacency.Length; i++)
+        for (var i = 0; i < matrix.Length; i++)
         {
-            cachedAdjacency[i] = adjacency[i];
+            cachedMatrix[i] = matrix[i];
         }
     }
     
 
-    private static void EnsureSymmetric(int count, bool[] adjacency)
+    private static void EnsureSymmetric(int count, bool[] matrix)
     {
-        if (adjacency == null || adjacency.Length < count * count) return;
+        if (matrix == null || matrix.Length < count * count) return;
 
         for (int row = 0; row < count; row++)
         for (int col = row + 1; col < count; col++)
         {
-            bool value = adjacency[Idx(row, col, count)] || adjacency[Idx(col, row, count)];
-            adjacency[Idx(row, col, count)] = value;
-            adjacency[Idx(col, row, count)] = value;
+            bool value = matrix[Idx(row, col, count)] || matrix[Idx(col, row, count)];
+            matrix[Idx(row, col, count)] = value;
+            matrix[Idx(col, row, count)] = value;
         }
     }
 
@@ -143,7 +162,7 @@ public class MatrixMakerStructureTypeAdjacency : Editor
         return sb.ToString();
     }
 
-    private static void DrawCompatibilityMatrix(int count, StructureType[] structureTypes, bool[] adjacency)
+    private static void DrawCompatibilityMatrix(int count, StructureType[] structureTypes, bool[] matrix)
     {
         float labelW = 60f;
         float cellW = 34f;
@@ -211,7 +230,7 @@ public class MatrixMakerStructureTypeAdjacency : Editor
             for (int slot = 0; slot <= count - 1 - row; slot++)
             {
                 int col = count - 1 - slot;
-                bool current = adjacency[Idx(row, col, count)];
+                bool current = matrix[Idx(row, col, count)];
                 Rect cellRect = GUILayoutUtility.GetRect(cellW, cellH, GUILayout.Width(cellW));
 
                 if (Event.current.type == EventType.Repaint)
@@ -234,8 +253,8 @@ public class MatrixMakerStructureTypeAdjacency : Editor
                 bool newVal = EditorGUI.Toggle(toggleRect, current);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    adjacency[Idx(row, col, count)] = newVal;
-                    adjacency[Idx(col, row, count)] = newVal;
+                    matrix[Idx(row, col, count)] = newVal;
+                    matrix[Idx(col, row, count)] = newVal;
                 }
             }
 

@@ -12,8 +12,8 @@ public class CityBuilder : MonoBehaviour
 {
     public ReferenceHolder units;
     public CityData cityData;
-   
-    
+
+
     private void OnEnable()
     {
         units.CityDrawer.OnCellsReady += RegisterMapOnFloorAndInstall;
@@ -31,24 +31,24 @@ public class CityBuilder : MonoBehaviour
         units.FloorDb.OnLastFloorRemoved -= RemoveLastFloorResidentsData;
         units.Installer.OnStructureRemovalRequest -= RemoveStructureDataFromAllFloors;
     }
-    
+
     private void RegisterMapOnFloorAndInstall(int floorIndex, HashSet<Vector2Int> cells)
     {
 #if UNITY_EDITOR
-        Undo.RecordObject(units.FloorResidentsDb,"Map On Floor");
+        Undo.RecordObject(units.FloorResidentsDb, "Map On Floor");
         Undo.RecordObject(units.Installer, "Installment From Slot");
 
         var slotDataSet = CellToSlotData(cells);
         //var slotDataSet = units.MapOrganizer.ToSlotData(cells, cityData);
         units.FloorResidentsDb.RegisterCellsForFloor(floorIndex, cells.ToList());
-        
+
         var floorResidents = units.FloorResidentsDb.GetFloor(floorIndex);
-        
+
         PreventDuplicates(floorResidents, slotDataSet);
         units.FloorResidentsDb.RegisterSlotsForFloor(floorIndex, slotDataSet.ToList());
-        
+
         units.Installer.InstallStructures(units.FloorDb.GetFloorData(floorIndex), floorResidents, slotDataSet.ToList());
-        
+
         EditorUtility.SetDirty(units.FloorResidentsDb);
         EditorUtility.SetDirty(units.Installer);
 #endif
@@ -64,28 +64,28 @@ public class CityBuilder : MonoBehaviour
         }
 #if UNITY_EDITOR
 
-        Undo.RecordObject(units.FloorResidentsDb,"Installment From Cell" + floorIndex);
-        Undo.RecordObject(units.Installer, "Installment From Cell"  + floorIndex);
-        
+        Undo.RecordObject(units.FloorResidentsDb, "Installment From Cell" + floorIndex);
+        Undo.RecordObject(units.Installer, "Installment From Cell" + floorIndex);
+
         var floorData = units.FloorDb.GetFloorData(floorIndex);
         var floorResidents = units.FloorResidentsDb.GetFloor(floorIndex);
         var cells = floorResidents.Cells.ToHashSet();
-        
+
         var slotDataSet = CellToSlotData(cells);
 
-        
+
         var structures = units.FloorResidentsDb.ClearStructuresDataKeepCells(floorIndex);
         units.Installer.ClearStructuresPhysically(structures);
-            
-        units.FloorResidentsDb.RegisterSlotsForFloor(floorIndex, slotDataSet.ToList()); //units.MapOrganizer.ToSlotData(cells, cityData)
+
+        units.FloorResidentsDb.RegisterSlotsForFloor(floorIndex,
+            slotDataSet.ToList()); //units.MapOrganizer.ToSlotData(cells, cityData)
         units.Installer.InstallStructures(floorData, units.FloorResidentsDb.GetFloor(floorData.Index));
-        
+
         EditorUtility.SetDirty(units.FloorResidentsDb);
         EditorUtility.SetDirty(units.Installer);
 #endif
-        
     }
-    
+
     public void RandomizeAndInstallTotalZone()
     {
         foreach (var floorData in units.FloorDb.FloorDatas)
@@ -94,11 +94,12 @@ public class CityBuilder : MonoBehaviour
             RandomizeSelectedFloor(floorIndex);
         }
     }
-    
+
     private void AddFloorResidentsData()
     {
         units.FloorResidentsDb.AddFloorResidentsData();
     }
+
     public void ClearStructuresOnFloor(int floorIndex)
     {
         var structures = units.FloorResidentsDb.ClearResidentsData(floorIndex);
@@ -114,18 +115,20 @@ public class CityBuilder : MonoBehaviour
             units.FloorDb.OnFloorClearRequest?.Invoke(floorIndex);
         }
     }
+
     private void RemoveLastFloorResidentsData()
     {
         units.FloorResidentsDb.RemoveLastFloor();
     }
-    
+
     public void RestoreMatrixSizeIfNeeded()
     {
         var typesCount = cityData.GetStructureTypes().Count;
         int matrixSize = Mathf.RoundToInt(Mathf.Pow(typesCount, 2));
 
-        if (cityData.matrix == null || cityData.matrix.Length != matrixSize)
+        if (cityData.matrix == null)
         {
+            Debug.LogWarning("MATRIX NULL");
             cityData.matrix = new bool[matrixSize];
         }
     }
@@ -133,12 +136,12 @@ public class CityBuilder : MonoBehaviour
     private HashSet<SlotData> CellToSlotData(HashSet<Vector2Int> cells)
     {
         HashSet<StructureType> cityTypes = cityData.GetStructureTypes().ToHashSet();
-        
+
         var pools = units.Installer.pools;
         HashSet<StructureType> poolTypes = new();
         pools.ForEach(pool => poolTypes.Add(pool.poolData.StructureType));
-        
-        
+
+
         foreach (var cityType in cityTypes)
         {
             if (!poolTypes.Contains(cityType))
@@ -146,9 +149,10 @@ public class CityBuilder : MonoBehaviour
                 cityData.RemoveStructureType(cityType);
             }
         }
-        
+
         return units.MapOrganizer.ToSlotData(cells, cityData);
     }
+
     private void PreventDuplicates(FloorResidentsData floorResidents, HashSet<SlotData> slotDataSet)
     {
         foreach (var slot in floorResidents.Slots)
@@ -157,12 +161,12 @@ public class CityBuilder : MonoBehaviour
                 slotDataSet.Remove(slot);
         }
     }
-    
+
     private void RemoveStructureDataFromAllFloors(StructureType structureType)
     {
         var structures = units.FloorResidentsDb.RemoveStructureDataFrom_AllFloors(structureType);
-        
-        Debug.Log("STRUCTURES TO REMOVE: "+structures.Count());
+
+        Debug.Log("STRUCTURES TO REMOVE: " + structures.Count());
         units.Installer.ClearStructuresPhysically(structures);
     }
 }
