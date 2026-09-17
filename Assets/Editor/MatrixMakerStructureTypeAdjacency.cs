@@ -9,10 +9,10 @@ public class MatrixMakerStructureTypeAdjacency : Editor
     private static int previousTypesLength;
     private static bool[] cachedAdjacency = null;
 
-    public static void DisposeStructureTypes(StructureType[] cityDataStructureTypes, bool[] adjacency)
+    public static void DisposeStructureTypes(StructureType[] cityDataStructureTypes, ref bool[] adjacency)
     {
         int structureTypesLength = cityDataStructureTypes.Length;
-        SetAdjacencyDataOnChange(adjacency, structureTypesLength);
+        SetAdjacencyDataOnChange(ref adjacency, structureTypesLength);
 
         EnsureSymmetric(structureTypesLength, adjacency);
 
@@ -50,70 +50,50 @@ public class MatrixMakerStructureTypeAdjacency : Editor
         }
 
         EditorGUILayout.EndVertical();
-
         EditorGUILayout.Space(4);
     }
 
-    private static void SetAdjacencyDataOnChange(bool[] adjacencyData, int structureTypesLength, bool value = true)
+    private static void SetAdjacencyDataOnChange(ref bool[] adjacencyData, int structureTypesLength, bool value = true)
     {
-        if (adjacencyData == null ||
-            previousTypesLength != structureTypesLength) // or on type change even the numbers are same
+        if (adjacencyData == null || previousTypesLength != structureTypesLength) // or on type change even the numbers are same
         {
             if (adjacencyData == null)
                 Debug.LogWarning("Adjacency data array is null");
-
-            if (previousTypesLength == 0)
-            {
-                MakeTriviaOnEmptyCache(adjacencyData);
-            }
-
-            if (previousTypesLength != structureTypesLength)
-                Debug.Log("previous type: " + previousTypesLength + " " + "current: " + structureTypesLength +
-                          " adjacency array size mismatch");
-
-            System.Array.Resize(ref adjacencyData, structureTypesLength * structureTypesLength);
-
-            int minTypeCount = cachedAdjacency.Length < adjacencyData.Length
-                ? cachedAdjacency.Length
-                : adjacencyData.Length;
-            for (int i = 0; i < minTypeCount; i++)
-            {
-                adjacencyData[i] = cachedAdjacency[i];
-            }
-
+            
+            if(previousTypesLength != 0)
+                adjacencyData = RestoreAdjacencyFromCache(structureTypesLength);
+            
             previousTypesLength = structureTypesLength;
-            CacheAdjacency(adjacencyData);
         }
+        
+        //On Change
+        CacheAdjacency(adjacencyData);
+
+    }
+
+    private static bool[] RestoreAdjacencyFromCache(int newCount)
+    {
+        bool[] restored = new bool[newCount * newCount];
+        int oldCount = previousTypesLength;
+
+        int min = Mathf.Min(oldCount, newCount);
+        for (int r = 0; r < min; r++)
+        for (int c = 0; c < min; c++)
+            restored[r * newCount + c] = cachedAdjacency[r * oldCount + c];
+
+        return restored;
     }
 
     private static void CacheAdjacency(bool[] adjacency)
     {
-        foreach (var item in adjacency)
-        {
-            Debug.Log("new adj " + item);
-        }
-        
-        foreach (var item in cachedAdjacency)
-        {
-            Debug.Log("prew adj " + item);
-        }
-
-        
-        if (adjacency.Length != cachedAdjacency.Length)
-            cachedAdjacency = new bool[adjacency.Length];
+        cachedAdjacency = new bool[adjacency.Length];
 
         for (var i = 0; i < adjacency.Length; i++)
         {
             cachedAdjacency[i] = adjacency[i];
         }
     }
-
-    private static void MakeTriviaOnEmptyCache(bool[] adjacency)
-    {
-        cachedAdjacency = new bool[adjacency.Length];
-        for (var i = 0; i < adjacency.Length; i++)
-            cachedAdjacency[i] = adjacency[i]; //true;
-    }
+    
 
     private static void EnsureSymmetric(int count, bool[] adjacency)
     {
@@ -127,6 +107,7 @@ public class MatrixMakerStructureTypeAdjacency : Editor
             adjacency[Idx(col, row, count)] = value;
         }
     }
+
 
     private static string GetRowLabel(string structureName)
     {
