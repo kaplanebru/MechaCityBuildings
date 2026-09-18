@@ -60,8 +60,10 @@ public class QuadSearcher
         return selectedQuads;
     }
 
-    public static HashSet<QuadOnMap> SearchQuads(List<StructureTypeSearchData> structureTypeDatas,
-        HashSet<Vector2Int> map)
+    public static HashSet<QuadOnMap> SearchQuads(
+        List<StructureTypeSearchData> structureTypeDatas,
+        HashSet<Vector2Int> map, 
+        List<StructureType> fillerTypes)
     {
         HashSet<QuadOnMap> discoveredQuads = new();
         Dictionary<Vector2Int, bool> examiningMap = map.ToDictionary(point => point, point => false);
@@ -72,7 +74,9 @@ public class QuadSearcher
             .GroupBy(sd => sd.QuadSample.data.GetPointAmount)
             .ToDictionary(g => g.Key, g => g.ToList());
 
-        var singularTypes = volumeGroups.TryGetValue(1, out var singles) ? singles.ToList() : null;
+        //var singularTypes = volumeGroups.TryGetValue(1, out var singles) ? singles.ToList() : null;
+
+     
 
         foreach (var volume in volumeGroups.Keys.OrderByDescending(v => v))
         {
@@ -86,8 +90,8 @@ public class QuadSearcher
                 .Where(kvp => !kvp.Value)
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
-
-        if (HasEmptyPoints(examiningMap.Keys.ToList(), singularTypes, out var remainingQuads))
+        
+        if (HasEmptyPoints(examiningMap.Keys.ToList(), structureTypeDatas, fillerTypes, volumeGroups.Last().Value, out var remainingQuads))
             discoveredQuads.UnionWith(remainingQuads);
 
         return discoveredQuads;
@@ -125,16 +129,36 @@ public class QuadSearcher
         }
         return true;
     }
+    
+    private static List<StructureTypeSearchData> GetFillerSearchData(List<StructureType> fillerTypes, List<StructureTypeSearchData> structureTypeDatas, List<StructureTypeSearchData> smallestVolumeGroup)
+    {
+        List<StructureTypeSearchData> fillerSearchData = new();
+        if (fillerTypes.Count > 0)
+        {
+            foreach (var searchData in structureTypeDatas)
+            {
+                if(fillerTypes.Contains(searchData.Type))
+                    fillerSearchData.Add(searchData);
+            }
+        }
+        else
+        {
+            fillerSearchData = smallestVolumeGroup; // volumeGroups.Last().Value;
+        }
+        
+        return fillerSearchData;
+    }
 
-    private static bool HasEmptyPoints(List<Vector2Int> runningMap, List<StructureTypeSearchData> singularTypes,
-        out HashSet<QuadOnMap> quads)
+    private static bool HasEmptyPoints(List<Vector2Int> runningMap, List<StructureTypeSearchData> searchDatas, List<StructureType> fillerTypes,List<StructureTypeSearchData> smallestVolumeGroup, out HashSet<QuadOnMap> quads)
     {
         quads = new();
-        if (runningMap.Count == 0 || singularTypes == null || singularTypes.Count == 0) return false;
+        if (runningMap.Count == 0) return false;// || fillerSearchDatas == null || fillerSearchDatas.Count == 0) return false;
+        
+        List<StructureTypeSearchData> fillerSearchDatas = GetFillerSearchData(fillerTypes, searchDatas, smallestVolumeGroup);
 
         foreach (var cell in runningMap)
         {
-            var searchData = singularTypes[Random.Range(0, singularTypes.Count)];
+            var searchData = fillerSearchDatas[Random.Range(0, fillerSearchDatas.Count)];
             var neighbors = QuadProjector.GetNeighborsOnGivenPoint(cell, searchData.QuadSample).ToArray();
 
             var newQuad = CreateQuadOnMap(

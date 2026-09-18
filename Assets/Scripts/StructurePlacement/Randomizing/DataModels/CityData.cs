@@ -7,9 +7,11 @@ using UnityEngine;
 public class CityData
 {
     public List<RandomizerData> RandomizerDataSet = new();
+    [SerializeField] private List<StructureType> FillerSmallTypes = new();
     [HideInInspector] public bool[] matrix;
 
     public HashSet<StructureType> GetStructureTypes() => RandomizerDataSet.Select(t => t.Type).ToHashSet();
+    public List<StructureType> GetFillerTypes() => FillerSmallTypes;
 
     public bool TryGetAmountByType(StructureType structureType, out int amount)
     {

@@ -71,7 +71,8 @@ public class MapOrganizer : MonoBehaviour
 
         var randomQuads = QuadSearcher.SearchQuads(
             structureTypeDatas,
-            mapToAlter.ToHashSet());
+            mapToAlter.ToHashSet(),
+            _currentCityData.GetFillerTypes());
 
         return SlotCreator.CreateSlotDataFromQuads(randomQuads.ToArray(), map);
     }
@@ -83,11 +84,6 @@ public class MapOrganizer : MonoBehaviour
             ToArray();
         
         FrequencyToAmountConverter.SetAmountsByRatio(frequencyDatas, cellAmount);
-    }
-
-    public void MatchRandomizerWithPool(ref CityData cityData, HashSet<StructureType> activeTypes)
-    {
-        cityData.RandomizerDataSet = cityData.RandomizerDataSet.Where(r => activeTypes.Contains(r.Type)).ToList();
     }
 
     public static void Shuffle<T>(IList<T> collection) //T[] //IList
