@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 
 public abstract class Pool<T> : MonoBehaviour where T : Component
 {
@@ -96,6 +100,20 @@ public abstract class Pool<T> : MonoBehaviour where T : Component
                 pool.Enqueue(item);
         }
     }
+
+#if UNITY_EDITOR
+    public void DeletePoolItems()
+    {
+        var poolItems = root.GetComponentsInChildren(typeof(Structure), true);
+        for (var i = poolItems.Length - 1; i >= 0; i--)
+        {
+            var item = poolItems[i];
+            Undo.DestroyObjectImmediate(item.gameObject);
+        }
+        ClearPool();
+    }
+    
+#endif
 
 #if UNITY_EDITOR
     private void RebuildQueueFromChildren(Transform root)

@@ -9,6 +9,7 @@ using UnityEngine;
 public class Installer : MonoBehaviour
 {
     public Action<StructureType> OnStructureRemovalRequest;
+    public Func<StructureType, StructurePool, HashSet<Structure>> OnStructureReplacementRequest;
     private Dictionary<StructureType, List<SlotData>> _slotDatasByType = new();
     [SerializeField] private GridData gridData;
     public Transform root;
@@ -41,7 +42,7 @@ public class Installer : MonoBehaviour
         floorToInstall.RegisterStructures(structuresByType);
     }
 
-    private Structure[] InstallStructuresFromPool(StructurePool pool, Transform floorRoot)
+    public Structure[] InstallStructuresFromPool(StructurePool pool, Transform floorRoot)
     {
         RestorePoolIfNeeded(pool);
         _slotDatasByType.TryGetValue(pool.poolData.StructureType, out List<SlotData> slotDatas);

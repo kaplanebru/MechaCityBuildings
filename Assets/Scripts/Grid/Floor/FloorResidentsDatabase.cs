@@ -87,6 +87,7 @@ public class FloorResidentsDatabase : MonoBehaviour
         return structuresByCell;
     }
 
+    
     public HashSet<Structure> RemoveStructureDataFrom_AllFloors(StructureType structureType)
     {
         HashSet<Structure> cachedStructures = new();
@@ -98,11 +99,31 @@ public class FloorResidentsDatabase : MonoBehaviour
         return cachedStructures;
     }
 
+    public HashSet<Structure> GetSelectedStructuresFromAllFloors(StructureType structureType, bool clear = true)
+    {
+        HashSet<Structure> totalStructures = new();
+        for (var i = 0; i < floorResidents.Count; i++)
+        {
+            var floorResidentData = floorResidents[i];
+            var relatedStructures = floorResidentData.Structures.Where(sd => sd.type == structureType).ToHashSet();
+            totalStructures.UnionWith(relatedStructures);
+
+            for (var j = relatedStructures.Count - 1; j >= 0; j--)
+            {
+                var relatedStructure = floorResidentData.Structures[j];
+                
+                if(clear)
+                    floorResidentData.Structures.Remove(relatedStructure);
+            }
+        }
+
+        return totalStructures;
+    }
+
     public HashSet<Structure> RemoveStructureDataFrom_SingleFloor(StructureType structureType, FloorResidentsData floorResidentData)
     {
         var relatedSlots = floorResidentData.Slots.Where(f => f.StructureType == structureType).ToHashSet();
         var relatedStructures = floorResidentData.Structures.Where(sd => sd.type == structureType).ToHashSet();
-        Debug.Log("related structures: " + relatedStructures.Count);
         HashSet<Vector2Int> relatedCells = new();
         HashSet<Structure> cachedStructures = new();
 
@@ -120,25 +141,13 @@ public class FloorResidentsDatabase : MonoBehaviour
         {
             floorResidentData.Slots.Remove(slot);
         }
-        //bug: not removing the related slot
         
-        foreach (var slot in relatedStructures)
+        foreach (var structure in relatedStructures)
         {
-            cachedStructures.Add(slot);
-            floorResidentData.Structures.Remove(slot);
+            cachedStructures.Add(structure);
+            floorResidentData.Structures.Remove(structure);
         }
         Debug.Log("cached structutrues: " + cachedStructures.Count);
         return cachedStructures;
     }
-
-    /*public static void RestoreBuildingsOnFloor(FloorData floorData,GridData gridData)
-    {
-        HashSet<Vector2Int> keys = floorData.Slots.ToHashSet();
-        foreach (var key in keys)
-        {
-            if (floorData.HasStructureOnCell(key, out var item)) continue;
-
-            //floorData.SetItemOnCell(key, ConstructItem(key, floorData, gridData));
-        }
-    }*/
 }

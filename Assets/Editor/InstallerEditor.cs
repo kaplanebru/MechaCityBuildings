@@ -1,4 +1,6 @@
 #if UNITY_EDITOR
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -54,6 +56,9 @@ public class InstallerEditor : Editor
         DeletePool();
 
         EditorGUILayout.Space(8);
+        ModifyPool();
+
+        EditorGUILayout.Space(8);
         DrawDefaultInspector();
     }
 
@@ -87,7 +92,7 @@ public class InstallerEditor : Editor
         CacheTarget();
         using (new EditorGUILayout.HorizontalScope())
         {
-            selectedPoolIndex = EditorGUILayout.Popup("Pools of", selectedPoolIndex,
+            selectedPoolIndex = EditorGUILayout.Popup("Select pool", selectedPoolIndex,
                 t.pools.ConvertAll(p => p.name).ToArray()); //p.poolData.Prefab.name
 
             if (GUILayout.Button("Delete"))
@@ -97,14 +102,67 @@ public class InstallerEditor : Editor
                     var pool = t.pools[selectedPoolIndex];
                     Debug.Log("pool removed" + pool.poolData.StructureType);
 
-                    
+
                     t.OnStructureRemovalRequest?.Invoke(pool.poolData.StructureType);
 
                     t.pools.Remove(pool);
                     Debug.Log("pools count: " + t.pools.Count);
                     Undo.DestroyObjectImmediate(pool.gameObject);
-                    
+
                     selectedPoolIndex--;
+                }
+            }
+        }
+    }
+
+    private Structure newStructure;
+
+    public void ModifyPool()
+    {
+        CacheTarget();
+        EditorGUILayout.LabelField("To replace the pool structure with another structure (matching type)",
+            EditorStyles.label);
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            selectedPoolIndex = EditorGUILayout.Popup("Select pool", selectedPoolIndex,
+                t.pools.ConvertAll(p => p.name).ToArray()); //p.poolData.Prefab.name
+            
+        }
+        
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            newStructure = (Structure)EditorGUILayout.ObjectField(label: "New structure", newStructure,
+                typeof(Structure), false);
+
+            if (GUILayout.Button("Modify Pool"))
+            {
+                if (newStructure == null)
+                {
+                    Debug.LogError("No structure assigned!");
+                    return;
+                }
+                if (selectedPoolIndex < 0 || selectedPoolIndex >= t.pools.Count) return;
+
+                var pool = t.pools[selectedPoolIndex];
+                if (pool.poolData.StructureType != newStructure.type)
+                {
+                    Debug.LogError($"{newStructure.name} is not a {newStructure.type}!");
+                    return;
+                }
+
+                //önce mevcut pool'u sil, ölü poolu dirilt. Sonra floorDb'de yeni pool'dan çekmek şartıyla ordan yükleme yap
+
+
+                pool.DeletePoolItems();
+                pool.poolData.Prefab = newStructure;
+                pool.InitializePool();
+
+                var structuresToRemove = t.OnStructureReplacementRequest?.Invoke(newStructure.type, pool).ToArray();
+                if (structuresToRemove == null) return;
+                for (int i = structuresToRemove.Length - 1; i >= 0; i--)
+                {
+                    var structure = structuresToRemove[i];
+                    Undo.DestroyObjectImmediate(structure.gameObject);
                 }
             }
         }

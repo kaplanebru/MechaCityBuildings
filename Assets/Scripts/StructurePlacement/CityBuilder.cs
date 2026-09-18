@@ -21,6 +21,7 @@ public class CityBuilder : MonoBehaviour
         units.FloorDb.OnFloorCreated += AddFloorResidentsData;
         units.FloorDb.OnLastFloorRemoved += RemoveLastFloorResidentsData;
         units.Installer.OnStructureRemovalRequest += RemoveStructureDataFromAllFloors;
+        units.Installer.OnStructureReplacementRequest += ReplaceStructures;
     }
 
     private void OnDisable()
@@ -30,6 +31,7 @@ public class CityBuilder : MonoBehaviour
         units.FloorDb.OnFloorCreated -= AddFloorResidentsData;
         units.FloorDb.OnLastFloorRemoved -= RemoveLastFloorResidentsData;
         units.Installer.OnStructureRemovalRequest -= RemoveStructureDataFromAllFloors;
+        units.Installer.OnStructureReplacementRequest -= ReplaceStructures;
     }
 
     private void RegisterMapOnFloorAndInstall(int floorIndex, HashSet<Vector2Int> cells)
@@ -149,11 +151,9 @@ public class CityBuilder : MonoBehaviour
             {
                 Debug.LogWarning(cityType + " structure type can't be found in any pool");
                 return false;
-                //cityData.RemoveStructureType(cityType);
             }
         }
         
-        //units.MapOrganizer.MatchRandomizerWithPool(ref cityData, activeTypes);
         slotDataSet = units.MapOrganizer.ToSlotData(cells, cityData);
         return true;
     }
@@ -173,5 +173,21 @@ public class CityBuilder : MonoBehaviour
 
         Debug.Log("STRUCTURES TO REMOVE: " + structures.Count());
         units.Installer.ClearStructuresPhysically(structures);
+    }
+    
+    private  HashSet<Structure> ReplaceStructures(StructureType structureType, StructurePool pool)
+    {
+        var oldStructures = units.FloorResidentsDb.GetSelectedStructuresFromAllFloors(structureType, false);
+        
+        Dictionary<int, HashSet<Structure>> newStructuresPerFloor = new();
+        for (var i = 0; i < units.FloorDb.FloorDatas.Count; i++)
+        {
+            var data = units.FloorDb.FloorDatas[i];
+            var newStructures = units.Installer.InstallStructuresFromPool(pool, data.Root).ToHashSet();
+            newStructuresPerFloor.Add(data.Index, newStructures);
+            units.FloorResidentsDb.floorResidents[i].Structures.AddRange(newStructures);
+        }
+
+        return oldStructures;
     }
 }
