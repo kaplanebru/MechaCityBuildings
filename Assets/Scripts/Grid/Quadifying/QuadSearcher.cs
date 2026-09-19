@@ -18,12 +18,11 @@ public class QuadSearcher
         foreach (var point in map)
         {
             if (examiningMap[point]) continue;
-
-            // Bu noktaya sığan ve komşuluğu uygun tipler
+            
             var candidates = group
                 .Where(sd => QuadIsOnMap(
                     QuadProjector.GetQuadOnGivenPoint(point, sd.QuadSample), examiningMap))
-                .Where(sd => possibilityHandler.IsTypeConvenient2(sd.Type,
+                .Where(sd => possibilityHandler.IsTypeConvenient(sd.Type,
                     QuadProjector.GetNeighborsOnGivenPoint(point, sd.QuadSample).ToArray()))
                 .ToList();
 
@@ -60,10 +59,7 @@ public class QuadSearcher
         return selectedQuads;
     }
 
-    public static HashSet<QuadOnMap> SearchQuads(
-        List<StructureTypeSearchData> structureTypeDatas,
-        HashSet<Vector2Int> map, 
-        List<StructureType> fillerTypes)
+    public static HashSet<QuadOnMap> SearchQuads(List<StructureTypeSearchData> structureTypeDatas, HashSet<Vector2Int> map, List<StructureType> fillerTypes)
     {
         HashSet<QuadOnMap> discoveredQuads = new();
         Dictionary<Vector2Int, bool> examiningMap = map.ToDictionary(point => point, point => false);
@@ -71,46 +67,65 @@ public class QuadSearcher
         SlotNeighborConvenienceHandler possibilityHandler = new(structureTypeDatas.ToHashSet());
 
         Dictionary<int, List<StructureTypeSearchData>> volumeGroups = structureTypeDatas
-            .GroupBy(sd => sd.QuadSample.data.GetPointAmount)
+            .GroupBy(sd => sd.QuadSample.GetVolume)
             .ToDictionary(g => g.Key, g => g.ToList());
 
         //var singularTypes = volumeGroups.TryGetValue(1, out var singles) ? singles.ToList() : null;
-
-     
-
+        
         foreach (var volume in volumeGroups.Keys.OrderByDescending(v => v))
         {
             var group = volumeGroups[volume];
             var found = DiscoveredQuadsInGivenGroup(group, examiningMap, possibilityHandler);
-            int before = discoveredQuads.Count;
             discoveredQuads.UnionWith(found);
-            Debug.Log($"volume {volume}: found={found.Count} before={before} after={discoveredQuads.Count}");
+            Debug.Log($"volume {volume}: found={found.Count}");
 
             examiningMap = examiningMap
                 .Where(kvp => !kvp.Value)
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
         
-        if (HasEmptyPoints(examiningMap.Keys.ToList(), structureTypeDatas, fillerTypes, volumeGroups.Last().Value, out var remainingQuads))
-            discoveredQuads.UnionWith(remainingQuads);
+        //if (HasEmptyPoints(examiningMap.Keys.ToList(), structureTypeDatas, fillerTypes, volumeGroups.Last().Value, out var remainingQuads))
+           // discoveredQuads.UnionWith(remainingQuads);
 
         return discoveredQuads;
     }
 
     private static StructureTypeSearchData PickWeighted(List<StructureTypeSearchData> candidates)
     {
-        int total = 0;
-        foreach (var c in candidates) total += c.Amount;
+        int candidateCount = candidates.Count;
+        if (candidateCount == 1) return candidates[0];
 
-        int roll = Random.Range(0, total);
-        foreach (var c in candidates)
+        var indicesByAmountAscending = new int[candidateCount];
+        for (int index = 0; index < candidateCount; index++) indicesByAmountAscending[index] = index;
+
+        System.Array.Sort(indicesByAmountAscending, (firstIndex, secondIndex) =>
+            candidates[firstIndex].Amount.CompareTo(candidates[secondIndex].Amount));
+
+        int totalWeight = candidateCount * (candidateCount + 1) / 2;
+        int remainingRoll = Random.Range(0, totalWeight);
+
+        for (int rank = 0; rank < candidateCount; rank++)
         {
-            if (roll < c.Amount) return c;
-            roll -= c.Amount;
+            int weight = candidateCount - rank;
+            if (remainingRoll < weight) return candidates[indicesByAmountAscending[rank]];
+            remainingRoll -= weight;
         }
-        return candidates[^1];
-    }
 
+        return candidates[indicesByAmountAscending[candidateCount - 1]];
+    }
+    // private static StructureTypeSearchData PickWeighted(List<StructureTypeSearchData> candidates)
+    // {
+    //     if(candidates.Count == 1) return candidates[0];
+    //     
+    //     var sum = candidates.Sum(c => c.Amount);
+    //     int roll = Random.Range(0, sum);
+    //     foreach (var c in candidates)
+    //     {
+    //         if (roll < c.Amount) return c;
+    //         roll -= c.Amount;
+    //     }
+    //     return candidates[^1];
+    // }
     private static QuadOnMap CreateQuadOnMap(QuadSample quadSample, Vector2Int[] points, Vector2Int[] neighbors,
         StructureType structureType)
     {

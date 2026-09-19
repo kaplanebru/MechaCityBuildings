@@ -10,7 +10,7 @@ public class QuadSample : ScriptableObject
 {
     public QuadData data;
 
-    public int GetMultitude => data.GetPointAmount;
+    public int GetVolume => data.GetPointAmount;
 
     public void Generate()
     {

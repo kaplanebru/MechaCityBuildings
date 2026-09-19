@@ -6,38 +6,36 @@ public static class FrequencyToAmountConverter
 {
     private static int GetRatioSum(FrequencyData[] frequencyDataSet)
     {
-        return frequencyDataSet.Sum(d => d.Frequency);
+        return frequencyDataSet.Sum(d => d.Frequency * d.Volume);
     }
 
-    public static void SetAmountsByRatio(FrequencyData[] frequencyDataSet, int totalBodyCount)
+    public static void SetAmountsByRatio(FrequencyData[] frequencyDataSet, int totalCellAmount)
     {
-        int totalAmount = totalBodyCount;
         float ratioSum = GetRatioSum(frequencyDataSet);
 
         foreach (var data in frequencyDataSet)
         {
-            data.Amount = Mathf.FloorToInt(totalAmount * data.Frequency / ratioSum);
+            data.Amount = Mathf.FloorToInt(totalCellAmount * (data.Frequency * data.Volume / ratioSum));
         }
-        
-        HandleRest(frequencyDataSet, totalAmount);
+
+        HandleRest(frequencyDataSet, totalCellAmount);
     }
 
-    private static void HandleRest(FrequencyData[] frequencyDataSet, int totalBodyCount)
+    private static void HandleRest(FrequencyData[] frequencyDataSet, int totalCellCount)
     {
         var totalAmount = frequencyDataSet.Sum(d => d.Amount);
-        int rest = totalBodyCount - totalAmount;
+        int rest = totalCellCount - totalAmount;
         
-        if(rest == 0) return;
-        frequencyDataSet = frequencyDataSet.OrderBy(d => d.Amount).ToArray();
+        Debug.Log("rest: " + rest + " total cell count: " + totalCellCount);
+
+        if (rest == 0) return;
         
-        while (rest > 0)
+        /*var smallest = frequencyDataSet.OrderBy(d => d.Volume).First();
+
+        while (rest >= smallest.Volume)
         {
-            foreach (var data in frequencyDataSet)
-            {
-                data.Amount++;
-                rest--;
-                if(rest == 0) return;
-            }
-        }
+            rest -= smallest.Volume;
+            smallest.Amount++;
+        }*/
     }
 }

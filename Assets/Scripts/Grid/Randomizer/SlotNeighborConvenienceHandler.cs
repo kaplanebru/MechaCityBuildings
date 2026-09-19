@@ -32,7 +32,7 @@ public class SlotNeighborConvenienceHandler
     }
 
 
-    public bool IsTypeConvenient2(StructureType currentType, Vector2Int[] neighbors)
+    public bool IsTypeConvenient(StructureType currentType, Vector2Int[] neighbors)
     {
         foreach (var neighbor in neighbors)
         {

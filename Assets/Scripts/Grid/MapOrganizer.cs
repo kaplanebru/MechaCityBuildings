@@ -55,7 +55,7 @@ public class MapOrganizer : MonoBehaviour
     {
         _currentCityData = cityData;
         
-        ConvertFrequenciesToAmounts(map.Count);
+        ConvertFrequencies(map.Count);
         var structureTypeDatas = GetStructureTypeDatas();
         
         return DisposeMapByShuffle(map, structureTypeDatas);
@@ -77,13 +77,20 @@ public class MapOrganizer : MonoBehaviour
         return SlotCreator.CreateSlotDataFromQuads(randomQuads.ToArray(), map);
     }
 
-    private void ConvertFrequenciesToAmounts(int cellAmount)
+    private void ConvertFrequencies(int cellAmount)
     {
-        FrequencyData[] frequencyDatas = _currentCityData.RandomizerDataSet.
+        /*FrequencyData[] frequencyDatas = _currentCityData.RandomizerDataSet.
             Select(r => r.FrequencyData).
-            ToArray();
+            ToArray();*/
+
+        List<FrequencyData> frequencyDatas = new();
+        foreach (var randomizerData in _currentCityData.RandomizerDataSet)
+        {
+            randomizerData.FrequencyData.Volume = structureDatabase.GetData(randomizerData.Type).QuadSample.GetVolume;
+            frequencyDatas.Add(randomizerData.FrequencyData);
+        }
         
-        FrequencyToAmountConverter.SetAmountsByRatio(frequencyDatas, cellAmount);
+        FrequencyToAmountConverter.SetAmountsByRatio(frequencyDatas.ToArray(), cellAmount);
     }
 
     public static void Shuffle<T>(IList<T> collection) //T[] //IList

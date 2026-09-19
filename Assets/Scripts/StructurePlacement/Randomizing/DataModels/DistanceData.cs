@@ -13,4 +13,6 @@ public class FrequencyData
 {
     [Range(0, 100)] public int Frequency = 30;
     public int Amount { get; set; }
+    
+    public int Volume { get; set; }
 }
